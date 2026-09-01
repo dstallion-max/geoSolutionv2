@@ -19,9 +19,7 @@
     // 🔧 API URLs
     // =============================================
     const LOCAL_API = 'http://localhost:3000/api';
-    // ✅ Production: Use relative path (same domain)
-    const PRODUCTION_API = 'https://geosolutionv2.onrender.com';
-    // =============================================
+    const PRODUCTION_API = 'https://geosolutionv2.onrender.com/api';
 
     // Set the global API base URL
     window.BASE_API = isLocal ? LOCAL_API : PRODUCTION_API;
@@ -33,11 +31,14 @@
     if (isLocal) {
         console.log('🌐 Geo Solution - API URL:', window.BASE_API);
         console.log('📱 Environment: Development');
+    } else {
+        console.log('🌐 Geo Solution - API URL:', window.BASE_API);
+        console.log('📱 Environment: Production');
     }
     
     // ✅ Make sure BASE_API is never undefined
     if (!window.BASE_API) {
         console.error('❌ BASE_API is undefined! Using fallback.');
-        window.BASE_API = 'https://geosolutionv2.onrender.com';
+        window.BASE_API = 'https://geosolutionv2.onrender.com/api';
     }
 })();

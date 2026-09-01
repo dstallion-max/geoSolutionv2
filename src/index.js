@@ -51,6 +51,7 @@ const allowedOrigins = [
     'http://localhost:5500',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:5500',
+    'https://geosolutionv2.onrender.com',
 ];
 
 app.use(cors({
@@ -59,7 +60,7 @@ app.use(cors({
         if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
-            if (origin && origin.includes('.onrender.com')) {
+            if (origin && (origin.includes('.onrender.com') || origin.includes('localhost'))) {
                 callback(null, true);
             } else {
                 callback(null, false);
@@ -78,13 +79,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // =============================================
-// STATIC FILES - Serves all frontend files
-// =============================================
-app.use(express.static(path.join(__dirname, '../public')));
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-
-// =============================================
-// HEALTH CHECK
+// ✅ HEALTH CHECK (BEFORE static files)
 // =============================================
 app.get('/api/health', (req, res) => {
     res.json({
@@ -96,12 +91,12 @@ app.get('/api/health', (req, res) => {
 });
 
 // =============================================
-// AUTH ROUTES (No session required)
+// ✅ AUTH ROUTES (BEFORE static files)
 // =============================================
 app.use('/api/auth', authRoutes);
 
 // =============================================
-// PROTECTED ROUTES (Session required)
+// ✅ PROTECTED ROUTES (BEFORE static files)
 // =============================================
 app.use('/api/students', verifySession, studentRoutes);
 app.use('/api/staff', verifySession, staffRoutes);
@@ -112,29 +107,16 @@ app.use('/api/notes', verifySession, notesRoutes);
 app.use('/api/profile', verifySession, profileRoutes);
 
 // =============================================
-// ✅ FALLBACK: Serve index.html for frontend routes (Express 5 compatible)
+// ✅ STATIC FILES (AFTER API routes)
 // =============================================
-app.use((req, res, next) => {
-    // Skip API routes - they should have been handled above
-    if (req.path.startsWith('/api')) {
-        return next();
-    }
-    
-    // Check if the requested file exists in public folder
-    const filePath = path.join(__dirname, '../public', req.path);
-    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-        return next(); // Let express.static handle it
-    }
-    
-    // For all other routes, serve index.html (SPA support)
-    res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+app.use(express.static(path.join(__dirname, '../public')));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // =============================================
-// ✅ 404 HANDLER for API routes (Express 5 compatible - no wildcard)
+// ✅ FALLBACK: Serve index.html for frontend routes ONLY
 // =============================================
 app.use((req, res) => {
-    // Only handle API routes that weren't matched
+    // ✅ If it's an API route, return JSON error
     if (req.path.startsWith('/api')) {
         return res.status(404).json({
             success: false,
@@ -142,8 +124,9 @@ app.use((req, res) => {
             path: req.path
         });
     }
-    // For non-API routes that weren't handled, send 404
-    res.status(404).sendFile(path.join(__dirname, '../public/404.html'));
+    
+    // ✅ For all other routes, serve index.html
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 // =============================================

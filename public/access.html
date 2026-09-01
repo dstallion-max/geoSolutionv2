@@ -392,7 +392,7 @@
 
     <script src="js/config.js"></script>
 <script>
-        const BASE_API = window.BASE_API || 'https://your-backend-url.com/api';
+        const BASE_API = window.BASE_API || 'https://geosolutionv2.onrender.com/api';
         
         const bgImage = document.getElementById('bgImage');
         
@@ -458,11 +458,18 @@
             roleDisplay.className = 'hidden p-3 rounded-lg text-center font-semibold text-sm';
 
             try {
+                // ✅ Use the correct API endpoint
                 const response = await fetch(`${BASE_API}/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, pin })
                 });
+                
+                // ✅ Handle non-JSON responses (like HTML error pages)
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Server returned non-JSON response. Check your backend.');
+                }
                 
                 const data = await response.json();
 
@@ -494,7 +501,7 @@
             } catch (err) {
                 console.error('Login error:', err);
                 errorMsg.classList.remove('hidden');
-                errorText.textContent = '❌ Connection error. Please try again later.';
+                errorText.textContent = '❌ Connection error: ' + err.message;
                 btn.disabled = false;
                 btnText.textContent = 'Access Dashboard';
                 spinner.classList.add('hidden');
