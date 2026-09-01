@@ -20,7 +20,7 @@
     // =============================================
     const LOCAL_API = 'http://localhost:3000/api';
     // ✅ Production: Use relative path (same domain)
-    const PRODUCTION_API = '/api';
+    const PRODUCTION_API = 'https://geosolutionv2.onrender.com';
     // =============================================
 
     // Set the global API base URL
@@ -38,6 +38,6 @@
     // ✅ Make sure BASE_API is never undefined
     if (!window.BASE_API) {
         console.error('❌ BASE_API is undefined! Using fallback.');
-        window.BASE_API = '/api';
+        window.BASE_API = 'https://geosolutionv2.onrender.com';
     }
 })();
