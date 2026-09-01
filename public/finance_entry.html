@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+    <title>Finance Entry | Geo Solution</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0f2b3d",
+                        "primary-container": "#0f2b3d",
+                        "secondary": "#1a5f7a",
+                        "secondary-container": "#a3dfff",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#7993a8",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#21647f",
+                        "on-background": "#1a1c1d",
+                        "on-surface-variant": "#43474c",
+                        "background": "#faf9fa",
+                        "surface": "#faf9fa",
+                        "surface-container": "#efedef",
+                        "surface-container-low": "#f4f3f5",
+                        "surface-container-high": "#e9e8e9",
+                        "surface-container-highest": "#e3e2e4",
+                        "outline": "#73777d",
+                        "outline-variant": "#c3c7cc",
+                        "error": "#e63946",
+                        "success": "#2d9b4e",
+                        "warning": "#f4a261",
+                        "tertiary": "#211000",
+                        "tertiary-fixed": "#ffdcbd",
+                        "on-tertiary-fixed-variant": "#5e4122",
+                        "primary-fixed": "#cbe6fe",
+                        "secondary-fixed": "#c0e8ff",
+                        "on-secondary-fixed": "#001e2b",
+                        "surface-dim": "#dbdadb",
+                        "surface-bright": "#faf9fa",
+                        "surface-tint": "#486175",
+                        "surface-variant": "#e3e2e4",
+                        "inverse-surface": "#2f3032",
+                        "inverse-on-surface": "#f1f0f2",
+                        "inverse-primary": "#afcae1",
+                        "tertiary-container": "#3b2307",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#2c1600",
+                        "on-tertiary-container": "#ad8864",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#92cfee",
+                        "primary-fixed-dim": "#afcae1",
+                        "on-primary-fixed": "#001e2f",
+                        "on-primary-fixed-variant": "#30495d",
+                        "on-secondary-fixed-variant": "#004d66"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "margin-mobile": "16px",
+                        "lg": "40px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "xl": "64px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "margin-desktop": "48px"
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    fontSize: {
+                        'headline-lg-mobile': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+                        'headline-xl': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '700' }],
+                        'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '700' }],
+                        'headline-md': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+                        'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+                        'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+                        'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+                        'label-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+                        'label-md': ['14px', { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '600' }]
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background: #faf9fa;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(15, 43, 61, 0.06);
+            box-shadow: 0 2px 16px -2px rgba(15, 43, 61, 0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(0, 180, 216, 0.1);
+            box-shadow: 0 4px 24px -4px rgba(15, 43, 61, 0.1);
+        }
+        
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #0f2b3d;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .admin-sidebar .brand {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .admin-sidebar .brand h1 {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            margin: 0;
+        }
+        
+        .admin-sidebar .brand p {
+            font-size: 12px;
+            color: rgba(192, 232, 255, 0.6);
+            margin: 2px 0 0;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        .admin-sidebar .cta-btn {
+            margin: 16px 24px 20px;
+            padding: 12px 16px;
+            background: #c0e8ff;
+            color: #001e2b;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-sidebar .cta-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(192, 232, 255, 0.3);
+        }
+        
+        .admin-sidebar .cta-btn .material-symbols-outlined {
+            font-size: 20px;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 8px 12px;
+            overflow-y: auto;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: rgba(192, 232, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            margin-bottom: 2px;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.06);
+            color: #ffffff;
+        }
+        
+        .sidebar-nav a.active {
+            background: #001624;
+            color: #c0e8ff;
+            font-weight: 700;
+            border-right: 4px solid #00b4d8;
+        }
+        
+        .sidebar-nav a .material-symbols-outlined {
+            font-size: 22px;
+        }
+        
+        .sidebar-profile {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: auto;
+        }
+        
+        .sidebar-profile .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(192, 232, 255, 0.3);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-profile .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .sidebar-profile .info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .sidebar-profile .info .name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            display: block;
+            line-height: 1.2;
+        }
+        
+        .sidebar-profile .info .email {
+            font-size: 11px;
+            color: rgba(192, 232, 255, 0.5);
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .sidebar-profile .logout-btn {
+            background: none;
+            border: none;
+            color: rgba(192, 232, 255, 0.5);
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.3s;
+            font-size: 20px;
+        }
+        
+        .sidebar-profile .logout-btn:hover {
+            color: #ffffff;
+        }
+        
+        .admin-main {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 260px;
+            right: 0;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(195, 199, 204, 0.15);
+            z-index: 99;
+        }
+        
+        .top-nav .search-wrap {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .top-nav .search-wrap .material-symbols-outlined {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #73777d;
+            font-size: 20px;
+        }
+        
+        .top-nav .search-wrap input {
+            width: 100%;
+            padding: 9px 16px 9px 44px;
+            border: none;
+            border-radius: 50px;
+            background: #f4f3f5;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            outline: none;
+        }
+        
+        .top-nav .search-wrap input:focus {
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.15);
+        }
+        
+        .top-nav .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .top-nav .nav-actions .icon-btn {
+            position: relative;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #73777d;
+            transition: color 0.3s;
+            padding: 4px;
+        }
+        
+        .top-nav .nav-actions .icon-btn:hover {
+            color: #0f2b3d;
+        }
+        
+        .top-nav .nav-actions .icon-btn .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: #e63946;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .top-nav .nav-actions .material-symbols-outlined {
+            font-size: 24px;
+        }
+        
+        .dashboard-content {
+            padding: 80px 32px 48px;
+            flex: 1;
+            max-width: 1440px;
+            width: 100%;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f2b3d;
+            line-height: 1.2;
+        }
+        
+        .stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-income { border-left: 4px solid #2d9b4e; }
+        .stat-expense { border-left: 4px solid #e63946; }
+        .stat-profit { border-left: 4px solid #00b4d8; }
+        
+        .transaction-item {
+            transition: all 0.2s ease;
+        }
+        
+        .transaction-item:hover {
+            background: rgba(15, 43, 61, 0.02);
+        }
+        
+        .trans-icon-income {
+            background: rgba(45, 155, 78, 0.12);
+            color: #2d9b4e;
+        }
+        
+        .trans-icon-expense {
+            background: rgba(230, 57, 70, 0.12);
+            color: #e63946;
+        }
+        
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #ffffff;
+            padding: 4px;
+        }
+        
+        .hamburger-btn .material-symbols-outlined {
+            font-size: 28px;
+        }
+        
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(195,199,204,0.15);
+            padding: 6px 8px;
+            justify-content: space-around;
+        }
+        
+        .mobile-bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 4px 12px;
+            transition: color 0.2s;
+        }
+        
+        .mobile-bottom-nav a.active {
+            color: #0f2b3d;
+        }
+        
+        .mobile-bottom-nav a .material-symbols-outlined {
+            font-size: 24px;
+        }
+        
+        .mobile-bottom-nav a span:last-child {
+            margin-top: 2px;
+        }
+        
+        @media (max-width: 1024px) {
+            .top-nav {
+                padding: 0 20px;
+            }
+            .dashboard-content {
+                padding: 80px 20px 48px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .top-nav {
+                left: 0;
+                width: 100%;
+                padding: 0 16px;
+                background: #0f2b3d;
+                border-bottom: none;
+            }
+            
+            .top-nav .search-wrap input {
+                background: rgba(255, 255, 255, 0.12);
+                color: #ffffff;
+            }
+            
+            .top-nav .search-wrap input::placeholder {
+                color: rgba(255, 255, 255, 0.5);
+            }
+            
+            .top-nav .search-wrap .material-symbols-outlined {
+                color: rgba(255, 255, 255, 0.5);
+            }
+            
+            .top-nav .nav-actions .icon-btn {
+                color: rgba(255, 255, 255, 0.7);
+            }
+            
+            .top-nav .nav-actions .icon-btn:hover {
+                color: #ffffff;
+            }
+            
+            .hamburger-btn {
+                display: block;
+            }
+            
+            .dashboard-content {
+                padding: 80px 16px 80px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            
+            .stat-number {
+                font-size: 22px !important;
+            }
+            
+            .stat-card {
+                padding: 12px 14px !important;
+            }
+            
+            .filter-bar {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            
+            .filter-bar .search-wrap {
+                width: 100% !important;
+            }
+            
+            .page-header h2 {
+                font-size: 22px !important;
+            }
+            
+            .mobile-bottom-nav {
+                display: flex !important;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .date-nav {
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 8px !important;
+            }
+            
+            .date-nav .date-display {
+                order: -1 !important;
+                width: 100% !important;
+                text-align: center !important;
+                margin-bottom: 4px !important;
+                font-size: 14px !important;
+            }
+            
+            .date-nav button {
+                padding: 6px 14px !important;
+                font-size: 12px !important;
+                flex: 1 !important;
+                min-width: 60px !important;
+                justify-content: center !important;
+            }
+            
+            .controls {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 8px !important;
+            }
+            
+            .controls .left {
+                text-align: center !important;
+            }
+            
+            .controls .left h3 {
+                font-size: 14px !important;
+            }
+            
+            .controls .left p {
+                font-size: 11px !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                gap: 8px !important;
+            }
+            
+            .stat-number {
+                font-size: 20px !important;
+            }
+            
+            .stat-label {
+                font-size: 9px !important;
+            }
+            
+            .date-nav button {
+                padding: 4px 10px !important;
+                font-size: 11px !important;
+                min-width: 50px !important;
+            }
+            
+            .date-nav .date-display {
+                font-size: 13px !important;
+            }
+        }
+        
+        .admin-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideUp 0.3s ease;
+        }
+        
+        @keyframes modalSlideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f2b3d;
+            margin: 0 0 4px;
+        }
+        
+        .modal .sub {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0 0 20px;
+        }
+        
+        .modal .form-group {
+            margin-bottom: 14px;
+        }
+        
+        .modal .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        
+        .modal .form-group input,
+        .modal .form-group select,
+        .modal .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+            transition: border 0.3s;
+            outline: none;
+        }
+        
+        .modal .form-group input:focus,
+        .modal .form-group select:focus,
+        .modal .form-group textarea:focus {
+            border-color: #1a5f7a;
+            box-shadow: 0 0 0 3px rgba(26, 95, 122, 0.1);
+        }
+        
+        .modal .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .modal .btn-row button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal .btn-save {
+            background: #0f2b3d;
+            color: #ffffff;
+        }
+        
+        .modal .btn-save:hover {
+            background: #1a5f7a;
+        }
+        
+        .modal .btn-cancel {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        
+        .modal .btn-cancel:hover {
+            background: #cbd5e1;
+        }
+        
+        .search-hint {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+        
+        .date-nav-btn {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .date-nav-btn:hover {
+            background: rgba(15, 43, 61, 0.06);
+        }
+        
+        .date-nav-btn.active {
+            background: #0f2b3d;
+            color: #ffffff;
+        }
+        
+        .date-nav-btn.active:hover {
+            background: #0f2b3d;
+        }
+    </style>
+</head>
+<body>
+    <!-- ========================================== -->
+    <!-- SIDEBAR -->
+    <!-- ========================================== -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">
+            <h1>Geo Solution</h1>
+            <p>Management Portal</p>
+        </div>
+        
+        <button class="cta-btn" id="registerStudentBtn">
+            <span class="material-symbols-outlined">person_add</span>
+            Register Student
+        </button>
+        
+        <nav class="sidebar-nav">
+            <a href="/secretary_dashboard.html" id="navDashboard">
+                <span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+            <a href="/attendance.html" id="navAttendance">
+                <span class="material-symbols-outlined">how_to_reg</span>
+                Attendance
+            </a>
+            <a href="/records.html" id="navRecords">
+                <span class="material-symbols-outlined">description</span>
+                Records
+            </a>
+            <a href="/staff_attendance.html" id="navStaffRegister">
+                <span class="material-symbols-outlined">badge</span>
+                Staff Register
+            </a>
+            <a href="/finance_entry.html" class="active" id="navFinance">
+                <span class="material-symbols-outlined">payments</span>
+                Finance Entry
+            </a>
+            <a href="/notes.html" id="navNotes">
+                <span class="material-symbols-outlined">sticky_note_2</span>
+                Notes
+            </a>
+        </nav>
+        
+        <div class="sidebar-profile">
+            <div class="avatar">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvyQrFZksp73Ep6rIdj776lYrYsU4f143Q73jsCGSmyiydMEmnCXpqwFq6Sw7hcHGuhmOQE2Jcra2ltjctVbIPf-NcOHqWlrjinQ1rgsRhN1CCeNectGRuUHLXEZ5RePP7SgW69LHZS1vYGeDxYl3kK3YcafIDsS3k47LpOfeQHf2cYo8MZaT3Ye5mru1vwvMPxSYTKg5o7Q5YM1CVmPy1BvWeRCwhmA0s34ML8xQPf3fT1bYgSdFsS5llH-gN48mqP9b1s0Hpe4jp" alt="User">
+            </div>
+            <div class="info">
+                <span class="name" id="userName">Secretary</span>
+                <span class="email" id="userEmail">secretary@email.com</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn" title="Logout">
+                <span class="material-symbols-outlined">logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================================== -->
+    <main class="admin-main">
+        <header class="top-nav">
+            <button class="hamburger-btn" id="sidebarToggle">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            
+            <!-- 🔍 GLOBAL SEARCH - Top Nav -->
+            <div class="search-wrap">
+                <span class="material-symbols-outlined">search</span>
+                <input type="text" placeholder=" Search transactions by description or customer..." id="globalSearch">
+            </div>
+            
+            <div class="nav-actions">
+                <button class="icon-btn" id="notificationsBtn">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="badge" id="notificationBadge">0</span>
+                </button>
+                <button class="icon-btn" id="helpBtn">
+                    <span class="material-symbols-outlined">help</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <!-- Page Header -->
+            <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+                <div>
+                    <h2 style="font-size:32px; font-weight:700; color:#0f2b3d; margin:0;">💰 Finance Entry</h2>
+                    <p style="font-size:16px; color:#64748b; margin:4px 0 0; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">calendar_today</span>
+                        <span id="dateDisplay">Today: Loading...</span>
+                    </p>
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button id="addIncomeBtn" style="padding:10px 20px; background:#2d9b4e; color:#ffffff; border:none; border-radius:12px; font-weight:600; font-size:14px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:8px;">
+                        <span class="material-symbols-outlined" style="font-size:20px;">add</span>
+                        Add Income
+                    </button>
+                    <button id="addExpenseBtn" style="padding:10px 20px; background:#e63946; color:#ffffff; border:none; border-radius:12px; font-weight:600; font-size:14px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:8px;">
+                        <span class="material-symbols-outlined" style="font-size:20px;">add</span>
+                        Add Expense
+                    </button>
+                </div>
+            </div>
+
+            <!-- 📅 DATE NAVIGATION -->
+            <div class="glass-card date-nav" style="padding:12px 18px; border-radius:14px; margin-bottom:24px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <button class="date-nav-btn" id="prevDayBtn" style="padding:6px 16px; border:1px solid rgba(195,199,204,0.3); border-radius:8px; background:transparent; cursor:pointer; font-size:13px; font-weight:500; color:#0f2b3d; transition:all 0.3s; display:flex; align-items:center; gap:4px;">
+                    <span class="material-symbols-outlined" style="font-size:18px;">chevron_left</span>
+                    <span class="nav-label">Yesterday</span>
+                </button>
+                
+                <div class="date-display" style="flex:1; text-align:center; font-size:16px; font-weight:600; color:#0f2b3d;">
+                    <span id="displayDate">Loading...</span>
+                </div>
+                
+                <button class="date-nav-btn" id="nextDayBtn" style="padding:6px 16px; border:1px solid rgba(195,199,204,0.3); border-radius:8px; background:transparent; cursor:pointer; font-size:13px; font-weight:500; color:#0f2b3d; transition:all 0.3s; display:flex; align-items:center; gap:4px;">
+                    <span class="nav-label">Tomorrow</span>
+                    <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
+                </button>
+                
+                <button class="date-nav-btn active" id="todayBtn" style="padding:6px 16px; border:none; border-radius:8px; background:#0f2b3d; color:#ffffff; cursor:pointer; font-size:13px; font-weight:600; transition:all 0.3s;">
+                    Today
+                </button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; width:100%;">
+                <div class="glass-card stat-card stat-income" style="padding:16px 18px; border-radius:14px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span class="material-symbols-outlined" style="color:#2d9b4e; font-size:24px;">account_balance_wallet</span>
+                        <span style="font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; color:#2d9b4e; background:rgba(45,155,78,0.1);">Period</span>
+                    </div>
+                    <div class="stat-number" id="totalIncome">₦0</div>
+                    <div class="stat-label">Total Income</div>
+                </div>
+
+                <div class="glass-card stat-card stat-expense" style="padding:16px 18px; border-radius:14px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span class="material-symbols-outlined" style="color:#e63946; font-size:24px;">payments</span>
+                        <span style="font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; color:#e63946; background:rgba(230,57,70,0.1);">Period</span>
+                    </div>
+                    <div class="stat-number" id="totalExpense">₦0</div>
+                    <div class="stat-label">Total Expenses</div>
+                </div>
+
+                <div class="glass-card stat-card stat-profit" style="padding:16px 18px; border-radius:14px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span class="material-symbols-outlined" style="color:#00b4d8; font-size:24px;">trending_up</span>
+                        <span style="font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; color:#2d9b4e; background:rgba(45,155,78,0.1);" id="profitTrend">+0%</span>
+                    </div>
+                    <div class="stat-number" id="netProfit">₦0</div>
+                    <div class="stat-label">Net Profit</div>
+                </div>
+            </div>
+
+            <!-- 🔍 PAGE-SPECIFIC SEARCH + DROPDOWNS -->
+            <div class="glass-card filter-bar" style="padding:14px 18px; border-radius:14px; margin-bottom:16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                <div class="search-wrap" style="flex:1; min-width:180px; position:relative;">
+                    <span class="material-symbols-outlined" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#73777d; font-size:20px;">search</span>
+                    <input type="text" id="pageSearch" placeholder="Search by description or customer..." style="width:100%; padding:9px 12px 9px 40px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:14px; outline:none; font-family:'Inter',sans-serif; transition:border 0.3s;">
+                </div>
+                <span class="search-hint">Search within this page's transactions</span>
+                
+                <!-- ✅ Period Filter Dropdown -->
+                <select id="periodFilter" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:140px;">
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="week">This Week</option>
+                </select>
+                
+                <!-- ✅ Type Filter Dropdown -->
+                <select id="filterType" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:140px;">
+                    <option value="all">All Types</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+                
+                <button id="refreshBtn" style="padding:8px 16px; background:rgba(26,95,122,0.1); color:#1a5f7a; border:none; border-radius:10px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:6px;">
+                    <span class="material-symbols-outlined" style="font-size:18px;">refresh</span>
+                    Refresh
+                </button>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+                <div class="left">
+                    <h3 style="font-size:16px; font-weight:600; color:#0f2b3d; margin:0;" id="dateLabel2">Loading...</h3>
+                    <p style="font-size:12px; color:#64748b; margin:2px 0 0;">Transactions Log</p>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button id="downloadBtn" style="padding:6px 12px; background:#2d9b4e; color:#ffffff; border:none; border-radius:8px; font-weight:600; font-size:11px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:4px;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">download</span>
+                        CSV
+                    </button>
+                    <span style="font-size:13px; color:#64748b;" id="transactionCount">0 transactions</span>
+                </div>
+            </div>
+
+            <!-- Transactions List -->
+            <div class="glass-card" style="border-radius:14px; overflow:hidden;">
+                <div style="padding:14px 18px; border-bottom:1px solid rgba(195,199,204,0.15); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <h3 style="font-size:16px; font-weight:600; color:#0f2b3d; margin:0;">📋 Transactions</h3>
+                </div>
+                <div id="transactionList" style="padding:4px 0;">
+                    <div style="text-align:center; padding:30px; color:#94a3b8;">Loading transactions...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODAL -->
+    <!-- ========================================== -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h2 id="modalTitle">💰 Add Income</h2>
+            <p class="sub" id="modalSub">Record a new income transaction</p>
+            <form id="financeForm">
+                <div class="form-group" id="categoryGroup">
+                    <label>Category *</label>
+                    <select id="category" required>
+                        <option value="">Select category...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Customer Name *</label>
+                    <input type="text" id="customerName" placeholder="Enter customer name" required>
+                </div>
+                <div class="form-group">
+                    <label>Amount (₦) *</label>
+                    <input type="number" id="amount" placeholder="e.g. 5000" required step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="method">
+                        <option value="cash">Cash</option>
+                        <option value="transfer">Transfer</option>
+                        <option value="cheque">Cheque</option>
+                        <option value="online">Online</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="description" placeholder="e.g. John Doe - Training Fee">
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="transactionDate">
+                </div>
+                <div class="btn-row">
+                    <button type="submit" class="btn-save" id="saveBtn">💾 Save</button>
+                    <button type="button" class="btn-cancel" id="closeModalBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCRIPTS -->
+    <!-- ========================================== -->
+    <script src="js/config.js"></script>
+    <script>
+        // =============================================
+        // ✅ CSP-COMPLIANT - NO INLINE EVENT HANDLERS
+        // =============================================
+        
+        const BASE_API = window.BASE_API;
+        let currentDate = new Date();
+        let allTransactions = [];
+        let editingId = null;
+
+        // =============================================
+        // ✅ CATEGORIES
+        // =============================================
+        const CATEGORIES = {
+            income: ['Training Fees', 'Exam Fees', 'Consultation', 'Other Income'],
+            expense: ['Salaries', 'Utilities', 'Supplies', 'Maintenance', 'Rent', 'Miscellaneous']
+        };
+
+        let currentType = 'income';
+
+        // =============================================
+        // ✅ AUTH
+        // =============================================
+        (async function protectPage() {
+            try {
+                const response = await fetch(`${BASE_API}/auth/check-session`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (!data.valid) {
+                    window.location.href = 'access.html';
+                    return;
+                }
+                
+                if (data.role !== 'secretary' && data.role !== 'admin') {
+                    window.location.href = 'access.html';
+                    return;
+                }
+                
+                document.getElementById('userName').textContent = data.name || data.email.split('@')[0];
+                document.getElementById('userEmail').textContent = data.email;
+                
+            } catch (err) {
+                console.error('Auth error:', err.message);
+                window.location.href = 'access.html';
+            }
+        })();
+
+        // =============================================
+        // ✅ NAVIGATION HELPERS
+        // =============================================
+        function navigateTo(url) {
+            window.location.href = url;
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch(`${BASE_API}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                .then(() => {
+                    window.location.href = 'access.html';
+                })
+                .catch(() => {
+                    window.location.href = 'access.html';
+                });
+            }
+        }
+
+        function formatNumber(num) {
+            return Number(num).toLocaleString('en-US', { 
+                minimumFractionDigits: 0, 
+                maximumFractionDigits: 0 
+            });
+        }
+
+        // =============================================
+        // ✅ DATE HELPERS
+        // =============================================
+        function getDateString(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function formatDisplayDate(date) {
+            return date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function updateDateDisplay() {
+            const dateStr = formatDisplayDate(currentDate);
+            document.getElementById('dateDisplay').textContent = 'Date: ' + dateStr;
+            document.getElementById('displayDate').textContent = dateStr;
+            document.getElementById('dateLabel2').textContent = dateStr;
+        }
+
+        function changeDate(days) {
+            const newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() + days);
+            currentDate = newDate;
+            updateDateDisplay();
+            renderTransactions();
+        }
+
+        function goToday() {
+            currentDate = new Date();
+            updateDateDisplay();
+            renderTransactions();
+        }
+
+        // =============================================
+        // ✅ MODAL CONTROLS
+        // =============================================
+        function openModal(type) {
+            currentType = type;
+            editingId = null;
+            document.getElementById('modal').classList.add('active');
+            document.getElementById('modalTitle').textContent = type === 'income' ? '💰 Add Income' : '💸 Add Expense';
+            document.getElementById('modalSub').textContent = type === 'income' ? 'Record a new income transaction' : 'Record a new expense transaction';
+            document.getElementById('financeForm').reset();
+            document.getElementById('transactionDate').value = getDateString(currentDate);
+            
+            const select = document.getElementById('category');
+            select.innerHTML = '<option value="">Select category...</option>';
+            CATEGORIES[type].forEach(cat => {
+                select.innerHTML += `<option value="${cat}">${cat}</option>`;
+            });
+            
+            const saveBtn = document.querySelector('.btn-save');
+            saveBtn.style.background = type === 'income' ? '#2d9b4e' : '#e63946';
+            saveBtn.textContent = '💾 Save';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.getElementById('financeForm').reset();
+        }
+
+        // =============================================
+        // ✅ RENDER TRANSACTIONS
+        // =============================================
+        window.renderTransactions = async function() {
+            // ✅ Get search values from BOTH search bars
+            const globalSearchVal = document.getElementById('globalSearch').value.trim().toLowerCase();
+            const pageSearchVal = document.getElementById('pageSearch').value.trim().toLowerCase();
+            const searchVal = globalSearchVal || pageSearchVal;
+            
+            const period = document.getElementById('periodFilter').value;
+            const typeFilter = document.getElementById('filterType').value;
+            const container = document.getElementById('transactionList');
+            
+            // ✅ Map period to API endpoint
+            const endpointMap = {
+                'today': '/finance/today',
+                'yesterday': '/finance/today', // Will filter by date in code
+                'week': '/finance/week'
+            };
+            
+            try {
+                // ✅ Use currentDate for the API call
+                const dateStr = getDateString(currentDate);
+                
+                // For specific date, we need to use the date endpoint
+                let endpoint = BASE_API + endpointMap[period] || BASE_API + '/finance/today';
+                let response = await fetch(endpoint);
+                let result = await response.json();
+                
+                if (response.ok) {
+                    let transactions = result.transactions || [];
+                    
+                    // ✅ If "yesterday", filter by yesterday's date
+                    if (period === 'yesterday') {
+                        const yesterday = new Date(currentDate);
+                        yesterday.setDate(yesterday.getDate() - 1);
+                        const yesterdayStr = getDateString(yesterday);
+                        transactions = transactions.filter(t => t.transaction_date === yesterdayStr);
+                    }
+                    
+                    // ✅ For "today", filter by current date
+                    if (period === 'today') {
+                        transactions = transactions.filter(t => t.transaction_date === dateStr);
+                    }
+                    
+                    // Filter by type
+                    if (typeFilter !== 'all') {
+                        transactions = transactions.filter(t => t.transaction_type === typeFilter);
+                    }
+                    
+                    // Filter by search
+                    if (searchVal) {
+                        transactions = transactions.filter(t => 
+                            (t.description && t.description.toLowerCase().includes(searchVal)) ||
+                            (t.category && t.category.toLowerCase().includes(searchVal)) ||
+                            (t.customer_name && t.customer_name.toLowerCase().includes(searchVal))
+                        );
+                    }
+                    
+                    // Update stats
+                    const totalIncome = transactions
+                        .filter(t => t.transaction_type === 'income')
+                        .reduce((sum, t) => sum + (t.amount || 0), 0);
+                    const totalExpense = transactions
+                        .filter(t => t.transaction_type === 'expense')
+                        .reduce((sum, t) => sum + (t.amount || 0), 0);
+                    
+                    document.getElementById('totalIncome').textContent = '₦' + formatNumber(totalIncome);
+                    document.getElementById('totalExpense').textContent = '₦' + formatNumber(totalExpense);
+                    document.getElementById('netProfit').textContent = '₦' + formatNumber(totalIncome - totalExpense);
+                    
+                    renderTransactionList(transactions);
+                } else {
+                    container.innerHTML = `
+                        <div style="text-align:center; padding:30px; color:#94a3b8;">
+                            <span class="material-symbols-outlined" style="font-size:48px; display:block; margin-bottom:12px;">receipt_long</span>
+                            <p>No transactions found.</p>
+                            <p style="font-size:13px;">Click "Add Income" or "Add Expense" to record.</p>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error('Error loading transactions:', err);
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px; color:#e63946;">
+                        ❌ Error loading transactions. Please try again.
+                    </div>
+                `;
+            }
+        };
+
+        function renderTransactionList(transactions) {
+            const container = document.getElementById('transactionList');
+            document.getElementById('transactionCount').textContent = transactions.length + ' transactions';
+            document.getElementById('notificationBadge').textContent = transactions.length;
+            
+            if (!transactions || transactions.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px; color:#94a3b8;">
+                        <span class="material-symbols-outlined" style="font-size:48px; display:block; margin-bottom:12px;">receipt_long</span>
+                        <p>No transactions found.</p>
+                        <p style="font-size:13px;">Click "Add Income" or "Add Expense" to record.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            transactions.forEach((t, index) => {
+                const isIncome = t.transaction_type === 'income';
+                const sign = isIncome ? '+' : '-';
+                const icon = isIncome ? '📈' : '📉';
+                const iconClass = isIncome ? 'trans-icon-income' : 'trans-icon-expense';
+                const customerName = t.customer_name || '—';
+                const amountColor = isIncome ? '#2d9b4e' : '#e63946';
+                const dateDisplay = t.transaction_date || '—';
+                
+                html += `
+                    <div class="transaction-item" style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px; border-bottom:1px solid rgba(195,199,204,0.08);">
+                        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; flex:1;">
+                            <div style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; ${iconClass === 'trans-icon-income' ? 'background:rgba(45,155,78,0.12); color:#2d9b4e;' : 'background:rgba(230,57,70,0.12); color:#e63946;'}">
+                                <span style="font-size:18px;">${icon}</span>
+                            </div>
+                            <div>
+                                <div style="font-weight:600; color:#0f2b3d; font-size:14px;">${t.category}</div>
+                                <div style="font-size:12px; color:#64748b;">${customerName} • ${t.description || 'No description'} • ${dateDisplay}</div>
+                            </div>
+                            <span style="font-size:10px; color:#94a3b8; background:#f1f5f9; padding:2px 10px; border-radius:10px;">${t.payment_method || 'cash'}</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="font-weight:700; font-size:15px; color:${amountColor};">${sign}₦${formatNumber(t.amount)}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // =============================================
+        // ✅ FINANCE FORM SUBMIT
+        // =============================================
+        document.getElementById('financeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const type = currentType;
+            const category = document.getElementById('category').value;
+            const customer_name = document.getElementById('customerName').value.trim();
+            const amount = parseFloat(document.getElementById('amount').value);
+            const method = document.getElementById('method').value;
+            const description = document.getElementById('description').value;
+            const date = document.getElementById('transactionDate').value;
+
+            if (!category || !customer_name || !amount || amount <= 0) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const data = {
+                type: type,
+                category: category,
+                customer_name: customer_name,
+                amount: amount,
+                method: method,
+                description: description,
+                date: date
+            };
+
+            try {
+                const response = await fetch(`${BASE_API}/finance/add`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('✅ ' + (type === 'income' ? 'Income' : 'Expense') + ' added successfully!');
+                    closeModal();
+                    renderTransactions();
+                } else {
+                    alert('❌ Error: ' + result.error);
+                }
+            } catch (err) {
+                alert('❌ Error: ' + err.message);
+            }
+        });
+
+        // =============================================
+        // ✅ DOWNLOAD CSV
+        // =============================================
+        window.downloadCSV = function() {
+            const container = document.getElementById('transactionList');
+            const items = container.querySelectorAll('.transaction-item');
+            
+            if (items.length === 0) {
+                alert('No transactions to download.');
+                return;
+            }
+
+            const dateStr = getDateString(currentDate);
+            let csvContent = "Date,Category,Customer Name,Amount,Method,Description,Type\n";
+
+            items.forEach(item => {
+                const cells = item.querySelectorAll('div');
+                const category = cells[1]?.querySelector('div:first-child')?.textContent?.trim() || '';
+                const customerAndDesc = cells[1]?.querySelector('div:nth-child(2)')?.textContent?.trim() || '';
+                const customerName = customerAndDesc.split('•')[0]?.trim() || '';
+                const description = customerAndDesc.split('•')[1]?.trim() || '';
+                const date = customerAndDesc.split('•')[2]?.trim() || '';
+                const method = cells[1]?.querySelector('span')?.textContent?.trim() || '';
+                const amountText = cells[2]?.querySelector('div')?.textContent?.trim() || '';
+                const type = amountText.includes('+') ? 'Income' : 'Expense';
+                const amount = amountText.replace(/[+−₦]/g, '').trim();
+                
+                csvContent += `"${date}","${category}","${customerName}","${amount}","${method}","${description}","${type}"\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `Geo_Solution_Finance_${dateStr}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        // =============================================
+        // ✅ EVENT LISTENERS (CSP COMPLIANT)
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Initial date ---
+            updateDateDisplay();
+            
+            // --- Sidebar toggle ---
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
+
+            // --- Logout ---
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', handleLogout);
+            }
+
+            // --- Register Student ---
+            const registerBtn = document.getElementById('registerStudentBtn');
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function() {
+                    navigateTo('registration.html');
+                });
+            }
+
+            // --- Navigation links ---
+            const navLinks = {
+                'navDashboard': '/secretary_dashboard.html',
+                'navAttendance': '/attendance.html',
+                'navRecords': '/records.html',
+                'navStaffRegister': '/staff_attendance.html',
+                'navFinance': '/finance_entry.html',
+                'navNotes': '/notes.html'
+            };
+
+            Object.keys(navLinks).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo(navLinks[id]);
+                    });
+                }
+            });
+
+            // --- Date Navigation ---
+            const prevDayBtn = document.getElementById('prevDayBtn');
+            if (prevDayBtn) {
+                prevDayBtn.addEventListener('click', function() {
+                    changeDate(-1);
+                });
+            }
+
+            const nextDayBtn = document.getElementById('nextDayBtn');
+            if (nextDayBtn) {
+                nextDayBtn.addEventListener('click', function() {
+                    changeDate(1);
+                });
+            }
+
+            const todayBtn = document.getElementById('todayBtn');
+            if (todayBtn) {
+                todayBtn.addEventListener('click', goToday);
+            }
+
+            // --- Add Income ---
+            const addIncomeBtn = document.getElementById('addIncomeBtn');
+            if (addIncomeBtn) {
+                addIncomeBtn.addEventListener('click', function() {
+                    openModal('income');
+                });
+            }
+
+            // --- Add Expense ---
+            const addExpenseBtn = document.getElementById('addExpenseBtn');
+            if (addExpenseBtn) {
+                addExpenseBtn.addEventListener('click', function() {
+                    openModal('expense');
+                });
+            }
+
+            // --- Close Modal ---
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', closeModal);
+            }
+
+            // --- Close modal on overlay click ---
+            const modal = document.getElementById('modal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) closeModal();
+                });
+            }
+
+            // --- 🔍 GLOBAL SEARCH (Top Nav) ---
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('keyup', renderTransactions);
+            }
+
+            // --- 🔍 PAGE-SPECIFIC SEARCH (Filter Bar) ---
+            const pageSearch = document.getElementById('pageSearch');
+            if (pageSearch) {
+                pageSearch.addEventListener('keyup', renderTransactions);
+            }
+
+            // --- Period Filter ---
+            const periodFilter = document.getElementById('periodFilter');
+            if (periodFilter) {
+                periodFilter.addEventListener('change', renderTransactions);
+            }
+
+            // --- Type Filter ---
+            const filterType = document.getElementById('filterType');
+            if (filterType) {
+                filterType.addEventListener('change', renderTransactions);
+            }
+
+            // --- Refresh buttons ---
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', renderTransactions);
+            }
+
+            // --- Download CSV ---
+            const downloadBtn = document.getElementById('downloadBtn');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', downloadCSV);
+            }
+
+            // --- Notifications ---
+            const notifBtn = document.getElementById('notificationsBtn');
+            if (notifBtn) {
+                notifBtn.addEventListener('click', function() {
+                    navigateTo('notes.html');
+                });
+            }
+
+            // --- Help ---
+            const helpBtn = document.getElementById('helpBtn');
+            if (helpBtn) {
+                helpBtn.addEventListener('click', function() {
+                    navigateTo('finance_entry.html');
+                });
+            }
+
+            // --- Load initial data ---
+            renderTransactions();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(renderTransactions, 30000);
+        });
+    </script>
+</body>
+</html>

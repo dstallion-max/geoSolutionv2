@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+    <title>Staff Management | Geo Solution</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+   
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0f2b3d",
+                        "primary-container": "#0f2b3d",
+                        "secondary": "#1a5f7a",
+                        "secondary-container": "#a3dfff",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#7993a8",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#21647f",
+                        "on-background": "#1a1c1d",
+                        "on-surface-variant": "#43474c",
+                        "background": "#faf9fa",
+                        "surface": "#faf9fa",
+                        "surface-container": "#efedef",
+                        "surface-container-low": "#f4f3f5",
+                        "surface-container-high": "#e9e8e9",
+                        "surface-container-highest": "#e3e2e4",
+                        "outline": "#73777d",
+                        "outline-variant": "#c3c7cc",
+                        "error": "#e63946",
+                        "success": "#2d9b4e",
+                        "warning": "#f4a261",
+                        "tertiary": "#211000",
+                        "tertiary-fixed": "#ffdcbd",
+                        "on-tertiary-fixed-variant": "#5e4122",
+                        "primary-fixed": "#cbe6fe",
+                        "secondary-fixed": "#c0e8ff",
+                        "on-secondary-fixed": "#001e2b",
+                        "surface-dim": "#dbdadb",
+                        "surface-bright": "#faf9fa",
+                        "surface-tint": "#486175",
+                        "surface-variant": "#e3e2e4",
+                        "inverse-surface": "#2f3032",
+                        "inverse-on-surface": "#f1f0f2",
+                        "inverse-primary": "#afcae1",
+                        "tertiary-container": "#3b2307",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#2c1600",
+                        "on-tertiary-container": "#ad8864",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#92cfee",
+                        "primary-fixed-dim": "#afcae1",
+                        "on-primary-fixed": "#001e2f",
+                        "on-primary-fixed-variant": "#30495d",
+                        "on-secondary-fixed-variant": "#004d66"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "margin-mobile": "16px",
+                        "lg": "40px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "xl": "64px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "margin-desktop": "48px"
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    fontSize: {
+                        'headline-lg-mobile': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+                        'headline-xl': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '700' }],
+                        'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '700' }],
+                        'headline-md': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+                        'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+                        'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+                        'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+                        'label-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+                        'label-md': ['14px', { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '600' }]
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background: #faf9fa;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(15, 43, 61, 0.06);
+            box-shadow: 0 2px 16px -2px rgba(15, 43, 61, 0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(0, 180, 216, 0.1);
+            box-shadow: 0 4px 24px -4px rgba(15, 43, 61, 0.1);
+        }
+        
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #0f2b3d;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .admin-sidebar .brand {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .admin-sidebar .brand h1 {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            margin: 0;
+        }
+        
+        .admin-sidebar .brand p {
+            font-size: 12px;
+            color: rgba(192, 232, 255, 0.6);
+            margin: 2px 0 0;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        .admin-sidebar .cta-btn {
+            margin: 16px 24px 20px;
+            padding: 12px 16px;
+            background: #c0e8ff;
+            color: #001e2b;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-sidebar .cta-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(192, 232, 255, 0.3);
+        }
+        
+        .admin-sidebar .cta-btn .material-symbols-outlined {
+            font-size: 20px;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 8px 12px;
+            overflow-y: auto;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: rgba(192, 232, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            margin-bottom: 2px;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.06);
+            color: #ffffff;
+        }
+        
+        .sidebar-nav a.active {
+            background: #001624;
+            color: #c0e8ff;
+            font-weight: 700;
+            border-right: 4px solid #00b4d8;
+        }
+        
+        .sidebar-nav a .material-symbols-outlined {
+            font-size: 22px;
+        }
+        
+        .sidebar-profile {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: auto;
+        }
+        
+        .sidebar-profile .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(192, 232, 255, 0.3);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-profile .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .sidebar-profile .info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .sidebar-profile .info .name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            display: block;
+            line-height: 1.2;
+        }
+        
+        .sidebar-profile .info .email {
+            font-size: 11px;
+            color: rgba(192, 232, 255, 0.5);
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .sidebar-profile .logout-btn {
+            background: none;
+            border: none;
+            color: rgba(192, 232, 255, 0.5);
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.3s;
+            font-size: 20px;
+        }
+        
+        .sidebar-profile .logout-btn:hover {
+            color: #ffffff;
+        }
+        
+        .admin-main {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 260px;
+            right: 0;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(195, 199, 204, 0.15);
+            z-index: 99;
+        }
+        
+        .top-nav .search-wrap {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .top-nav .search-wrap .material-symbols-outlined {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #73777d;
+            font-size: 20px;
+        }
+        
+        .top-nav .search-wrap input {
+            width: 100%;
+            padding: 9px 16px 9px 44px;
+            border: none;
+            border-radius: 50px;
+            background: #f4f3f5;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            outline: none;
+        }
+        
+        .top-nav .search-wrap input:focus {
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.15);
+        }
+        
+        .top-nav .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .top-nav .nav-actions .icon-btn {
+            position: relative;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #73777d;
+            transition: color 0.3s;
+            padding: 4px;
+        }
+        
+        .top-nav .nav-actions .icon-btn:hover {
+            color: #0f2b3d;
+        }
+        
+        .top-nav .nav-actions .icon-btn .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: #e63946;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .top-nav .nav-actions .material-symbols-outlined {
+            font-size: 24px;
+        }
+        
+        .dashboard-content {
+            padding: 80px 32px 48px;
+            flex: 1;
+            max-width: 1440px;
+            width: 100%;
+        }
+        
+        .role-badge-admin {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .role-badge-secretary {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .role-badge-teacher {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .role-badge-other {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        
+        .status-badge-active {
+            background: rgba(45, 155, 78, 0.12);
+            color: #2d9b4e;
+        }
+        
+        .status-badge-inactive {
+            background: rgba(100, 116, 139, 0.1);
+            color: #64748b;
+        }
+        
+        .status-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        
+        .status-dot.active { background: #2d9b4e; }
+        .status-dot.inactive { background: #94a3b8; }
+        
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #ffffff;
+            padding: 4px;
+        }
+        
+        .hamburger-btn .material-symbols-outlined {
+            font-size: 28px;
+        }
+        
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(195,199,204,0.15);
+            padding: 6px 8px;
+            justify-content: space-around;
+        }
+        
+        .mobile-bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 4px 12px;
+            transition: color 0.2s;
+        }
+        
+        .mobile-bottom-nav a.active {
+            color: #0f2b3d;
+        }
+        
+        .mobile-bottom-nav a .material-symbols-outlined {
+            font-size: 24px;
+        }
+        
+        .mobile-bottom-nav a span:last-child {
+            margin-top: 2px;
+        }
+        
+        @media (max-width: 1024px) {
+            .top-nav {
+                padding: 0 20px;
+            }
+            .dashboard-content {
+                padding: 80px 20px 48px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .top-nav {
+                left: 0;
+                width: 100%;
+                padding: 0 16px;
+                background: #0f2b3d;
+                border-bottom: none;
+            }
+            
+            .top-nav .search-wrap input {
+                background: rgba(255, 255, 255, 0.12);
+                color: #ffffff;
+            }
+            
+            .top-nav .search-wrap input::placeholder {
+                color: rgba(255, 255, 255, 0.5);
+            }
+            
+            .top-nav .search-wrap .material-symbols-outlined {
+                color: rgba(255, 255, 255, 0.5);
+            }
+            
+            .top-nav .nav-actions .icon-btn {
+                color: rgba(255, 255, 255, 0.7);
+            }
+            
+            .top-nav .nav-actions .icon-btn:hover {
+                color: #ffffff;
+            }
+            
+            .hamburger-btn {
+                display: block;
+            }
+            
+            .dashboard-content {
+                padding: 80px 16px 80px;
+            }
+            
+            .page-header h2 {
+                font-size: 22px !important;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            
+            .stat-number {
+                font-size: 22px !important;
+            }
+            
+            .stat-card {
+                padding: 12px 14px !important;
+            }
+            
+            .mobile-bottom-nav {
+                display: flex !important;
+            }
+            
+            .table-wrap table {
+                font-size: 13px !important;
+                min-width: 600px !important;
+            }
+            
+            .table-wrap table th,
+            .table-wrap table td {
+                padding: 8px 10px !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                gap: 8px !important;
+            }
+            
+            .stat-number {
+                font-size: 20px !important;
+            }
+            
+            .stat-label {
+                font-size: 9px !important;
+            }
+        }
+        
+        .admin-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .table-wrap table {
+            min-width: 700px;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        .table-wrap table thead {
+            background: #0f2b3d;
+            color: #ffffff;
+        }
+        
+        .table-wrap table thead th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            white-space: nowrap;
+        }
+        
+        .table-wrap table tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(195, 199, 204, 0.08);
+            color: #1a1c1d;
+        }
+        
+        .table-wrap table tbody tr {
+            transition: background 0.2s;
+        }
+        
+        .table-wrap table tbody tr:hover {
+            background: rgba(15, 43, 61, 0.02);
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .table-actions .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #0f2b3d;
+            padding: 4px 6px;
+            transition: all 0.2s;
+            border-radius: 6px;
+        }
+        
+        .table-actions .action-btn:hover {
+            background: rgba(15, 43, 61, 0.06);
+            transform: scale(1.1);
+        }
+        
+        .table-actions .action-btn.delete:hover {
+            color: #e63946;
+            background: rgba(230, 57, 70, 0.08);
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .toast {
+            padding: 14px 24px;
+            border-radius: 12px;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+            animation: slideInRight 0.4s ease, fadeOut 0.4s ease 2.6s forwards;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            min-width: 280px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .toast-success { background: #2d9b4e; }
+        .toast-error { background: #e63946; }
+        .toast-warning { background: #f4a261; }
+        .toast-info { background: #1a5f7a; }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(50px); }
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideUp 0.3s ease;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+        
+        @keyframes modalSlideUp {
+            from {
+                transform: translateY(30px) scale(0.96);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .modal .modal-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(15, 43, 61, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        
+        .modal .modal-icon .material-symbols-outlined {
+            font-size: 32px;
+            color: #0f2b3d;
+        }
+        
+        .modal h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f2b3d;
+            text-align: center;
+            margin: 0 0 4px;
+        }
+        
+        .modal .sub {
+            font-size: 14px;
+            color: #64748b;
+            text-align: center;
+            margin: 0 0 24px;
+        }
+        
+        .modal .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .modal .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+        
+        .modal .form-group input,
+        .modal .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+            transition: all 0.3s;
+            outline: none;
+            background: #faf9fa;
+        }
+        
+        .modal .form-group input:focus,
+        .modal .form-group select:focus {
+            border-color: #1a5f7a;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(26, 95, 122, 0.08);
+        }
+        
+        .modal .form-group input::placeholder {
+            color: #94a3b8;
+        }
+        
+        .modal .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .modal .btn-row button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .modal .btn-save {
+            background: #0f2b3d;
+            color: #ffffff;
+        }
+        
+        .modal .btn-save:hover {
+            background: #1a5f7a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(15, 43, 61, 0.2);
+        }
+        
+        .modal .btn-save:active {
+            transform: scale(0.98);
+        }
+        
+        .modal .btn-cancel {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        
+        .modal .btn-cancel:hover {
+            background: #e2e8f0;
+        }
+        
+        @media (max-width: 640px) {
+            .modal {
+                padding: 24px 20px;
+                max-width: 100%;
+                margin: 10px;
+                border-radius: 20px;
+            }
+            
+            .modal .modal-icon {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .modal .modal-icon .material-symbols-outlined {
+                font-size: 28px;
+            }
+            
+            .modal h2 {
+                font-size: 20px;
+            }
+            
+            .modal .btn-row {
+                flex-direction: column;
+            }
+            
+            .modal .btn-row button {
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========================================== -->
+    <!-- SIDEBAR -->
+    <!-- ========================================== -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">
+            <h1>Geo Solution</h1>
+            <p>Admin Portal</p>
+        </div>
+        
+        <button class="cta-btn" id="registerStudentBtn">
+            <span class="material-symbols-outlined">person_add</span>
+            Register Student
+        </button>
+        
+        <nav class="sidebar-nav">
+            <a href="/admin_dashboard.html" id="navDashboard">
+                <span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+            <a href="/admin_students.html" id="navStudents">
+                <span class="material-symbols-outlined">school</span>
+                Students
+            </a>
+            <a href="/admin_finance.html" id="navFinance">
+                <span class="material-symbols-outlined">payments</span>
+                Finance
+            </a>
+            <a href="/admin_staff.html" class="active" id="navStaff">
+                <span class="material-symbols-outlined">group</span>
+                Staff
+            </a>
+            <a href="/admin_attendance.html" id="navAttendance">
+                <span class="material-symbols-outlined">event_available</span>
+                Attendance
+            </a>
+            <!-- <a href="/admin_results.html" id="navResults">
+                <span class="material-symbols-outlined">quiz</span>
+                Exam Results
+            </a> -->
+            <a href="/admin_notes.html" id="navNotes">
+                <span class="material-symbols-outlined">sticky_note_2</span>
+                Notes
+            </a>
+            <a href="/settings.html" id="navSettings">
+                <span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+        </nav>
+        
+        <div class="sidebar-profile">
+            <div class="avatar">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT2_hO-XrJ4mCZoTCMpOHrVmFQY3hOKslq0mJ_RrNnx3imKF7GK18iCpfUzr6p7L_oLqb-BjEU4IVOJqkGa3kzOA2rDFs1uMBu32rEtPA8672O7qkhFsApz8I0V_6Ur7qAs8DH0OxZ2dQlnTw4kRW7kYLv0Swj9tM9lttZ-mwnbC_gQT_zbOwsLBzhyPLKdBunltvxlizmk_SV9I53NdP8yQfbmYSRBRG67KOBlp40XoWX6ukR49jHlA4Ey99PfmoHBCHIaBJyHCOW" alt="Admin">
+            </div>
+            <div class="info">
+                <span class="name" id="adminName">Administrator</span>
+                <span class="email" id="adminEmail">admin@email.com</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn" title="Logout">
+                <span class="material-symbols-outlined">logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================================== -->
+    <main class="admin-main">
+        <header class="top-nav">
+            <button class="hamburger-btn" id="sidebarToggle">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            
+            <div class="search-wrap">
+                <span class="material-symbols-outlined">search</span>
+                <input type="text" placeholder="Search staff by email..." id="searchInput">
+            </div>
+            
+            <div class="nav-actions">
+                <button class="icon-btn" id="notificationsBtn">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="badge" id="notificationBadge">0</span>
+                </button>
+                <button class="icon-btn" id="helpBtn">
+                    <span class="material-symbols-outlined">help</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+                <div>
+                    <h2 style="font-size:32px; font-weight:700; color:#0f2b3d; margin:0;">👥 Staff Management</h2>
+                    <p style="font-size:16px; color:#64748b; margin:4px 0 0;">Manage staff members, roles, and PINs</p>
+                </div>
+                <button id="addStaffBtn" style="padding:10px 24px; background:#0f2b3d; color:#ffffff; border:none; border-radius:12px; font-weight:600; font-size:14px; cursor:pointer; transition:all 0.3s; display:inline-flex; align-items:center; gap:8px;">
+                    <span class="material-symbols-outlined" style="font-size:20px;">person_add</span>
+                    Add Staff
+                </button>
+            </div>
+
+            <div class="stats-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; width:100%;">
+                <div class="glass-card stat-card" style="padding:16px 18px; border-radius:14px; border-left:4px solid #0f2b3d;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span class="material-symbols-outlined" style="color:#0f2b3d; font-size:24px;">groups</span>
+                        <span style="font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; color:#64748b; background:rgba(100,116,139,0.08);">Total</span>
+                    </div>
+                    <div class="stat-number" id="totalStaff">0</div>
+                    <div class="stat-label">Total Staff</div>
+                </div>
+
+                <div class="glass-card stat-card" style="padding:16px 18px; border-radius:14px; border-left:4px solid #fef3c7;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span class="material-symbols-outlined" style="color:#92400e; font-size:24px;">admin_panel_settings</span>
+                        <span style="font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; color:#64748b; background:rgba(100,116,139,0.08);">Admins</span>
+                    </div>
+                    <div class="stat-number" id="adminCount">0</div>
+                    <div class="stat-label">Administrators</div>
+                </div>
+
+                <div class="glass-card stat-card" style="padding:16px 18px; border-radius:14px; border-left:4px solid #dbeafe;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span class="material-symbols-outlined" style="color:#1e40af; font-size:24px;">badge</span>
+                        <span style="font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; color:#64748b; background:rgba(100,116,139,0.08);">Secretaries</span>
+                    </div>
+                    <div class="stat-number" id="secretaryCount">0</div>
+                    <div class="stat-label">Secretaries</div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="border-radius:14px; overflow:hidden;">
+                <div style="padding:14px 18px; border-bottom:1px solid rgba(195,199,204,0.15); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <h3 style="font-size:16px; font-weight:600; color:#0f2b3d; margin:0;">📋 All Staff Members</h3>
+                    <span style="font-size:13px; color:#64748b;" id="staffCount">0 staff</span>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Email</th>
+                                <th>Full Name</th>
+                                <th>Role</th>
+                                <th>Added On</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffTableBody">
+                            <tr>
+                                <td colspan="7" style="text-align:center; padding:40px; color:#94a3b8;">Loading staff...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODALS -->
+    <!-- ========================================== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="modal-overlay" id="addModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <span class="material-symbols-outlined">person_add</span>
+            </div>
+            
+            <h2>Add Staff Member</h2>
+            <p class="sub">Add a new staff member with a 6-digit PIN</p>
+            
+            <form id="addStaffForm">
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="staffEmail" placeholder="Enter email address" required>
+                </div>
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="staffName" placeholder="Enter full name" required>
+                </div>
+                <div class="form-group">
+                    <label>Role *</label>
+                    <select id="staffRole" required>
+                        <option value="secretary">📋 Secretary</option>
+                        <option value="admin">👑 Administrator</option>
+                        <option value="teacher">👨‍🏫 Teacher</option>
+                        <option value="other">👤 Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>6-Digit PIN *</label>
+                    <input type="password" id="staffPin" placeholder="Enter 6-digit PIN" required maxlength="6" pattern="[0-9]{6}">
+                    <span style="font-size:11px; color:#94a3b8; display:block; margin-top:4px;">Must be exactly 6 digits</span>
+                </div>
+                <div class="btn-row">
+                    <button type="submit" class="btn-save" id="addStaffSubmit">
+                        <span class="material-symbols-outlined" style="font-size:18px;">check</span>
+                        Add Staff
+                    </button>
+                    <button type="button" class="btn-cancel" id="closeAddModalBtn">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <span class="material-symbols-outlined">edit</span>
+            </div>
+            
+            <h2>Edit Staff Member</h2>
+            <p class="sub">Update staff role or PIN</p>
+            
+            <form id="editStaffForm">
+                <input type="hidden" id="editStaffId">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="editStaffEmail" disabled style="background:#f1f5f9; cursor:not-allowed;">
+                </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="editStaffName" disabled style="background:#f1f5f9; cursor:not-allowed;">
+                </div>
+                <div class="form-group">
+                    <label>Role *</label>
+                    <select id="editStaffRole" required>
+                        <option value="secretary">📋 Secretary</option>
+                        <option value="admin">👑 Administrator</option>
+                        <option value="teacher">👨‍🏫 Teacher</option>
+                        <option value="other">👤 Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>New 6-Digit PIN (leave blank to keep current)</label>
+                    <input type="password" id="editStaffPin" placeholder="Enter new 6-digit PIN" maxlength="6" pattern="[0-9]{6}">
+                    <span style="font-size:11px; color:#94a3b8; display:block; margin-top:4px;">Leave blank to keep current PIN</span>
+                </div>
+                <div class="btn-row">
+                    <button type="submit" class="btn-save" id="editStaffSubmit">
+                        <span class="material-symbols-outlined" style="font-size:18px;">save</span>
+                        Update Staff
+                    </button>
+                    <button type="button" class="btn-cancel" id="closeEditModalBtn">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCRIPTS -->
+    <!-- ========================================== -->
+    <script src="js/config.js"></script>
+    <script>
+        // =============================================
+        // ✅ CSP-COMPLIANT - NO INLINE EVENT HANDLERS
+        // =============================================
+        
+        const BASE_API = window.BASE_API;
+
+        // =============================================
+        // ✅ AUTH
+        // =============================================
+        (async function protectPage() {
+            try {
+                const response = await fetch(`${BASE_API}/auth/check-session`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (!data.valid) {
+                    window.location.href = 'access.html';
+                    return;
+                }
+                
+                document.getElementById('adminName').textContent = data.name || data.email.split('@')[0];
+                document.getElementById('adminEmail').textContent = data.email;
+                
+            } catch (err) {
+                console.error('Auth error:', err.message);
+                window.location.href = 'access.html';
+            }
+        })();
+
+        // =============================================
+        // ✅ TOAST NOTIFICATIONS
+        // =============================================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icons = {
+                success: 'check_circle',
+                error: 'error',
+                warning: 'warning',
+                info: 'info'
+            };
+            
+            toast.innerHTML = `
+                <span class="material-symbols-outlined" style="font-size:22px;">${icons[type] || 'info'}</span>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+
+        // =============================================
+        // ✅ MODAL CONTROLS
+        // =============================================
+        function openAddModal() {
+            document.getElementById('addModal').classList.add('active');
+            document.getElementById('addStaffForm').reset();
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.remove('active');
+        }
+
+        function openEditModal(staff) {
+            document.getElementById('editStaffId').value = staff.id;
+            document.getElementById('editStaffEmail').value = staff.email;
+            document.getElementById('editStaffName').value = staff.full_name || '';
+            document.getElementById('editStaffRole').value = staff.role;
+            document.getElementById('editStaffPin').value = '';
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        // =============================================
+        // ✅ SIDEBAR FUNCTIONS
+        // =============================================
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch(`${BASE_API}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                .then(() => {
+                    window.location.href = 'access.html';
+                })
+                .catch(() => {
+                    window.location.href = 'access.html';
+                });
+            }
+        }
+
+        function navigateTo(url) {
+            window.location.href = url;
+        }
+
+        // =============================================
+        // ✅ LOAD STAFF
+        // =============================================
+        window.loadStaff = async function() {
+            const search = document.getElementById('searchInput').value.toLowerCase().trim();
+            const tbody = document.getElementById('staffTableBody');
+
+            try {
+                const response = await fetch(`${BASE_API}/staff/all`);
+                if (!response.ok) throw new Error('Failed to fetch staff');
+                
+                let staff = await response.json();
+
+                if (search) {
+                    staff = staff.filter(s => 
+                        s.email && s.email.toLowerCase().includes(search)
+                    );
+                }
+
+                const total = staff.length;
+                const admins = staff.filter(s => s.role === 'admin').length;
+                const secretaries = staff.filter(s => s.role === 'secretary').length;
+                
+                document.getElementById('totalStaff').textContent = total;
+                document.getElementById('adminCount').textContent = admins;
+                document.getElementById('secretaryCount').textContent = secretaries;
+                document.getElementById('staffCount').textContent = total + ' staff';
+                document.getElementById('notificationBadge').textContent = total;
+
+                if (staff.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding:40px; color:#94a3b8;">
+                                <span class="material-symbols-outlined" style="font-size:48px; display:block; margin-bottom:12px;">group</span>
+                                <p>No staff members found.</p>
+                                <p style="font-size:13px;">Click "Add Staff" to add a new staff member.</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                staff.forEach((s, i) => {
+                    const roleMap = {
+                        'admin': '👑 Admin',
+                        'secretary': '📋 Secretary',
+                        'teacher': '👨‍🏫 Teacher',
+                        'other': '👤 Other'
+                    };
+                    const roleClass = s.role === 'admin' ? 'role-badge-admin' : 
+                                    s.role === 'secretary' ? 'role-badge-secretary' :
+                                    s.role === 'teacher' ? 'role-badge-teacher' : 'role-badge-other';
+                    
+                    const isActive = s.current_status !== 'inactive';
+                    const statusClass = isActive ? 'active' : 'inactive';
+                    const statusLabel = isActive ? 'Active' : 'Inactive';
+                    const statusBadge = isActive ? 'status-badge-active' : 'status-badge-inactive';
+
+                    html += `
+                        <tr>
+                            <td>${String(i + 1).padStart(3, '0')}</td>
+                            <td style="font-weight:500; color:#0f2b3d;">${s.email}</td>
+                            <td style="color:#64748b;">${s.full_name || '—'}</td>
+                            <td><span class="${roleClass}" style="padding:2px 12px; border-radius:20px; font-size:10px; font-weight:600;">${roleMap[s.role] || s.role}</span></td>
+                            <td style="color:#64748b; font-size:13px;">${s.created_at ? new Date(s.created_at).toLocaleDateString() : '—'}</td>
+                            <td>
+                                <span class="status-dot ${statusClass}"></span>
+                                <span class="${statusBadge}" style="padding:2px 10px; border-radius:20px; font-size:9px; font-weight:600;">${statusLabel}</span>
+                            </td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="action-btn view-btn" data-id="${s.id}" title="View Staff">
+                                        <span class="material-symbols-outlined" style="font-size:18px;">visibility</span>
+                                    </button>
+                                    <button class="action-btn edit-btn" data-id="${s.id}" title="Edit Staff">
+                                        <span class="material-symbols-outlined" style="font-size:18px;">edit</span>
+                                    </button>
+                                    <button class="action-btn delete-btn" data-id="${s.id}" title="Remove Staff">
+                                        <span class="material-symbols-outlined" style="font-size:18px;">delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tbody.innerHTML = html;
+
+                // ✅ Attach event listeners to dynamically created buttons
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        viewStaff(this.dataset.id);
+                    });
+                });
+
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        editStaff(this.dataset.id);
+                    });
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        removeStaff(this.dataset.id);
+                    });
+                });
+
+            } catch (err) {
+                console.error('Error loading staff:', err);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:40px; color:#e63946;">
+                            ❌ Error loading staff. Please try again.
+                        </td>
+                    </tr>
+                `;
+            }
+        };
+
+        // =============================================
+        // ✅ STAFF ACTIONS
+        // =============================================
+        function viewStaff(id) {
+            window.location.href = `profile.html?type=staff&id=${id}`;
+        }
+
+        async function editStaff(id) {
+            try {
+                const response = await fetch(`${BASE_API}/staff/${id}`);
+                if (!response.ok) throw new Error('Failed to fetch staff');
+                const staff = await response.json();
+                openEditModal(staff);
+            } catch (err) {
+                showToast('❌ Error loading staff details', 'error');
+            }
+        }
+
+        async function removeStaff(id) {
+            if (!confirm('⚠️ Remove this staff member? This action cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`${BASE_API}/staff/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('✅ Staff removed successfully', 'success');
+                    loadStaff();
+                } else {
+                    showToast('❌ ' + (data.error || 'Error removing staff'), 'error');
+                }
+            } catch (err) {
+                showToast('❌ Error: ' + err.message, 'error');
+            }
+        }
+
+        // =============================================
+        // ✅ ADD STAFF FORM
+        // =============================================
+        document.getElementById('addStaffForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('staffEmail').value.trim();
+            const full_name = document.getElementById('staffName').value.trim();
+            const role = document.getElementById('staffRole').value;
+            const pin = document.getElementById('staffPin').value.trim();
+
+            if (!email) {
+                showToast('Please enter an email address', 'error');
+                return;
+            }
+
+            if (!full_name) {
+                showToast('Please enter the staff full name', 'error');
+                return;
+            }
+
+            if (!pin || pin.length !== 6 || !/^\d{6}$/.test(pin)) {
+                showToast('PIN must be exactly 6 digits', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BASE_API}/staff/add`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, full_name, role, pin })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast(`✅ ${role} added successfully!`, 'success');
+                    closeAddModal();
+                    loadStaff();
+                } else {
+                    showToast('❌ ' + (data.error || 'Error adding staff'), 'error');
+                }
+            } catch (err) {
+                showToast('❌ Error: ' + err.message, 'error');
+            }
+        });
+
+        // =============================================
+        // ✅ EDIT STAFF FORM
+        // =============================================
+        document.getElementById('editStaffForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('editStaffId').value;
+            const role = document.getElementById('editStaffRole').value;
+            const pin = document.getElementById('editStaffPin').value.trim();
+
+            try {
+                const body = { role };
+                if (pin && pin.length === 6 && /^\d{6}$/.test(pin)) {
+                    body.pin = pin;
+                }
+
+                const response = await fetch(`${BASE_API}/staff/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('✅ Staff updated successfully!', 'success');
+                    closeEditModal();
+                    loadStaff();
+                } else {
+                    showToast('❌ ' + (data.error || 'Error updating staff'), 'error');
+                }
+            } catch (err) {
+                showToast('❌ Error: ' + err.message, 'error');
+            }
+        });
+
+        // =============================================
+        // ✅ EVENT LISTENERS (CSP COMPLIANT)
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Sidebar toggle ---
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
+
+            // --- Logout ---
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', handleLogout);
+            }
+
+            // --- Register Student ---
+            const registerBtn = document.getElementById('registerStudentBtn');
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function() {
+                    navigateTo('registration.html');
+                });
+            }
+
+            // --- Add Staff ---
+            const addStaffBtn = document.getElementById('addStaffBtn');
+            if (addStaffBtn) {
+                addStaffBtn.addEventListener('click', openAddModal);
+            }
+
+            // --- Close Add Modal ---
+            const closeAddBtn = document.getElementById('closeAddModalBtn');
+            if (closeAddBtn) {
+                closeAddBtn.addEventListener('click', closeAddModal);
+            }
+
+            // --- Close Edit Modal ---
+            const closeEditBtn = document.getElementById('closeEditModalBtn');
+            if (closeEditBtn) {
+                closeEditBtn.addEventListener('click', closeEditModal);
+            }
+
+            // --- Close modals on overlay click ---
+            const addModal = document.getElementById('addModal');
+            if (addModal) {
+                addModal.addEventListener('click', function(e) {
+                    if (e.target === this) closeAddModal();
+                });
+            }
+
+            const editModal = document.getElementById('editModal');
+            if (editModal) {
+                editModal.addEventListener('click', function(e) {
+                    if (e.target === this) closeEditModal();
+                });
+            }
+
+            // --- Search input ---
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', loadStaff);
+            }
+
+            // --- Navigation links ---
+            const navLinks = {
+                'navDashboard': '/admin_dashboard.html',
+                'navStudents': '/admin_students.html',
+                'navFinance': '/admin_finance.html',
+                'navStaff': '/admin_staff.html',
+                'navAttendance': '/admin_attendance.html',
+                'navResults': '/admin_results.html',
+                'navNotes': '/admin_notes.html',
+                'navSettings': '/settings.html'
+            };
+
+            Object.keys(navLinks).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo(navLinks[id]);
+                    });
+                }
+            });
+
+            // --- Notifications button ---
+            const notifBtn = document.getElementById('notificationsBtn');
+            if (notifBtn) {
+                notifBtn.addEventListener('click', function() {
+                    navigateTo('notes.html');
+                });
+            }
+
+            // --- Help button ---
+            const helpBtn = document.getElementById('helpBtn');
+            if (helpBtn) {
+                helpBtn.addEventListener('click', function() {
+                    navigateTo('admin_staff.html');
+                });
+            }
+
+            // --- Load initial data ---
+            loadStaff();
+            setInterval(loadStaff, 60000);
+        });
+    </script>
+</body>
+</html>

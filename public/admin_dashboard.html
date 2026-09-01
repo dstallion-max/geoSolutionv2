@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo Solution | Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+   <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #faf9fa;
+            overflow-x: hidden;
+        }
+        
+        .admin-wrapper {
+            display: flex;
+            min-height: 100vh;
+            background: #faf9fa;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+        
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #0f2b3d;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            z-index: 99;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .admin-sidebar .brand {
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .admin-sidebar .brand h1 {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            margin: 0;
+        }
+        
+        .admin-sidebar .brand p {
+            font-size: 12px;
+            color: rgba(192, 232, 255, 0.6);
+            margin: 2px 0 0;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        .admin-sidebar .cta-btn {
+            margin: 16px 24px 20px;
+            padding: 12px 16px;
+            background: #c0e8ff;
+            color: #001e2b;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-sidebar .cta-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(192, 232, 255, 0.3);
+        }
+        
+        .admin-sidebar .cta-btn .material-symbols-outlined {
+            font-size: 20px;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 8px 12px;
+            overflow-y: auto;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: rgba(192, 232, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            margin-bottom: 2px;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.06);
+            color: #ffffff;
+        }
+        
+        .sidebar-nav a.active {
+            background: #001624;
+            color: #c0e8ff;
+            font-weight: 700;
+            border-right: 4px solid #00b4d8;
+        }
+        
+        .sidebar-nav a .material-symbols-outlined {
+            font-size: 22px;
+        }
+        
+        .sidebar-profile {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: auto;
+        }
+        
+        .sidebar-profile .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(192, 232, 255, 0.3);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-profile .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .sidebar-profile .info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .sidebar-profile .info .name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            display: block;
+            line-height: 1.2;
+        }
+        
+        .sidebar-profile .info .email {
+            font-size: 11px;
+            color: rgba(192, 232, 255, 0.5);
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .sidebar-profile .logout-btn {
+            background: none;
+            border: none;
+            color: rgba(192, 232, 255, 0.5);
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.3s;
+            font-size: 20px;
+        }
+        
+        .sidebar-profile .logout-btn:hover {
+            color: #ffffff;
+        }
+        
+        .admin-main {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: calc(100% - 260px);
+            max-width: 100%;
+        }
+        
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 260px;
+            right: 0;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(195, 199, 204, 0.15);
+            z-index: 100;
+            width: calc(100% - 260px);
+        }
+        
+        .top-nav .search-wrap {
+            flex: 1;
+            max-width: 440px;
+            position: relative;
+        }
+        
+        .top-nav .search-wrap .material-symbols-outlined {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #73777d;
+            font-size: 20px;
+        }
+        
+        .top-nav .search-wrap input {
+            width: 100%;
+            padding: 9px 16px 9px 44px;
+            border: none;
+            border-radius: 50px;
+            background: #f4f3f5;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            outline: none;
+        }
+        
+        .top-nav .search-wrap input:focus {
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.15);
+        }
+        
+        .top-nav .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .top-nav .nav-actions .icon-btn {
+            position: relative;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #73777d;
+            transition: color 0.3s;
+            padding: 4px;
+        }
+        
+        .top-nav .nav-actions .icon-btn:hover {
+            color: #0f2b3d;
+        }
+        
+        .top-nav .nav-actions .icon-btn .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: #ba1a1a;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .top-nav .nav-actions .material-symbols-outlined {
+            font-size: 24px;
+        }
+        
+        .dashboard-content {
+            padding: 80px 32px 48px;
+            flex: 1;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .page-header {
+            margin-bottom: 24px;
+        }
+        
+        .page-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0f2b3d;
+            margin: 0 0 4px;
+            letter-spacing: -0.3px;
+        }
+        
+        .page-header p {
+            font-size: 16px;
+            color: #64748b;
+            margin: 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(15, 43, 61, 0.05);
+            border-radius: 14px;
+            padding: 16px 18px;
+            box-shadow: 0 4px 20px -4px rgba(15, 43, 61, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px -4px rgba(15, 43, 61, 0.1);
+            border-color: rgba(0, 180, 216, 0.15);
+        }
+        
+        .stat-card .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .stat-card .stat-top .icon {
+            font-size: 24px;
+        }
+        
+        .stat-card .stat-top .trend {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+        
+        .stat-card .stat-top .trend.up {
+            color: #2d9b4e;
+            background: rgba(45, 155, 78, 0.1);
+        }
+        
+        .stat-card .stat-top .trend.down {
+            color: #e63946;
+            background: rgba(230, 57, 70, 0.1);
+        }
+        
+        .stat-card .stat-top .trend.neutral {
+            color: #64748b;
+            background: rgba(100, 116, 139, 0.08);
+        }
+        
+        .stat-card .stat-number {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0f2b3d;
+            line-height: 1.2;
+        }
+        
+        .stat-card .stat-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+        
+        .stat-card.border-primary { border-left: 4px solid #0f2b3d; }
+        .stat-card.border-secondary { border-left: 4px solid #1a5f7a; }
+        .stat-card.border-success { border-left: 4px solid #2d9b4e; }
+        .stat-card.border-danger { border-left: 4px solid #e63946; }
+        .stat-card.border-accent { border-left: 4px solid #00b4d8; }
+        .stat-card.border-warning { border-left: 4px solid #f4a261; }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+        
+        .glass-card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(15, 43, 61, 0.05);
+            border-radius: 14px;
+            box-shadow: 0 4px 20px -4px rgba(15, 43, 61, 0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(0, 180, 216, 0.1);
+        }
+        
+        .glass-card .card-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(195, 199, 204, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .glass-card .card-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f2b3d;
+            margin: 0;
+        }
+        
+        .glass-card .card-header .view-all {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a5f7a;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .glass-card .card-header .view-all:hover {
+            text-decoration: underline;
+        }
+        
+        .table-wrap {
+            overflow-x: auto;
+            padding: 0;
+        }
+        
+        .table-wrap table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        .table-wrap table thead {
+            background: #0f2b3d;
+            color: #ffffff;
+        }
+        
+        .table-wrap table thead th {
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        
+        .table-wrap table tbody td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(195, 199, 204, 0.1);
+            color: #1a1c1d;
+        }
+        
+        .table-wrap table tbody tr:hover {
+            background: rgba(15, 43, 61, 0.03);
+        }
+        
+        .table-wrap table tbody .student-name {
+            font-weight: 700;
+            color: #0f2b3d;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .badge-exam {
+            background: #a3dfff;
+            color: #004d66;
+        }
+        
+        .badge-training {
+            background: #cbe6fe;
+            color: #001e2f;
+        }
+        
+        .badge-active {
+            background: rgba(45, 155, 78, 0.12);
+            color: #2d9b4e;
+        }
+        
+        .badge-inactive {
+            background: rgba(100, 116, 139, 0.1);
+            color: #64748b;
+        }
+        
+        .status-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        
+        .status-dot.active { background: #2d9b4e; }
+        .status-dot.inactive { background: #94a3b8; }
+        
+        .table-actions .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #0f2b3d;
+            padding: 4px;
+            transition: transform 0.2s;
+            font-size: 18px;
+        }
+        
+        .table-actions .action-btn:hover {
+            transform: scale(1.15);
+        }
+        
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .quick-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 12px;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(15, 43, 61, 0.05);
+            border-radius: 14px;
+            text-decoration: none;
+            color: #0f2b3d;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .quick-action-btn:hover {
+            background: rgba(163, 223, 255, 0.08);
+            transform: translateY(-2px);
+            border-color: rgba(0, 180, 216, 0.2);
+        }
+        
+        .quick-action-btn .material-symbols-outlined {
+            font-size: 28px;
+            color: #1a5f7a;
+            margin-bottom: 4px;
+            transition: transform 0.3s;
+        }
+        
+        .quick-action-btn:hover .material-symbols-outlined {
+            transform: scale(1.1);
+        }
+        
+        .quick-action-btn span:last-child {
+            font-size: 11px;
+            font-weight: 600;
+            text-align: center;
+            color: #1e293b;
+        }
+        
+        .activity-feed {
+            padding: 14px 18px 18px;
+        }
+        
+        .activity-item {
+            position: relative;
+            padding-left: 28px;
+            padding-bottom: 14px;
+        }
+        
+        .activity-item:last-child {
+            padding-bottom: 0;
+        }
+        
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 6px;
+            bottom: 0;
+            width: 2px;
+            background: rgba(195, 199, 204, 0.2);
+        }
+        
+        .activity-item:last-child::before {
+            display: none;
+        }
+        
+        .activity-item .dot {
+            position: absolute;
+            left: 0;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #a3dfff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+        
+        .activity-item .dot .inner {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #1a5f7a;
+        }
+        
+        .activity-item .activity-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0f2b3d;
+            display: block;
+        }
+        
+        .activity-item .activity-desc {
+            font-size: 12px;
+            color: #64748b;
+            margin: 2px 0 0;
+        }
+        
+        .activity-item .activity-time {
+            font-size: 10px;
+            color: #94a3b8;
+            display: block;
+            margin-top: 2px;
+        }
+        
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            width: 100%;
+        }
+        
+        .mgmt-card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(15, 43, 61, 0.05);
+            border-radius: 14px;
+            padding: 16px 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .mgmt-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px -4px rgba(15, 43, 61, 0.08);
+            border-color: rgba(0, 180, 216, 0.1);
+        }
+        
+        .mgmt-card .mgmt-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .mgmt-card .mgmt-header .icon-box {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .mgmt-card .mgmt-header .icon-box .material-symbols-outlined {
+            font-size: 20px;
+        }
+        
+        .mgmt-card .mgmt-header h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f2b3d;
+            margin: 0;
+        }
+        
+        .mgmt-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .mgmt-card ul li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 12px;
+            color: #475569;
+        }
+        
+        .mgmt-card ul li .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #1a5f7a;
+            flex-shrink: 0;
+        }
+        
+        .mgmt-card ul li a {
+            color: #475569;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .mgmt-card ul li a:hover {
+            color: #0f2b3d;
+        }
+        
+        .mobile-bottom-nav {
+            display: none;
+        }
+        
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #0f2b3d;
+            padding: 4px;
+        }
+        
+        .hamburger-btn .material-symbols-outlined {
+            font-size: 28px;
+        }
+        
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 14px;
+            }
+            
+            .management-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-content {
+                padding: 80px 20px 48px;
+            }
+            
+            .top-nav {
+                padding: 0 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                top: 0;
+                height: 100vh;
+            }
+            
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .top-nav {
+                left: 0;
+                width: 100%;
+                padding: 0 14px;
+            }
+            
+            .top-nav .search-wrap {
+                max-width: 100%;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .management-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-content {
+                padding: 80px 14px 80px;
+            }
+            
+            .page-header h2 {
+                font-size: 22px;
+            }
+            
+            .hamburger-btn {
+                display: flex !important;
+            }
+            
+            .mobile-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: rgba(255,255,255,0.95);
+                backdrop-filter: blur(12px);
+                border-top: 1px solid rgba(195, 199, 204, 0.15);
+                padding: 6px 8px;
+                justify-content: space-around;
+                z-index: 100;
+            }
+            
+            .mobile-bottom-nav a {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-decoration: none;
+                color: #73777d;
+                font-size: 9px;
+                font-weight: 600;
+                padding: 4px 8px;
+                transition: color 0.3s;
+            }
+            
+            .mobile-bottom-nav a.active {
+                color: #0f2b3d;
+            }
+            
+            .mobile-bottom-nav a .material-symbols-outlined {
+                font-size: 22px;
+            }
+            
+            .mobile-bottom-nav a span:last-child {
+                margin-top: 2px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            
+            .stat-card {
+                padding: 12px 14px;
+            }
+            
+            .stat-card .stat-number {
+                font-size: 20px;
+            }
+            
+            .quick-actions-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .admin-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- ========================================== -->
+        <!-- SIDEBAR -->
+        <!-- ========================================== -->
+        <aside class="admin-sidebar" id="sidebar">
+            <div class="brand">
+                <h1>Geo Solution</h1>
+                <p>Management Portal</p>
+            </div>
+            
+            <button class="cta-btn" id="registerStudentBtn">
+                <span class="material-symbols-outlined">person_add</span>
+                Register Student
+            </button>
+            
+            <nav class="sidebar-nav">
+                <a href="/admin_dashboard.html" class="active" id="navDashboard">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+                <a href="/admin_students.html" id="navStudents">
+                    <span class="material-symbols-outlined">school</span>
+                    Students
+                </a>
+                <a href="/admin_finance.html" id="navFinance">
+                    <span class="material-symbols-outlined">payments</span>
+                    Finance
+                </a>
+                <a href="/admin_staff.html" id="navStaff">
+                    <span class="material-symbols-outlined">group</span>
+                    Staff
+                </a>
+                <a href="/admin_attendance.html" id="navAttendance">
+                    <span class="material-symbols-outlined">event_available</span>
+                    Attendance
+                </a>
+                <!-- <a href="/admin_results.html" id="navResults">
+                    <span class="material-symbols-outlined">quiz</span>
+                    Exam Results
+                </a> -->
+                <a href="/admin_notes.html" id="navNotes">
+                    <span class="material-symbols-outlined">sticky_note_2</span>
+                    Notes
+                </a>
+                <a href="/settings.html" id="navSettings">
+                    <span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+            </nav>
+            
+            <div class="sidebar-profile">
+                <div class="avatar">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT2_hO-XrJ4mCZoTCMpOHrVmFQY3hOKslq0mJ_RrNnx3imKF7GK18iCpfUzr6p7L_oLqb-BjEU4IVOJqkGa3kzOA2rDFs1uMBu32rEtPA8672O7qkhFsApz8I0V_6Ur7qAs8DH0OxZ2dQlnTw4kRW7kYLv0Swj9tM9lttZ-mwnbC_gQT_zbOwsLBzhyPLKdBunltvxlizmk_SV9I53NdP8yQfbmYSRBRG67KOBlp40XoWX6ukR49jHlA4Ey99PfmoHBCHIaBJyHCOW" alt="Admin">
+                </div>
+                <div class="info">
+                    <span class="name" id="adminName">Administrator</span>
+                    <span class="email" id="adminEmail">admin@email.com</span>
+                </div>
+                <button class="logout-btn" id="logoutBtn" title="Logout">
+                    <span class="material-symbols-outlined">logout</span>
+                </button>
+            </div>
+        </aside>
+        
+        <!-- ========================================== -->
+        <!-- MAIN CONTENT -->
+        <!-- ========================================== -->
+        <main class="admin-main">
+            <header class="top-nav">
+                <button class="hamburger-btn" id="sidebarToggle">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                
+                <div class="search-wrap">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" placeholder="Search for students, staff, or transactions..." id="globalSearch">
+                </div>
+                
+                <div class="nav-actions">
+                    <button class="icon-btn" id="notificationsBtn">
+                        <span class="material-symbols-outlined">notifications</span>
+                        <span class="badge" id="notificationBadge">0</span>
+                    </button>
+                    <button class="icon-btn" id="helpBtn">
+                        <span class="material-symbols-outlined">help</span>
+                    </button>
+                </div>
+            </header>
+            
+            <div class="dashboard-content">
+                <div class="page-header">
+                    <h2>Administrative Overview</h2>
+                    <p>Welcome back, Admin. Here is what's happening today at Geo Solution.</p>
+                </div>
+                
+                <!-- ========================================== -->
+                <!-- STATS GRID -->
+                <!-- ========================================== -->
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card border-primary">
+                        <div class="stat-top">
+                            <span class="material-symbols-outlined icon" style="color:#0f2b3d; font-variation-settings:'FILL'1;">groups</span>
+                            <span class="trend up" id="studentTrend">+0%</span>
+                        </div>
+                        <div class="stat-number" id="totalStudents">0</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    
+                    <div class="stat-card border-secondary">
+                        <div class="stat-top">
+                            <span class="material-symbols-outlined icon" style="color:#1a5f7a;">how_to_reg</span>
+                            <span class="trend neutral">Today</span>
+                        </div>
+                        <div class="stat-number" id="todayPresent">0</div>
+                        <div class="stat-label">Today Present</div>
+                    </div>
+                    
+                    <div class="stat-card border-success">
+                        <div class="stat-top">
+                            <span class="material-symbols-outlined icon" style="color:#2d9b4e;">account_balance_wallet</span>
+                            <span class="trend up">MTD</span>
+                        </div>
+                        <div class="stat-number" id="totalIncome">₦0</div>
+                        <div class="stat-label">Total Income</div>
+                    </div>
+                    
+                    <div class="stat-card border-danger">
+                        <div class="stat-top">
+                            <span class="material-symbols-outlined icon" style="color:#e63946;">payments</span>
+                            <span class="trend down">MTD</span>
+                        </div>
+                        <div class="stat-number" id="totalExpenses">₦0</div>
+                        <div class="stat-label">Total Expenses</div>
+                    </div>
+                    
+                    <div class="stat-card border-accent">
+                        <div class="stat-top">
+                            <span class="material-symbols-outlined icon" style="color:#00b4d8;">trending_up</span>
+                            <span class="trend up" id="profitTrend">+0%</span>
+                        </div>
+                        <div class="stat-number" id="netProfit">₦0</div>
+                        <div class="stat-label">Net Profit</div>
+                    </div>
+                    
+                    <div class="stat-card border-warning">
+                        <div class="stat-top">
+                            <span class="material-symbols-outlined icon" style="color:#f4a261;">grade</span>
+                            <span class="trend neutral">Month</span>
+                        </div>
+                        <div class="stat-number" id="examResults">0</div>
+                        <div class="stat-label">Exam Results</div>
+                    </div>
+                </div>
+                
+                <!-- ========================================== -->
+                <!-- MAIN GRID -->
+                <!-- ========================================== -->
+                <div class="main-grid">
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3>Recent Enrolments</h3>
+                            <a href="/admin_students.html" class="view-all" id="viewAllStudents">View All →</a>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Course/Dept</th>
+                                        <th>Phone</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentTableBody">
+                                    <tr>
+                                        <td colspan="7" style="text-align:center; padding:30px; color:#94a3b8;">
+                                            Loading students...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                        <div>
+                            <h3 style="font-size:15px; font-weight:600; color:#0f2b3d; margin:0 0 10px 4px;">Quick Actions</h3>
+                            <div class="quick-actions-grid">
+                                <a href="/registration.html" class="quick-action-btn" id="quickRegister">
+                                    <span class="material-symbols-outlined">person_add</span>
+                                    <span>Register Student</span>
+                                </a>
+                                <a href="#" class="quick-action-btn" id="quickAttendance">
+                                    <span class="material-symbols-outlined">point_of_sale</span>
+                                    <span>Attendance Terminal</span>
+                                </a>
+                                <a href="#" class="quick-action-btn" id="quickFinance">
+                                    <span class="material-symbols-outlined">receipt_long</span>
+                                    <span>Finance Entry</span>
+                                </a>
+                                <a href="/admin_finance.html" class="quick-action-btn" id="quickReports">
+                                    <span class="material-symbols-outlined">bar_chart_4_bars</span>
+                                    <span>Reports Dashboard</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card">
+                            <div class="card-header">
+                                <h3>Recent Activity</h3>
+                                <span class="material-symbols-outlined" style="color:#73777d; cursor:pointer;" id="moreVert">more_vert</span>
+                            </div>
+                            <div class="activity-feed" id="activityFeed">
+                                <div style="text-align:center; padding:20px; color:#94a3b8;">
+                                    Loading activity...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ========================================== -->
+                <!-- MANAGEMENT GRID -->
+                <!-- ========================================== -->
+                <div class="management-grid">
+                    <div class="mgmt-card">
+                        <div class="mgmt-header">
+                            <div class="icon-box" style="background:rgba(15,43,61,0.08);">
+                                <span class="material-symbols-outlined" style="color:#0f2b3d;">school</span>
+                            </div>
+                            <h4>Student Management</h4>
+                        </div>
+                        <ul>
+                            <li><span class="dot"></span> <a href="/admin_students.html" id="mgmtViewAllStudents">View All Students</a></li>
+                            <li><span class="dot"></span> <a href="/admin_students.html?type=exam" id="mgmtExamStudents">Exam Students</a></li>
+                            <li><span class="dot"></span> <a href="/admin_students.html?type=computer_training" id="mgmtTrainingStudents">Computer Training Students</a></li>
+                            <li><span class="dot"></span> <a href="/registration.html" id="mgmtRegisterStudent">Register New Student</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mgmt-card">
+                        <div class="mgmt-header">
+                            <div class="icon-box" style="background:rgba(26,95,122,0.08);">
+                                <span class="material-symbols-outlined" style="color:#1a5f7a;">account_balance</span>
+                            </div>
+                            <h4>Finance</h4>
+                        </div>
+                        <ul>
+                            <li><span class="dot"></span> <a href="/admin_finance.html" id="mgmtFinanceReports">Finance Reports</a></li>
+                            <li><span class="dot"></span> <a href="/admin_finance.html" id="mgmtFinanceAnalytics">Analytics Dashboard</a></li>
+                            <li><span class="dot"></span> <a href="#" id="mgmtAddTransaction">Add Transaction</a></li>
+                            <li><span class="dot"></span> <a href="/admin_finance.html" id="mgmtExportReports">Export Reports</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mgmt-card">
+                        <div class="mgmt-header">
+                            <div class="icon-box" style="background:rgba(0,180,216,0.08);">
+                                <span class="material-symbols-outlined" style="color:#00b4d8;">engineering</span>
+                            </div>
+                            <h4>Staff Management</h4>
+                        </div>
+                        <ul>
+                            <li><span class="dot"></span> <a href="/admin_staff.html" id="mgmtAddSecretary">Add Secretary</a></li>
+                            <li><span class="dot"></span> <a href="/admin_staff.html" id="mgmtManageStaff">Manage Staff</a></li>
+                            <li><span class="dot"></span> <a href="/admin_activity.html" id="mgmtActivityLogs">View Activity Logs</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mgmt-card">
+                        <div class="mgmt-header">
+                            <div class="icon-box" style="background:rgba(244,162,97,0.08);">
+                                <span class="material-symbols-outlined" style="color:#f4a261;">checklist_rtl</span>
+                            </div>
+                            <h4>Attendance &amp; Results</h4>
+                        </div>
+                        <ul>
+                            <li><span class="dot"></span> <a href="/admin_attendance.html" id="mgmtAttendanceHistory">Attendance History</a></li>
+                            <li><span class="dot"></span> <a href="/admin_attendance.html" id="mgmtTodayRecords">Today's Records</a></li>
+                            <li><span class="dot"></span> <a href="/admin_notes.html" id="mgmtSecretaryNotes">View Secretary Notes</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- ========================================== -->
+    <!-- SCRIPTS -->
+    <!-- ========================================== -->
+    <script src="js/config.js"></script>
+    <script>
+        // =============================================
+        // ✅ CSP-COMPLIANT - NO INLINE EVENT HANDLERS
+        // =============================================
+        
+        const BASE_API = window.BASE_API;
+
+        // =============================================
+        // ✅ AUTH
+        // =============================================
+        (async function protectPage() {
+            try {
+                const response = await fetch(`${BASE_API}/auth/check-session`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (!data.valid) {
+                    window.location.href = 'access.html';
+                    return;
+                }
+                
+                document.getElementById('adminName').textContent = data.name || data.email.split('@')[0];
+                document.getElementById('adminEmail').textContent = data.email;
+                
+            } catch (err) {
+                console.error('Auth error:', err.message);
+                window.location.href = 'access.html';
+            }
+        })();
+
+        // =============================================
+        // ✅ NAVIGATION HELPERS
+        // =============================================
+        function navigateTo(url) {
+            window.location.href = url;
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch(`${BASE_API}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                .then(() => {
+                    window.location.href = 'access.html';
+                })
+                .catch(() => {
+                    window.location.href = 'access.html';
+                });
+            }
+        }
+
+        function viewStudent(id) {
+            window.location.href = `profile.html?type=student&id=${id}`;
+        }
+
+        function formatNumber(num) {
+            return Number(num).toLocaleString('en-US', { 
+                minimumFractionDigits: 0, 
+                maximumFractionDigits: 0 
+            });
+        }
+
+        // =============================================
+        // ✅ LOAD DASHBOARD DATA
+        // =============================================
+        async function loadDashboardData() {
+            try {
+                // --- Fetch total students ---
+                const studentsRes = await fetch(`${BASE_API}/students/all`);
+                if (studentsRes.ok) {
+                    const students = await studentsRes.json();
+                    document.getElementById('totalStudents').textContent = students.length || 0;
+                }
+                
+                // --- Fetch today's attendance ---
+                const attRes = await fetch(`${BASE_API}/attendance/today`);
+                if (attRes.ok) {
+                    const attData = await attRes.json();
+                    document.getElementById('todayPresent').textContent = attData.length || 0;
+                }
+                
+                // --- ✅ FIXED: Fetch finance data from multiple endpoints ---
+                // Get today's transactions
+                const todayRes = await fetch(`${BASE_API}/finance/today`);
+                let todayData = { transactions: [] };
+                if (todayRes.ok) {
+                    todayData = await todayRes.json();
+                }
+                
+                // Get monthly transactions for MTD stats
+                const monthRes = await fetch(`${BASE_API}/finance/month`);
+                let monthData = { transactions: [] };
+                if (monthRes.ok) {
+                    monthData = await monthRes.json();
+                }
+                
+                // Calculate MTD totals from month data
+                const monthTransactions = monthData.transactions || [];
+                const income = monthTransactions.filter(t => t.transaction_type === 'income');
+                const expenses = monthTransactions.filter(t => t.transaction_type === 'expense');
+                const totalIncome = income.reduce((sum, t) => sum + (t.amount || 0), 0);
+                const totalExpense = expenses.reduce((sum, t) => sum + (t.amount || 0), 0);
+                const netProfit = totalIncome - totalExpense;
+                
+                // Update dashboard stats with MTD values
+                document.getElementById('totalIncome').textContent = '₦' + formatNumber(totalIncome);
+                document.getElementById('totalExpenses').textContent = '₦' + formatNumber(totalExpense);
+                document.getElementById('netProfit').textContent = '₦' + formatNumber(netProfit);
+                
+                // Update notification badge with today's transactions count
+                const todayTransactions = todayData.transactions || [];
+                document.getElementById('notificationBadge').textContent = todayTransactions.length;
+                
+                // --- Load recent students ---
+                await loadRecentStudents();
+                
+                // --- Load recent activity ---
+                await loadRecentActivity();
+                
+            } catch (err) {
+                console.error('Error loading dashboard data:', err);
+            }
+        }
+
+        // =============================================
+        // ✅ LOAD RECENT STUDENTS
+        // =============================================
+        async function loadRecentStudents() {
+            const tbody = document.getElementById('studentTableBody');
+            try {
+                const res = await fetch(`${BASE_API}/students/all`);
+                if (!res.ok) throw new Error('Failed to fetch students');
+                const students = await res.json();
+                const recent = students.slice(0, 5) || [];
+                
+                if (recent.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:#94a3b8;">No students registered yet.</td></tr>`;
+                    return;
+                }
+                
+                let html = '';
+                recent.forEach((s, i) => {
+                    const isExam = s.student_type === 'exam';
+                    const typeBadge = isExam ? 'badge-exam' : 'badge-training';
+                    const typeLabel = isExam ? 'EXAM' : 'TRAINING';
+                    const courseDept = isExam ? (s.department || '—') : (s.course || '—');
+                    const isActive = s.current_status === 'IN' || s.current_status === 'ACTIVE';
+                    const statusClass = isActive ? 'active' : 'inactive';
+                    const statusLabel = isActive ? 'Active' : 'Inactive';
+                    
+                    html += `
+                        <tr>
+                            <td>${String(i + 1).padStart(3, '0')}</td>
+                            <td class="student-name">${s.full_name || 'Unknown'}</td>
+                            <td><span class="badge ${typeBadge}">${typeLabel}</span></td>
+                            <td>${courseDept}</td>
+                            <td>${s.phone_number || '—'}</td>
+                            <td>
+                                <span class="status-dot ${statusClass}"></span>
+                                <span class="badge ${isActive ? 'badge-active' : 'badge-inactive'}">${statusLabel}</span>
+                            </td>
+                            <td class="table-actions">
+                                <button class="action-btn view-student-btn" data-id="${s.student_id}" title="View Student">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+
+                // ✅ Attach event listeners to dynamic buttons
+                document.querySelectorAll('.view-student-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        viewStudent(this.dataset.id);
+                    });
+                });
+
+            } catch (err) {
+                console.error('Error loading students:', err);
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:#dc2626;">Error loading students</td></tr>`;
+            }
+        }
+
+        // =============================================
+        // ✅ LOAD RECENT ACTIVITY
+        // =============================================
+        async function loadRecentActivity() {
+            const feed = document.getElementById('activityFeed');
+            try {
+                const res = await fetch(`${BASE_API}/auth/activity-logs?limit=3`);
+                if (!res.ok) throw new Error('Failed to fetch activity');
+                const logs = await res.json();
+                const recent = logs.slice(0, 3) || [];
+                
+                if (recent.length === 0) {
+                    feed.innerHTML = `<div style="text-align:center; padding:16px; color:#94a3b8; font-size:14px;">No recent activity today.</div>`;
+                    return;
+                }
+                
+                let html = '';
+                recent.forEach((log, idx) => {
+                    const timeMap = ['just now', '1 minute ago', '2 minutes ago', '3 minutes ago', '4 minutes ago', '5 minutes ago', '10 minutes ago'];
+                    const timeText = timeMap[idx] || timeMap[5];
+                    const dotColor = log.type === 'attendance' ? '#2d9b4e' : log.type === 'finance' ? '#1a5f7a' : '#f4a261';
+                    
+                    html += `
+                        <div class="activity-item">
+                            <div class="dot">
+                                <div class="inner" style="background:${dotColor};"></div>
+                            </div>
+                            <span class="activity-title">${log.activity_type || 'Activity'}</span>
+                            <p class="activity-desc">${log.details || 'No details'}</p>
+                            <span class="activity-time">${timeText}</span>
+                        </div>
+                    `;
+                });
+                feed.innerHTML = html;
+            } catch (err) {
+                console.error('Error loading activity:', err);
+                feed.innerHTML = `<div style="text-align:center; padding:16px; color:#94a3b8; font-size:14px;">Could not load activity.</div>`;
+            }
+        }
+
+        // =============================================
+        // ✅ EVENT LISTENERS (CSP COMPLIANT)
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Sidebar toggle ---
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
+
+            // --- Logout ---
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', handleLogout);
+            }
+
+            // --- Register Student (CTA) ---
+            const registerBtn = document.getElementById('registerStudentBtn');
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function() {
+                    navigateTo('registration.html');
+                });
+            }
+
+            // --- Quick Actions ---
+            const quickRegister = document.getElementById('quickRegister');
+            if (quickRegister) {
+                quickRegister.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navigateTo('registration.html');
+                });
+            }
+
+            const quickAttendance = document.getElementById('quickAttendance');
+            if (quickAttendance) {
+                quickAttendance.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navigateTo('attendance.html');
+                });
+            }
+
+            const quickFinance = document.getElementById('quickFinance');
+            if (quickFinance) {
+                quickFinance.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navigateTo('finance_entry.html');
+                });
+            }
+
+            const quickReports = document.getElementById('quickReports');
+            if (quickReports) {
+                quickReports.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navigateTo('admin_finance.html');
+                });
+            }
+
+            // --- Navigation links (sidebar) ---
+            const navLinks = {
+                'navDashboard': '/admin_dashboard.html',
+                'navStudents': '/admin_students.html',
+                'navFinance': '/admin_finance.html',
+                'navStaff': '/admin_staff.html',
+                'navAttendance': '/admin_attendance.html',
+                'navResults': '/admin_results.html',
+                'navNotes': '/admin_notes.html',
+                'navSettings': '/settings.html'
+            };
+
+            Object.keys(navLinks).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo(navLinks[id]);
+                    });
+                }
+            });
+
+            // --- View All Students ---
+            const viewAllStudents = document.getElementById('viewAllStudents');
+            if (viewAllStudents) {
+                viewAllStudents.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navigateTo('/admin_students.html');
+                });
+            }
+
+            // --- Management Grid Links ---
+            const mgmtLinks = {
+                'mgmtViewAllStudents': '/admin_students.html',
+                'mgmtExamStudents': '/admin_students.html?type=exam',
+                'mgmtTrainingStudents': '/admin_students.html?type=computer_training',
+                'mgmtRegisterStudent': '/registration.html',
+                'mgmtFinanceReports': '/admin_finance.html',
+                'mgmtFinanceAnalytics': '/admin_finance.html',
+                'mgmtAddTransaction': '/finance_entry.html',
+                'mgmtExportReports': '/admin_finance.html',
+                'mgmtAddSecretary': '/admin_staff.html',
+                'mgmtManageStaff': '/admin_staff.html',
+                'mgmtActivityLogs': '/admin_activity.html',
+                'mgmtAttendanceHistory': '/admin_attendance.html',
+                'mgmtTodayRecords': '/admin_attendance.html',
+                'mgmtSecretaryNotes': '/admin_notes.html'
+            };
+
+            Object.keys(mgmtLinks).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo(mgmtLinks[id]);
+                    });
+                }
+            });
+
+            // --- Notifications button ---
+            const notifBtn = document.getElementById('notificationsBtn');
+            if (notifBtn) {
+                notifBtn.addEventListener('click', function() {
+                    navigateTo('notes.html');
+                });
+            }
+
+            // --- Help button ---
+            const helpBtn = document.getElementById('helpBtn');
+            if (helpBtn) {
+                helpBtn.addEventListener('click', function() {
+                    navigateTo('admin_dashboard.html');
+                });
+            }
+
+            // --- More Vert (activity) ---
+            const moreVert = document.getElementById('moreVert');
+            if (moreVert) {
+                moreVert.addEventListener('click', function() {
+                    navigateTo('admin_activity.html');
+                });
+            }
+
+            // --- Global search ---
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('keyup', function(e) {
+                    const query = e.target.value.trim();
+                    if (query.length > 2) {
+                        navigateTo(`admin_students.html?search=${encodeURIComponent(query)}`);
+                    }
+                });
+            }
+
+            // --- Load initial data ---
+            loadDashboardData();
+            
+            // Auto-refresh every 60 seconds
+            setInterval(loadDashboardData, 60000);
+        });
+    </script>
+</body>
+</html>

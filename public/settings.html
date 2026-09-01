@@ -1,0 +1,1554 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+    <title>Settings | Geo Solution</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0f2b3d",
+                        "primary-container": "#0f2b3d",
+                        "secondary": "#1a5f7a",
+                        "secondary-container": "#a3dfff",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#7993a8",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#21647f",
+                        "on-background": "#1a1c1d",
+                        "on-surface-variant": "#43474c",
+                        "background": "#faf9fa",
+                        "surface": "#faf9fa",
+                        "surface-container": "#efedef",
+                        "surface-container-low": "#f4f3f5",
+                        "surface-container-high": "#e9e8e9",
+                        "surface-container-highest": "#e3e2e4",
+                        "outline": "#73777d",
+                        "outline-variant": "#c3c7cc",
+                        "error": "#e63946",
+                        "success": "#2d9b4e",
+                        "warning": "#f4a261",
+                        "tertiary": "#211000",
+                        "tertiary-fixed": "#ffdcbd",
+                        "on-tertiary-fixed-variant": "#5e4122",
+                        "primary-fixed": "#cbe6fe",
+                        "secondary-fixed": "#c0e8ff",
+                        "on-secondary-fixed": "#001e2b",
+                        "surface-dim": "#dbdadb",
+                        "surface-bright": "#faf9fa",
+                        "surface-tint": "#486175",
+                        "surface-variant": "#e3e2e4",
+                        "inverse-surface": "#2f3032",
+                        "inverse-on-surface": "#f1f0f2",
+                        "inverse-primary": "#afcae1",
+                        "tertiary-container": "#3b2307",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#2c1600",
+                        "on-tertiary-container": "#ad8864",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#92cfee",
+                        "primary-fixed-dim": "#afcae1",
+                        "on-primary-fixed": "#001e2f",
+                        "on-primary-fixed-variant": "#30495d",
+                        "on-secondary-fixed-variant": "#004d66"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "margin-mobile": "16px",
+                        "lg": "40px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "xl": "64px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "margin-desktop": "48px"
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    fontSize: {
+                        'headline-lg-mobile': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+                        'headline-xl': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '700' }],
+                        'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '700' }],
+                        'headline-md': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+                        'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+                        'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+                        'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+                        'label-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+                        'label-md': ['14px', { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '600' }]
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background: #faf9fa;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(15, 43, 61, 0.06);
+            box-shadow: 0 2px 16px -2px rgba(15, 43, 61, 0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(0, 180, 216, 0.1);
+            box-shadow: 0 4px 24px -4px rgba(15, 43, 61, 0.1);
+        }
+        
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.85);
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+        
+        .dark .glass-card:hover {
+            border-color: rgba(0, 180, 216, 0.2);
+        }
+        
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #0f2b3d;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            overflow-y: auto;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .dark .admin-sidebar {
+            background: #0a1628;
+        }
+        
+        .admin-sidebar .brand {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .admin-sidebar .brand h1 {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            margin: 0;
+        }
+        
+        .admin-sidebar .brand p {
+            font-size: 12px;
+            color: rgba(192, 232, 255, 0.6);
+            margin: 2px 0 0;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        .admin-sidebar .cta-btn {
+            margin: 16px 24px 20px;
+            padding: 12px 16px;
+            background: #c0e8ff;
+            color: #001e2b;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-sidebar .cta-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(192, 232, 255, 0.3);
+        }
+        
+        .admin-sidebar .cta-btn .material-symbols-outlined {
+            font-size: 20px;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 8px 12px;
+            overflow-y: auto;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: rgba(192, 232, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            margin-bottom: 2px;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.06);
+            color: #ffffff;
+        }
+        
+        .sidebar-nav a.active {
+            background: #001624;
+            color: #c0e8ff;
+            font-weight: 700;
+            border-right: 4px solid #00b4d8;
+        }
+        
+        .sidebar-nav a .material-symbols-outlined {
+            font-size: 22px;
+        }
+        
+        .sidebar-profile {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: auto;
+        }
+        
+        .sidebar-profile .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(192, 232, 255, 0.3);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-profile .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .sidebar-profile .info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .sidebar-profile .info .name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            display: block;
+            line-height: 1.2;
+        }
+        
+        .sidebar-profile .info .email {
+            font-size: 11px;
+            color: rgba(192, 232, 255, 0.5);
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .sidebar-profile .logout-btn {
+            background: none;
+            border: none;
+            color: rgba(192, 232, 255, 0.5);
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.3s;
+            font-size: 20px;
+        }
+        
+        .sidebar-profile .logout-btn:hover {
+            color: #ffffff;
+        }
+        
+        .admin-main {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+        
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 260px;
+            right: 0;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(195, 199, 204, 0.15);
+            z-index: 99;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .dark .top-nav {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom-color: rgba(255, 255, 255, 0.06);
+        }
+        
+        .top-nav .search-wrap {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .top-nav .search-wrap .material-symbols-outlined {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #73777d;
+            font-size: 20px;
+        }
+        
+        .top-nav .search-wrap input {
+            width: 100%;
+            padding: 9px 16px 9px 44px;
+            border: none;
+            border-radius: 50px;
+            background: #f4f3f5;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            outline: none;
+        }
+        
+        .dark .top-nav .search-wrap input {
+            background: rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+        }
+        
+        .top-nav .search-wrap input:focus {
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.15);
+        }
+        
+        .dark .top-nav .search-wrap input:focus {
+            background: #1e293b;
+        }
+        
+        .top-nav .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .top-nav .nav-actions .icon-btn {
+            position: relative;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #73777d;
+            transition: color 0.3s;
+            padding: 4px;
+        }
+        
+        .top-nav .nav-actions .icon-btn:hover {
+            color: #0f2b3d;
+        }
+        
+        .dark .top-nav .nav-actions .icon-btn {
+            color: #94a3b8;
+        }
+        
+        .dark .top-nav .nav-actions .icon-btn:hover {
+            color: #e2e8f0;
+        }
+        
+        .top-nav .nav-actions .icon-btn .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: #e63946;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .top-nav .nav-actions .material-symbols-outlined {
+            font-size: 24px;
+        }
+        
+        .dashboard-content {
+            padding: 80px 32px 48px;
+            flex: 1;
+            max-width: 1440px;
+            width: 100%;
+        }
+        
+        .settings-section {
+            margin-bottom: 24px;
+        }
+        
+        .settings-section .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        .dark .settings-section .section-title {
+            color: #94a3b8;
+        }
+        
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(195, 199, 204, 0.08);
+            transition: background 0.2s;
+        }
+        
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        .settings-item:hover {
+            background: rgba(15, 43, 61, 0.02);
+        }
+        
+        .dark .settings-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .settings-item .left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        
+        .settings-item .left .icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .settings-item .left .info .title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f2b3d;
+        }
+        
+        .dark .settings-item .left .info .title {
+            color: #e2e8f0;
+        }
+        
+        .settings-item .left .info .desc {
+            font-size: 12px;
+            color: #64748b;
+        }
+        
+        .dark .settings-item .left .info .desc {
+            color: #94a3b8;
+        }
+        
+        .theme-toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .theme-toggle-wrapper .mode-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            transition: color 0.3s;
+        }
+        
+        .dark .theme-toggle-wrapper .mode-label {
+            color: #94a3b8;
+        }
+        
+        .theme-toggle-wrapper .mode-label.active-light {
+            color: #0f2b3d;
+        }
+        
+        .dark .theme-toggle-wrapper .mode-label.active-dark {
+            color: #e2e8f0;
+        }
+        
+        .theme-toggle-btn {
+            position: relative;
+            width: 56px;
+            height: 30px;
+            border-radius: 30px;
+            background: #e2e8f0;
+            border: 2px solid #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+        }
+        
+        .dark .theme-toggle-btn {
+            background: #334155;
+            border-color: #475569;
+        }
+        
+        .theme-toggle-btn .toggle-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transform: translateX(0);
+        }
+        
+        .theme-toggle-btn.dark-mode .toggle-thumb {
+            transform: translateX(26px);
+            background: #1e293b;
+        }
+        
+        .theme-toggle-btn .toggle-thumb .material-symbols-outlined {
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle-btn .toggle-thumb .sun-icon {
+            color: #f4a261;
+        }
+        
+        .theme-toggle-btn.dark-mode .toggle-thumb .sun-icon {
+            display: none;
+        }
+        
+        .theme-toggle-btn .toggle-thumb .moon-icon {
+            color: #94a3b8;
+            display: none;
+        }
+        
+        .theme-toggle-btn.dark-mode .toggle-thumb .moon-icon {
+            display: block;
+        }
+        
+        .theme-toggle-status {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        .theme-toggle-status.light {
+            background: rgba(15, 43, 61, 0.08);
+            color: #0f2b3d;
+        }
+        
+        .theme-toggle-status.dark {
+            background: rgba(30, 41, 59, 0.2);
+            color: #e2e8f0;
+        }
+        
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #ffffff;
+            padding: 4px;
+        }
+        
+        .hamburger-btn .material-symbols-outlined {
+            font-size: 28px;
+        }
+        
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(195,199,204,0.15);
+            padding: 6px 8px;
+            justify-content: space-around;
+        }
+        
+        .dark .mobile-bottom-nav {
+            background: rgba(15, 23, 42, 0.95);
+            border-top-color: rgba(255, 255, 255, 0.06);
+        }
+        
+        .mobile-bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 4px 12px;
+            transition: color 0.2s;
+        }
+        
+        .mobile-bottom-nav a.active {
+            color: #0f2b3d;
+        }
+        
+        .dark .mobile-bottom-nav a.active {
+            color: #e2e8f0;
+        }
+        
+        .mobile-bottom-nav a .material-symbols-outlined {
+            font-size: 24px;
+        }
+        
+        .mobile-bottom-nav a span:last-child {
+            margin-top: 2px;
+        }
+        
+        @media (max-width: 1024px) {
+            .top-nav {
+                padding: 0 20px;
+            }
+            .dashboard-content {
+                padding: 80px 20px 48px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .top-nav {
+                left: 0;
+                width: 100%;
+                padding: 0 16px;
+                background: #0f2b3d;
+                border-bottom: none;
+            }
+            
+            .dark .top-nav {
+                background: #0a1628;
+            }
+            
+            .top-nav .search-wrap input {
+                background: rgba(255, 255, 255, 0.12);
+                color: #ffffff;
+            }
+            
+            .top-nav .search-wrap input::placeholder {
+                color: rgba(255, 255, 255, 0.5);
+            }
+            
+            .top-nav .search-wrap .material-symbols-outlined {
+                color: rgba(255, 255, 255, 0.5);
+            }
+            
+            .top-nav .nav-actions .icon-btn {
+                color: rgba(255, 255, 255, 0.7);
+            }
+            
+            .top-nav .nav-actions .icon-btn:hover {
+                color: #ffffff;
+            }
+            
+            .hamburger-btn {
+                display: block;
+            }
+            
+            .dashboard-content {
+                padding: 80px 16px 80px;
+            }
+            
+            .page-header h2 {
+                font-size: 22px !important;
+            }
+            
+            .mobile-bottom-nav {
+                display: flex !important;
+            }
+            
+            .settings-item {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .settings-item .right {
+                margin-left: auto;
+            }
+            
+            .theme-toggle-wrapper {
+                gap: 8px;
+            }
+            
+            .theme-toggle-btn {
+                width: 48px;
+                height: 26px;
+            }
+            
+            .theme-toggle-btn .toggle-thumb {
+                width: 18px;
+                height: 18px;
+                font-size: 12px;
+            }
+            
+            .theme-toggle-btn.dark-mode .toggle-thumb {
+                transform: translateX(22px);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .settings-item .left .icon {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .settings-item .left .icon .material-symbols-outlined {
+                font-size: 18px !important;
+            }
+            
+            .settings-item .left .info .title {
+                font-size: 13px;
+            }
+            
+            .settings-item .left .info .desc {
+                font-size: 11px;
+            }
+        }
+        
+        .admin-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .toast {
+            padding: 14px 24px;
+            border-radius: 12px;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+            animation: slideInRight 0.4s ease, fadeOut 0.4s ease 2.6s forwards;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            min-width: 280px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .toast-success { background: #2d9b4e; }
+        .toast-error { background: #e63946; }
+        .toast-warning { background: #f4a261; }
+        .toast-info { background: #1a5f7a; }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(50px); }
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 420px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideUp 0.3s ease;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.15);
+        }
+        
+        .dark .modal {
+            background: #1e293b;
+        }
+        
+        @keyframes modalSlideUp {
+            from { transform: translateY(30px) scale(0.96); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        
+        .modal .modal-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(15,43,61,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        
+        .dark .modal .modal-icon {
+            background: rgba(255,255,255,0.08);
+        }
+        
+        .modal .modal-icon .material-symbols-outlined {
+            font-size: 32px;
+            color: #0f2b3d;
+        }
+        
+        .dark .modal .modal-icon .material-symbols-outlined {
+            color: #e2e8f0;
+        }
+        
+        .modal h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f2b3d;
+            text-align: center;
+            margin: 0 0 4px;
+        }
+        
+        .dark .modal h2 {
+            color: #e2e8f0;
+        }
+        
+        .modal .sub {
+            font-size: 14px;
+            color: #64748b;
+            text-align: center;
+            margin: 0 0 24px;
+        }
+        
+        .dark .modal .sub {
+            color: #94a3b8;
+        }
+        
+        .modal .form-group {
+            margin-bottom: 14px;
+        }
+        
+        .modal .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        
+        .dark .modal .form-group label {
+            color: #e2e8f0;
+        }
+        
+        .modal .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+            transition: all 0.3s;
+            outline: none;
+            background: #faf9fa;
+        }
+        
+        .dark .modal .form-group input {
+            background: #0f172a;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        
+        .modal .form-group input:focus {
+            border-color: #1a5f7a;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(26,95,122,0.08);
+        }
+        
+        .dark .modal .form-group input:focus {
+            background: #1e293b;
+            border-color: #1a5f7a;
+        }
+        
+        .modal .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .modal .btn-row button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal .btn-save {
+            background: #0f2b3d;
+            color: #ffffff;
+        }
+        
+        .modal .btn-save:hover {
+            background: #1a5f7a;
+        }
+        
+        .dark .modal .btn-save {
+            background: #1a5f7a;
+        }
+        
+        .dark .modal .btn-save:hover {
+            background: #0f2b3d;
+        }
+        
+        .modal .btn-cancel {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        
+        .modal .btn-cancel:hover {
+            background: #e2e8f0;
+        }
+        
+        .dark .modal .btn-cancel {
+            background: #334155;
+            color: #94a3b8;
+        }
+        
+        .dark .modal .btn-cancel:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body>
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">
+            <h1>Geo Solution</h1>
+            <p>Admin Portal</p>
+        </div>
+        
+        <button class="cta-btn" onclick="window.location.href='registration.html'">
+            <span class="material-symbols-outlined">person_add</span>
+            Register Student
+        </button>
+        
+        <nav class="sidebar-nav">
+            <a href="/admin_dashboard.html">
+                <span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+            <a href="/admin_students.html">
+                <span class="material-symbols-outlined">school</span>
+                Students
+            </a>
+            <a href="admin_finance.html">
+                <span class="material-symbols-outlined">payments</span>
+                Finance
+            </a>
+            <a href="admin_staff.html">
+                <span class="material-symbols-outlined">group</span>
+                Staff
+            </a>
+            <a href="admin_attendance.html">
+                <span class="material-symbols-outlined">event_available</span>
+                Attendance
+            </a>
+            <!-- <a href="admin_results.html">
+                <span class="material-symbols-outlined">quiz</span>
+                Exam Results
+            </a> -->
+            <a href="admin_notes.html">
+                <span class="material-symbols-outlined">sticky_note_2</span>
+                Notes
+            </a>
+            <a href="settings.html" class="active">
+                <span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+        </nav>
+        
+        <div class="sidebar-profile">
+            <div class="avatar">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT2_hO-XrJ4mCZoTCMpOHrVmFQY3hOKslq0mJ_RrNnx3imKF7GK18iCpfUzr6p7L_oLqb-BjEU4IVOJqkGa3kzOA2rDFs1uMBu32rEtPA8672O7qkhFsApz8I0V_6Ur7qAs8DH0OxZ2dQlnTw4kRW7kYLv0Swj9tM9lttZ-mwnbC_gQT_zbOwsLBzhyPLKdBunltvxlizmk_SV9I53NdP8yQfbmYSRBRG67KOBlp40XoWX6ukR49jHlA4Ey99PfmoHBCHIaBJyHCOW" alt="Admin">
+            </div>
+            <div class="info">
+                <span class="name" id="adminName">Administrator</span>
+                <span class="email" id="adminEmail">admin@email.com</span>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()" title="Logout">
+                <span class="material-symbols-outlined">logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="top-nav">
+            <button class="hamburger-btn" onclick="toggleSidebar()">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            
+            <div class="search-wrap">
+                <span class="material-symbols-outlined">search</span>
+                <input type="text" placeholder="Search settings..." id="searchInput">
+            </div>
+            
+            <div class="nav-actions">
+                <button class="icon-btn" onclick="window.location.href='notes.html'">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="badge" id="notificationBadge">0</span>
+                </button>
+                <button class="icon-btn" onclick="window.location.href='settings.html'">
+                    <span class="material-symbols-outlined">help</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+                <div>
+                    <h2 style="font-size:32px; font-weight:700; color:#0f2b3d; margin:0;">⚙️ Settings</h2>
+                    <p style="font-size:16px; color:#64748b; margin:4px 0 0;">Manage your account preferences and system settings</p>
+                </div>
+            </div>
+
+            <div class="glass-card" style="border-radius:14px; overflow:hidden; margin-bottom:24px;">
+                <div class="settings-section">
+                    <div style="padding:14px 18px 8px;">
+                        <div class="section-title">Appearance</div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(15,43,61,0.08);">
+                                <span class="material-symbols-outlined" style="color:#0f2b3d; font-size:20px;" id="themeIcon">dark_mode</span>
+                            </div>
+                            <div class="info">
+                                <div class="title" id="themeLabel">Dark Mode</div>
+                                <div class="desc" id="themeDesc">Switch between light and dark theme</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="theme-toggle-wrapper">
+                                <span class="mode-label" id="lightLabel" style="font-size:12px;">☀️ Light</span>
+                                <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleDarkMode()">
+                                    <div class="toggle-thumb">
+                                        <span class="sun-icon">☀️</span>
+                                        <span class="moon-icon">🌙</span>
+                                    </div>
+                                </button>
+                                <span class="mode-label" id="darkLabel" style="font-size:12px;">🌙 Dark</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(26,95,122,0.08);">
+                                <span class="material-symbols-outlined" style="color:#1a5f7a; font-size:20px;">palette</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">Color Theme</div>
+                                <div class="desc">Choose your preferred accent color</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <select style="padding:6px 12px; border:1px solid rgba(195,199,204,0.3); border-radius:8px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff;">
+                                <option value="default">Default (Navy)</option>
+                                <option value="blue">Blue</option>
+                                <option value="green">Green</option>
+                                <option value="purple">Purple</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="border-radius:14px; overflow:hidden; margin-bottom:24px;">
+                <div class="settings-section">
+                    <div style="padding:14px 18px 8px;">
+                        <div class="section-title">Account &amp; Security</div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(15,43,61,0.08);">
+                                <span class="material-symbols-outlined" style="color:#0f2b3d; font-size:20px;">person</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">Profile Information</div>
+                                <div class="desc">Update your name, email, and profile photo</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <button onclick="showToast('Profile settings coming soon!', 'info')" style="padding:6px 16px; background:rgba(15,43,61,0.08); color:#0f2b3d; border:none; border-radius:8px; font-weight:600; font-size:12px; cursor:pointer; transition:all 0.3s;">
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(230,57,70,0.08);">
+                                <span class="material-symbols-outlined" style="color:#e63946; font-size:20px;">lock</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">Change Password</div>
+                                <div class="desc">Update your account password</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <button onclick="openPasswordModal()" style="padding:6px 16px; background:rgba(15,43,61,0.08); color:#0f2b3d; border:none; border-radius:8px; font-weight:600; font-size:12px; cursor:pointer; transition:all 0.3s;">
+                                Change
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(244,162,97,0.08);">
+                                <span class="material-symbols-outlined" style="color:#f4a261; font-size:20px;">verified</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">Two-Factor Authentication</div>
+                                <div class="desc">Add an extra layer of security to your account</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(100,116,139,0.08);">
+                                <span class="material-symbols-outlined" style="color:#64748b; font-size:20px;">devices</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">Active Sessions</div>
+                                <div class="desc">Manage devices where you're logged in</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <span style="font-size:12px; color:#64748b; font-weight:500;">1 active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="border-radius:14px; overflow:hidden; margin-bottom:24px;">
+                <div class="settings-section">
+                    <div style="padding:14px 18px 8px;">
+                        <div class="section-title">Notifications</div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(0,180,216,0.08);">
+                                <span class="material-symbols-outlined" style="color:#00b4d8; font-size:20px;">email</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">Email Notifications</div>
+                                <div class="desc">Receive updates via email</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(45,155,78,0.08);">
+                                <span class="material-symbols-outlined" style="color:#2d9b4e; font-size:20px;">sms</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">SMS Alerts</div>
+                                <div class="desc">Receive important alerts via SMS</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(244,162,97,0.08);">
+                                <span class="material-symbols-outlined" style="color:#f4a261; font-size:20px;">notifications</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">Push Notifications</div>
+                                <div class="desc">Browser push notifications</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="border-radius:14px; overflow:hidden; margin-bottom:24px;">
+                <div class="settings-section">
+                    <div style="padding:14px 18px 8px;">
+                        <div class="section-title">Data &amp; Privacy</div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(15,43,61,0.08);">
+                                <span class="material-symbols-outlined" style="color:#0f2b3d; font-size:20px;">download</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">Export Data</div>
+                                <div class="desc">Download a copy of your data</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <button onclick="showToast('Exporting data...', 'info')" style="padding:6px 16px; background:rgba(15,43,61,0.08); color:#0f2b3d; border:none; border-radius:8px; font-weight:600; font-size:12px; cursor:pointer; transition:all 0.3s;">
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(230,57,70,0.08);">
+                                <span class="material-symbols-outlined" style="color:#e63946; font-size:20px;">delete_forever</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">Delete Account</div>
+                                <div class="desc">Permanently delete your account and all data</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <button onclick="if(confirm('⚠️ Are you sure you want to delete your account? This action cannot be undone!')) { showToast('Account deletion requested', 'error'); }" style="padding:6px 16px; background:rgba(230,57,70,0.08); color:#e63946; border:none; border-radius:8px; font-weight:600; font-size:12px; cursor:pointer; transition:all 0.3s;">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="border-radius:14px; overflow:hidden;">
+                <div class="settings-section">
+                    <div style="padding:14px 18px 8px;">
+                        <div class="section-title">About</div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(15,43,61,0.08);">
+                                <span class="material-symbols-outlined" style="color:#0f2b3d; font-size:20px;">info</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">Version</div>
+                                <div class="desc">Geo Solution v2.0.0</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <span style="font-size:12px; color:#94a3b8;">Latest</span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <div class="icon" style="background:rgba(15,43,61,0.08);">
+                                <span class="material-symbols-outlined" style="color:#0f2b3d; font-size:20px;">support</span>
+                            </div>
+                            <div class="info">
+                                <div class="title">Support</div>
+                                <div class="desc">Get help and support</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <button onclick="showToast('Support page coming soon!', 'info')" style="padding:6px 16px; background:rgba(15,43,61,0.08); color:#0f2b3d; border:none; border-radius:8px; font-weight:600; font-size:12px; cursor:pointer; transition:all 0.3s;">
+                                Contact
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <span class="material-symbols-outlined">lock</span>
+            </div>
+            <h2>Change Password</h2>
+            <p class="sub">Update your account password</p>
+            
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" id="currentPassword" placeholder="Enter current password">
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="newPassword" placeholder="Enter new password">
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                </div>
+                <div class="btn-row">
+                    <button type="submit" class="btn-save">Update Password</button>
+                    <button type="button" class="btn-cancel" onclick="closePasswordModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+<script>
+        const BASE_API = window.BASE_API || 'https://your-backend-url.com/api';
+        
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icons = {
+                success: 'check_circle',
+                error: 'error',
+                warning: 'warning',
+                info: 'info'
+            };
+            
+            toast.innerHTML = `
+                <span class="material-symbols-outlined" style="font-size:22px;">${icons[type] || 'info'}</span>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+        
+        window.showToast = showToast;
+
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('geo_dark_mode', isDark ? 'true' : 'false');
+            updateThemeUI(isDark);
+            showToast(isDark ? '🌙 Dark mode enabled' : '☀️ Light mode enabled', 'info');
+        }
+        
+        window.toggleDarkMode = toggleDarkMode;
+
+        function updateThemeUI(isDark) {
+            const btn = document.getElementById('themeToggleBtn');
+            const icon = document.getElementById('themeIcon');
+            const label = document.getElementById('themeLabel');
+            const desc = document.getElementById('themeDesc');
+            const lightLabel = document.getElementById('lightLabel');
+            const darkLabel = document.getElementById('darkLabel');
+            
+            if (isDark) {
+                btn.classList.add('dark-mode');
+                icon.textContent = 'light_mode';
+                icon.style.color = '#f4a261';
+                label.textContent = 'Dark Mode';
+                desc.textContent = 'Currently using dark theme';
+                lightLabel.style.color = '#94a3b8';
+                darkLabel.style.color = '#e2e8f0';
+            } else {
+                btn.classList.remove('dark-mode');
+                icon.textContent = 'dark_mode';
+                icon.style.color = '#0f2b3d';
+                label.textContent = 'Light Mode';
+                desc.textContent = 'Currently using light theme';
+                lightLabel.style.color = '#0f2b3d';
+                darkLabel.style.color = '#94a3b8';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkMode = localStorage.getItem('geo_dark_mode') === 'true';
+            if (darkMode) {
+                document.documentElement.classList.add('dark');
+            }
+            updateThemeUI(darkMode);
+        });
+
+        window.openPasswordModal = function() {
+            document.getElementById('passwordModal').classList.add('active');
+            document.getElementById('passwordForm').reset();
+        };
+
+        window.closePasswordModal = function() {
+            document.getElementById('passwordModal').classList.remove('active');
+        };
+
+        document.getElementById('passwordModal').addEventListener('click', function(e) {
+            if (e.target === this) closePasswordModal();
+        });
+
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+
+            if (!current || !newPass || !confirm) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (newPass !== confirm) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                showToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            showToast('✅ Password updated successfully!', 'success');
+            closePasswordModal();
+        });
+
+        window.toggleSidebar = function() {
+            document.getElementById('sidebar').classList.toggle('open');
+        };
+
+        window.handleLogout = function() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch(`${BASE_API}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                .then(() => {
+                    window.location.href = 'access.html';
+                })
+                .catch(() => {
+                    window.location.href = 'access.html';
+                });
+            }
+        };
+    </script>
+</body>
+</html>

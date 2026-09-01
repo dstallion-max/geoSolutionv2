@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Register Student | Geo Solution</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts: Inter & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0f2b3d",
+                        "primary-container": "#0f2b3d",
+                        "secondary": "#1a5f7a",
+                        "secondary-container": "#a3dfff",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#7993a8",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#21647f",
+                        "on-background": "#1a1c1d",
+                        "on-surface-variant": "#43474c",
+                        "background": "#faf9fa",
+                        "surface": "#faf9fa",
+                        "surface-container": "#efedef",
+                        "surface-container-low": "#f4f3f5",
+                        "surface-container-high": "#e9e8e9",
+                        "surface-container-highest": "#e3e2e4",
+                        "outline": "#73777d",
+                        "outline-variant": "#c3c7cc",
+                        "error": "#e63946",
+                        "success": "#2d9b4e",
+                        "warning": "#f4a261",
+                        "tertiary": "#211000",
+                        "tertiary-fixed": "#ffdcbd",
+                        "on-tertiary-fixed-variant": "#5e4122",
+                        "primary-fixed": "#cbe6fe",
+                        "secondary-fixed": "#c0e8ff",
+                        "on-secondary-fixed": "#001e2b",
+                        "surface-dim": "#dbdadb",
+                        "surface-bright": "#faf9fa",
+                        "surface-tint": "#486175",
+                        "surface-variant": "#e3e2e4",
+                        "inverse-surface": "#2f3032",
+                        "inverse-on-surface": "#f1f0f2",
+                        "inverse-primary": "#afcae1",
+                        "tertiary-container": "#3b2307",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#2c1600",
+                        "on-tertiary-container": "#ad8864",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#92cfee",
+                        "primary-fixed-dim": "#afcae1",
+                        "on-primary-fixed": "#001e2f",
+                        "on-primary-fixed-variant": "#30495d",
+                        "on-secondary-fixed-variant": "#004d66"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "md": "24px",
+                        "xl": "64px",
+                        "margin-mobile": "16px",
+                        "lg": "40px",
+                        "gutter": "24px",
+                        "sm": "12px",
+                        "xs": "4px",
+                        "base": "8px",
+                        "margin-desktop": "48px"
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    fontSize: {
+                        'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '700' }],
+                        'headline-xl': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '700' }],
+                        'headline-md': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+                        'headline-lg-mobile': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+                        'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+                        'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+                        'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+                        'label-md': ['14px', { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '600' }],
+                        'label-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }]
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #0f2b3d;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 16px 64px 0 rgba(0, 0, 0, 0.35);
+        }
+
+        .glass-card-light {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card-light:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-bottom: 2px solid #00b4d8 !important;
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .toggle-btn {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .toggle-btn.active {
+            background-color: #0f2b3d;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(15, 43, 61, 0.3);
+        }
+
+        .toggle-btn:not(.active):hover {
+            background-color: rgba(15, 43, 61, 0.05);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 0.8s infinite;
+            color: #00b4d8;
+            margin-left: 4px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .gradient-nav {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1a5f7a 50%, #00b4d8 100%);
+            background-size: 300% 300%;
+            animation: gradientMove 6s ease-in-out infinite;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .gradient-nav .brand-text {
+            color: #ffffff;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .gradient-nav .tagline {
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .gradient-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .gradient-nav .nav-link:hover {
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .gradient-nav .login-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .gradient-nav .login-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            padding: 14px 24px;
+            border-radius: 12px;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+            animation: slideInRight 0.4s ease, fadeOut 0.4s ease 3s forwards;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            min-width: 280px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast-success { background: #2d9b4e; }
+        .toast-error { background: #e63946; }
+        .toast-warning { background: #f4a261; }
+        .toast-info { background: #1a5f7a; }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(50px); }
+        }
+
+        @media (max-width: 768px) {
+            .glass-card {
+                padding: 20px !important;
+                border-radius: 1.5rem !important;
+            }
+            
+            .typing-cursor {
+                font-size: 28px !important;
+                line-height: 1.3 !important;
+            }
+            
+            .hero-subtitle {
+                font-size: 15px !important;
+                line-height: 1.6 !important;
+                padding: 0 8px !important;
+            }
+            
+            .hero-badges {
+                gap: 8px !important;
+                font-size: 12px !important;
+            }
+            
+            .hero-badges .badge-item {
+                font-size: 11px !important;
+            }
+            
+            .glass-card-light {
+                padding: 14px !important;
+            }
+            
+            .toast-container {
+                right: 16px;
+                left: 16px;
+                bottom: 16px;
+            }
+            
+            .toast {
+                min-width: unset;
+                width: 100%;
+                font-size: 13px;
+                padding: 12px 16px;
+            }
+            
+            .gradient-nav {
+                padding: 10px 16px !important;
+            }
+            
+            .gradient-nav .brand-text {
+                font-size: 18px !important;
+            }
+            
+            .gradient-nav .tagline {
+                font-size: 10px !important;
+            }
+            
+            .gradient-nav .school-icon {
+                font-size: 26px !important;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .typing-cursor {
+                font-size: 22px !important;
+                line-height: 1.3 !important;
+            }
+            
+            .glass-card {
+                padding: 16px !important;
+            }
+            
+            .hero-subtitle {
+                font-size: 14px !important;
+            }
+            
+            .hero-badges {
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+            }
+            
+            .hero-badges .badge-item {
+                font-size: 10px !important;
+                padding: 2px 6px !important;
+            }
+            
+            .gradient-nav .brand-text {
+                font-size: 16px !important;
+            }
+            
+            .gradient-nav .school-icon {
+                font-size: 22px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <header class="w-full sticky top-0 z-40 gradient-nav shadow-lg">
+        <div class="max-w-[1440px] mx-auto px-4 md:px-8 py-3 md:py-4 flex items-center justify-between">
+            <div class="flex items-center gap-2 md:gap-3">
+                <span class="material-symbols-outlined text-white font-bold text-[26px] md:text-[32px] drop-shadow-lg school-icon">school</span>
+                <div class="flex flex-col">
+                    <span class="font-headline-md text-[18px] md:text-[24px] font-bold brand-text">Geo Solution</span>
+                    <span class="font-label-sm text-[10px] md:text-[12px] tagline uppercase tracking-widest">Learning Never Ends</span>
+                </div>
+            </div>
+            <nav class="hidden md:flex items-center gap-6">
+                <a class="font-body-md text-body-md nav-link" href="/access.html">Staff Login</a>
+                <a class="font-body-md text-body-md nav-link" href="/records.html">Records</a>
+                <div class="w-[1px] h-6 bg-white/20"></div>
+                <a class="flex items-center gap-2 font-label-md text-label-md login-btn px-4 py-2 rounded-full" href="/access.html">
+                    <span class="material-symbols-outlined text-[18px]">login</span>
+                    Staff Login
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="relative min-h-screen py-xl">
+        <div class="max-w-[1200px] mx-auto px-4 md:px-8">
+            <section class="text-center mb-xl">
+                <h1 class="font-headline-xl text-[28px] md:text-[48px] text-white mb-2 md:mb-3 min-h-[50px] md:min-h-[60px] typing-cursor" id="typing-headline"></h1>
+                <p class="hero-subtitle font-body-lg text-[15px] md:text-[18px] text-white/80 max-w-2xl mx-auto leading-relaxed">
+                    "Learning Never Ends" — Start your academic journey with us today.
+                </p>
+                <div class="hero-badges flex items-center justify-center gap-2 md:gap-4 mt-3 md:mt-4 text-white/60 text-[11px] md:text-sm flex-wrap">
+                    <span class="badge-item flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px] md:text-[16px]">verified</span>
+                        Trusted Institution
+                    </span>
+                    <span class="w-1 h-1 rounded-full bg-white/30 hidden xs:block"></span>
+                    <span class="badge-item flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px] md:text-[16px]">groups</span>
+                        500+ Students
+                    </span>
+                    <span class="w-1 h-1 rounded-full bg-white/30 hidden xs:block"></span>
+                    <span class="badge-item flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px] md:text-[16px]">star</span>
+                        Excellence Guaranteed
+                    </span>
+                </div>
+            </section>
+
+            <div class="glass-card rounded-[2rem] p-4 md:p-xl animate-fade-in-up">
+                <form id="registrationForm">
+                    <div class="flex flex-col items-center gap-base mb-md">
+                        <label class="font-label-md text-[12px] md:text-[14px] text-outline uppercase tracking-wider">Select Enrollment Pathway</label>
+                        <div class="flex p-1 bg-surface-container-highest rounded-full w-full max-w-sm">
+                            <button class="toggle-btn active flex-1 py-2 md:py-2.5 rounded-full font-label-md text-[12px] md:text-[14px] transition-all" id="btn-exam" type="button">
+                                📝 EXAM
+                            </button>
+                            <button class="toggle-btn flex-1 py-2 md:py-2.5 rounded-full font-label-md text-[12px] md:text-[14px] transition-all text-on-surface-variant" id="btn-training" type="button">
+                                💻 COMPUTER TRAINING
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                        <div class="col-span-full border-b border-outline/10 pb-2 md:pb-3 mb-2 md:mb-3">
+                            <h3 class="font-headline-md text-[18px] md:text-[24px] text-[#0f2b3d] flex items-center gap-2">
+                                <span class="material-symbols-outlined">person</span>
+                                Personal Information
+                            </h3>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Full Name <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="fullName" placeholder="John Olusegun Doe" required type="text"/>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Matric Number <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="matricNumber" placeholder="GEO-2025-001" required type="text"/>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">Gender <span class="text-error">*</span></label>
+                            <select class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" id="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Date of Birth <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="dob" required type="date"/>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Phone Number <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="phone" placeholder="080 000 0000" required type="tel"/>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">Email Address</label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="email" placeholder="john.doe@example.com" type="email"/>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2 col-span-full">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Residential Address <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="address" placeholder="123 Academic Street, Lagos, Nigeria" required type="text"/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pt-3 md:pt-4">
+                        <div class="col-span-full border-b border-outline/10 pb-2 md:pb-3 mb-2 md:mb-3">
+                            <h3 class="font-headline-md text-[18px] md:text-[24px] text-[#0f2b3d] flex items-center gap-2">
+                                <span class="material-symbols-outlined">school</span>
+                                <span id="profileTitle">Academic Profile</span>
+                            </h3>
+                        </div>
+
+                        <div class="contents" id="examFields">
+                            <div class="flex flex-col gap-1 md:gap-2">
+                                <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                    Department <span class="text-error">*</span>
+                                </label>
+                                <select class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" id="department" required>
+                                    <option value="Science">Science</option>
+                                    <option value="Art">Art</option>
+                                    <option value="Commercial">Commercial</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-1 md:gap-2">
+                                <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                    Exam Type <span class="text-error">*</span>
+                                </label>
+                                <select class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" id="examType" required>
+                                    <option value="JAMB">JAMB</option>
+                                    <option value="WAEC">WAEC</option>
+                                    <option value="NECO">NECO</option>
+                                    <option value="SPECIAL">Special (One-on-One Teaching)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="contents hidden" id="trainingFields">
+                            <div class="flex flex-col gap-1 md:gap-2">
+                                <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                    Course <span class="text-error">*</span>
+                                </label>
+                                <select class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" id="course" required>
+                                    <option value="Web Development">Web Development</option>
+                                    <option value="Graphics Design">Graphics Design</option>
+                                    <option value="Computer Fundamentals">Computer Fundamentals</option>
+                                    <option value="Data Analysis">Data Analysis</option>
+                                    <option value="Digital Marketing">Digital Marketing</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-1 md:gap-2">
+                                <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                    Education Level <span class="text-error">*</span>
+                                </label>
+                                <select class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" id="eduLevel" required>
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Advanced">Advanced</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-1 md:gap-2 col-span-full">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">Learning Goals &amp; Aspirations</label>
+                            <textarea class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg resize-none" 
+                                      id="goal" placeholder="What do you hope to achieve with us?" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pt-3 md:pt-4">
+                        <div class="col-span-full border-b border-outline/10 pb-2 md:pb-3 mb-2 md:mb-3">
+                            <h3 class="font-headline-md text-[18px] md:text-[24px] text-[#0f2b3d] flex items-center gap-2">
+                                <span class="material-symbols-outlined">family_restroom</span>
+                                Parent/Guardian Information
+                            </h3>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Parent Full Name <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="parentName" placeholder="Mr. John Doe Sr." required type="text"/>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Relationship <span class="text-error">*</span>
+                            </label>
+                            <select class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" id="parentRelationship" required>
+                                <option value="">Select Relationship</option>
+                                <option value="Father">Father</option>
+                                <option value="Mother">Mother</option>
+                                <option value="Guardian">Guardian</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Phone (Call) <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="parentPhoneCall" placeholder="080 111 1111" required type="tel"/>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Phone (WhatsApp) <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="parentPhoneWhatsapp" placeholder="080 222 2222" required type="tel"/>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">Parent Email</label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="parentEmail" placeholder="parent@example.com" type="email"/>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Parent Occupation <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="parentOccupation" placeholder="Engineer" required type="text"/>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2 col-span-full">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Parent Address <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="parentAddress" placeholder="456 Family Estate, Lagos, Nigeria" required type="text"/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pt-3 md:pt-4">
+                        <div class="col-span-full border-b border-outline/10 pb-2 md:pb-3 mb-2 md:mb-3">
+                            <h3 class="font-headline-md text-[18px] md:text-[24px] text-[#0f2b3d] flex items-center gap-2">
+                                <span class="material-symbols-outlined">upload_file</span>
+                                Document Uploads
+                            </h3>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Passport Photo <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="photo" required type="file" accept="image/jpeg,image/png"/>
+                            <span class="text-[10px] text-outline">JPG or PNG only (Max 5MB)</span>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 md:gap-2">
+                            <label class="font-label-md text-[13px] md:text-[14px] text-on-surface">
+                                Signed Registration Form <span class="text-error">*</span>
+                            </label>
+                            <input class="bg-surface/50 border-0 border-b border-outline/20 p-2 md:p-3 font-body-md text-[15px] md:text-[16px] transition-all rounded-t-lg" 
+                                   id="formUpload" required type="file" accept=".pdf"/>
+                            <span class="text-[10px] text-outline">PDF only (Max 5MB)</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 md:pt-4">
+                        <button class="w-full bg-[#0f2b3d] text-white py-3 md:py-4 rounded-xl font-headline-md text-[16px] md:text-[20px] hover:bg-[#1a5f7a] active:scale-[0.98] transition-all shadow-md flex items-center justify-center gap-2 md:gap-3" type="submit" id="submitBtn">
+                            📝 Register Student
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 mt-4 md:mt-6">
+                <a class="glass-card-light p-3 md:p-4 rounded-2xl flex items-center gap-3 md:gap-4 hover:translate-y-[-4px] transition-all group" href="/access.html">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#1a5f7a]/10 flex items-center justify-center text-[#1a5f7a] group-hover:bg-[#1a5f7a] group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-[20px] md:text-[24px]">admin_panel_settings</span>
+                    </div>
+                    <div>
+                        <p class="font-label-md text-[13px] md:text-[14px] text-[#0f2b3d]">Staff &amp; Admin Portal</p>
+                        <p class="font-body-sm text-[11px] md:text-[14px] text-on-surface-variant">Authorized personnel only</p>
+                    </div>
+                </a>
+                <a class="glass-card-light p-3 md:p-4 rounded-2xl flex items-center gap-3 md:gap-4 hover:translate-y-[-4px] transition-all group" href="/records.html">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-tertiary-container/10 flex items-center justify-center text-tertiary group-hover:bg-tertiary-container group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-[20px] md:text-[24px]">history_edu</span>
+                    </div>
+                    <div>
+                        <p class="font-label-md text-[13px] md:text-[14px] text-[#0f2b3d]">Attendance Records</p>
+                        <p class="font-body-sm text-[11px] md:text-[14px] text-on-surface-variant">Check daily student logs</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="w-full py-6 md:py-10 bg-white/90 mt-6 md:mt-10 border-t border-outline/5 relative">
+        <div class="max-w-[1440px] mx-auto px-4 md:px-8 text-center">
+            <div class="flex items-center justify-center gap-2 md:gap-3 mb-2 md:mb-3">
+                <span class="material-symbols-outlined text-[#1a5f7a]">verified</span>
+                <span class="font-label-md text-[13px] md:text-[14px] font-bold text-[#0f2b3d]">Geo Solution</span>
+            </div>
+            <p class="font-body-sm text-[11px] md:text-[14px] text-on-surface-variant">"Learning Never Ends" • Academic Management Portal • v2.0</p>
+            <div class="flex justify-center gap-3 md:gap-4 mt-2 md:mt-3 text-outline">
+                <span class="material-symbols-outlined text-[18px] md:text-[20px] hover:text-[#00b4d8] cursor-pointer transition-colors">face_nod</span>
+                <span class="material-symbols-outlined text-[18px] md:text-[20px] hover:text-[#00b4d8] cursor-pointer transition-colors">language</span>
+                <span class="material-symbols-outlined text-[18px] md:text-[20px] hover:text-[#00b4d8] cursor-pointer transition-colors">mail</span>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="js/config.js"></script>
+    <script>
+        const BASE_API = window.BASE_API || 'https://your-backend-url.com/api';
+        
+        // =============================================
+        // ✅ CANVAS BACKGROUND (WebGL)
+        // =============================================
+        const canvas = document.getElementById('bg-canvas');
+        const gl = canvas.getContext('webgl');
+
+        if (gl) {
+            const vsSource = `
+                attribute vec4 a_position;
+                void main() {
+                    gl_Position = a_position;
+                }
+            `;
+            const fsSource = `
+                precision highp float;
+                uniform float u_time;
+                uniform vec2 u_resolution;
+
+                void main() {
+                    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                    float time = u_time * 0.2;
+                    
+                    vec3 color1 = vec3(0.0588, 0.1686, 0.2392); 
+                    vec3 color2 = vec3(0.1020, 0.3725, 0.4784);
+                    vec3 color3 = vec3(0.0, 0.7059, 0.8471);
+                    
+                    float noise = sin(uv.x * 3.0 + time) * cos(uv.y * 2.0 - time * 0.5);
+                    noise += sin(uv.y * 4.0 + time * 0.8) * 0.5;
+                    
+                    vec3 finalColor = mix(color1, color2, clamp(noise + 0.5, 0.0, 1.0));
+                    finalColor = mix(finalColor, color3, pow(clamp(noise, 0.0, 1.0), 3.0) * 0.4);
+                    
+                    float dist = distance(uv, vec2(0.5));
+                    finalColor *= 1.2 - dist;
+                    
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `;
+
+            function createShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                return shader;
+            }
+
+            const program = gl.createProgram();
+            gl.attachShader(program, createShader(gl, gl.VERTEX_SHADER, vsSource));
+            gl.attachShader(program, createShader(gl, gl.FRAGMENT_SHADER, fsSource));
+            gl.linkProgram(program);
+
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+
+            const positionLocation = gl.getAttribLocation(program, 'a_position');
+            const timeLocation = gl.getUniformLocation(program, 'u_time');
+            const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+
+            function render(time) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                gl.viewport(0, 0, canvas.width, canvas.height);
+
+                gl.useProgram(program);
+                gl.enableVertexAttribArray(positionLocation);
+                gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+                gl.uniform1f(timeLocation, time * 0.001);
+                gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                requestAnimationFrame(render);
+            }
+            requestAnimationFrame(render);
+        }
+
+        // =============================================
+        // ✅ TYPING HEADLINE
+        // =============================================
+        const headlineElement = document.getElementById('typing-headline');
+        
+        const phrases = [
+            "✨ Welcome to Geo Solution",
+            "📚 Learning Never Ends"
+        ];
+        
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let isPaused = false;
+        let timeoutId = null;
+
+        function typeLoop() {
+            const currentPhrase = phrases[phraseIndex];
+            
+            if (isPaused) {
+                return;
+            }
+            
+            if (!isDeleting) {
+                if (charIndex < currentPhrase.length) {
+                    headlineElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                    charIndex++;
+                    timeoutId = setTimeout(typeLoop, 80);
+                } else {
+                    isPaused = true;
+                    timeoutId = setTimeout(() => {
+                        isPaused = false;
+                        isDeleting = true;
+                        typeLoop();
+                    }, 2500);
+                }
+            } else {
+                if (charIndex > 0) {
+                    headlineElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                    charIndex--;
+                    timeoutId = setTimeout(typeLoop, 40);
+                } else {
+                    isDeleting = false;
+                    phraseIndex = (phraseIndex + 1) % phrases.length;
+                    timeoutId = setTimeout(typeLoop, 500);
+                }
+            }
+        }
+
+        window.addEventListener('load', () => {
+            headlineElement.textContent = '';
+            typeLoop();
+        });
+
+        // =============================================
+        // ✅ SET STUDENT TYPE TOGGLE
+        // =============================================
+        function setStudentType(type) {
+            const examBtn = document.getElementById('btn-exam');
+            const trainingBtn = document.getElementById('btn-training');
+            const examFields = document.getElementById('examFields');
+            const trainingFields = document.getElementById('trainingFields');
+            const profileTitle = document.getElementById('profileTitle');
+
+            if (type === 'exam') {
+                examBtn.classList.add('active');
+                trainingBtn.classList.remove('active');
+                examFields.classList.remove('hidden');
+                trainingFields.classList.add('hidden');
+                profileTitle.innerText = 'Exam Training Details';
+            } else {
+                trainingBtn.classList.add('active');
+                examBtn.classList.remove('active');
+                trainingFields.classList.remove('hidden');
+                examFields.classList.add('hidden');
+                profileTitle.innerText = 'Computer Training Details';
+            }
+        }
+
+        // Attach toggle event listeners
+        document.getElementById('btn-exam').addEventListener('click', function() {
+            setStudentType('exam');
+        });
+
+        document.getElementById('btn-training').addEventListener('click', function() {
+            setStudentType('computer_training');
+        });
+
+        // =============================================
+        // ✅ PHONE FORMATTING
+        // =============================================
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+            let formatted = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i === 3 || i === 7) formatted += ' ';
+                formatted += value[i];
+            }
+            e.target.value = formatted;
+        });
+
+        // Same for parent phone inputs
+        ['parentPhoneCall', 'parentPhoneWhatsapp'].forEach(id => {
+            const input = document.getElementById(id);
+            input.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                let formatted = '';
+                for (let i = 0; i < value.length; i++) {
+                    if (i === 3 || i === 7) formatted += ' ';
+                    formatted += value[i];
+                }
+                e.target.value = formatted;
+            });
+        });
+
+        // =============================================
+        // ✅ TOAST NOTIFICATIONS
+        // =============================================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icons = {
+                success: 'check_circle',
+                error: 'error',
+                warning: 'warning',
+                info: 'info'
+            };
+            
+            toast.innerHTML = `
+                <span class="material-symbols-outlined" style="font-size:22px;">${icons[type] || 'info'}</span>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+
+        // =============================================
+        // ✅ HELPER: File to Base64
+        // =============================================
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (error) => reject(error);
+            });
+        }
+
+        // =============================================
+        // ✅ FORM SUBMIT - JSON + Base64
+        // =============================================
+        const form = document.getElementById('registrationForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // =============================================
+            // ✅ GET ALL FORM VALUES
+            // =============================================
+            const fullName = document.getElementById('fullName').value.trim();
+            const matricNumber = document.getElementById('matricNumber').value.trim();
+            const gender = document.getElementById('gender').value;
+            const dob = document.getElementById('dob').value;
+            const phone = document.getElementById('phone').value.replace(/\s/g, '');
+            const email = document.getElementById('email').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const goal = document.getElementById('goal').value.trim();
+            
+            const isExam = !document.getElementById('examFields').classList.contains('hidden');
+            const department = isExam ? document.getElementById('department').value : '';
+            const examType = isExam ? document.getElementById('examType').value : '';
+            const course = !isExam ? document.getElementById('course').value : '';
+            const eduLevel = !isExam ? document.getElementById('eduLevel').value : '';
+
+            const parentName = document.getElementById('parentName').value.trim();
+            const parentRelationship = document.getElementById('parentRelationship').value;
+            const parentPhoneCall = document.getElementById('parentPhoneCall').value.replace(/\s/g, '');
+            const parentPhoneWhatsapp = document.getElementById('parentPhoneWhatsapp').value.replace(/\s/g, '');
+            const parentEmail = document.getElementById('parentEmail').value.trim();
+            const parentOccupation = document.getElementById('parentOccupation').value.trim();
+            const parentAddress = document.getElementById('parentAddress').value.trim();
+
+            const photoFile = document.getElementById('photo').files[0];
+            const formFile = document.getElementById('formUpload').files[0];
+
+            // =============================================
+            // ✅ VALIDATION - ALL FIELDS REQUIRED
+            // =============================================
+            if (!fullName) { showToast('⚠️ Please enter student full name', 'warning'); document.getElementById('fullName').focus(); return; }
+            if (!matricNumber) { showToast('⚠️ Please enter matric number', 'warning'); document.getElementById('matricNumber').focus(); return; }
+            if (!gender) { showToast('⚠️ Please select gender', 'warning'); document.getElementById('gender').focus(); return; }
+            if (!dob) { showToast('⚠️ Please enter date of birth', 'warning'); document.getElementById('dob').focus(); return; }
+            if (!phone || phone.length < 10) { showToast('⚠️ Please enter a valid phone number', 'warning'); document.getElementById('phone').focus(); return; }
+            if (!address) { showToast('⚠️ Please enter address', 'warning'); document.getElementById('address').focus(); return; }
+
+            if (isExam && !department) { showToast('⚠️ Please select department', 'warning'); document.getElementById('department').focus(); return; }
+            if (isExam && !examType) { showToast('⚠️ Please select exam type', 'warning'); document.getElementById('examType').focus(); return; }
+            if (!isExam && !course) { showToast('⚠️ Please select course', 'warning'); document.getElementById('course').focus(); return; }
+            if (!isExam && !eduLevel) { showToast('⚠️ Please select education level', 'warning'); document.getElementById('eduLevel').focus(); return; }
+
+            if (!parentName) { showToast('⚠️ Please enter parent full name', 'warning'); document.getElementById('parentName').focus(); return; }
+            if (!parentRelationship) { showToast('⚠️ Please select relationship', 'warning'); document.getElementById('parentRelationship').focus(); return; }
+            if (!parentPhoneCall || parentPhoneCall.length < 10) { showToast('⚠️ Please enter valid parent phone (call)', 'warning'); document.getElementById('parentPhoneCall').focus(); return; }
+            if (!parentPhoneWhatsapp || parentPhoneWhatsapp.length < 10) { showToast('⚠️ Please enter valid parent phone (WhatsApp)', 'warning'); document.getElementById('parentPhoneWhatsapp').focus(); return; }
+            if (!parentOccupation) { showToast('⚠️ Please enter parent occupation', 'warning'); document.getElementById('parentOccupation').focus(); return; }
+            if (!parentAddress) { showToast('⚠️ Please enter parent address', 'warning'); document.getElementById('parentAddress').focus(); return; }
+
+            if (!photoFile) { showToast('⚠️ Please upload passport photo', 'warning'); document.getElementById('photo').focus(); return; }
+            if (photoFile.size > 5 * 1024 * 1024) { showToast('⚠️ Photo must be less than 5MB', 'warning'); return; }
+            if (!['image/jpeg', 'image/png'].includes(photoFile.type)) { showToast('⚠️ Photo must be JPG or PNG', 'warning'); return; }
+
+            if (!formFile) { showToast('⚠️ Please upload signed registration form', 'warning'); document.getElementById('formUpload').focus(); return; }
+            if (formFile.size > 5 * 1024 * 1024) { showToast('⚠️ Form must be less than 5MB', 'warning'); return; }
+            if (formFile.type !== 'application/pdf') { showToast('⚠️ Form must be PDF', 'warning'); return; }
+
+            // =============================================
+            // ✅ DISABLE BUTTON & SHOW LOADING
+            // =============================================
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> Registering...`;
+
+            try {
+                // Convert files to base64
+                const photoBase64 = await fileToBase64(photoFile);
+                const formBase64 = await fileToBase64(formFile);
+
+                // =============================================
+                // ✅ BUILD DATA WITH CORRECT FIELD NAMES
+                // =============================================
+                const data = {
+                    // Personal Information - ✅ EXACT field names
+                    full_name: fullName,
+                    matric_number: matricNumber,
+                    gender: gender,
+                    dob: dob,
+                    phone: phone,
+                    email: email || '',
+                    address: address,
+                    student_type: isExam ? 'exam' : 'computer_training',
+                    goal: goal || '',
+                    
+                    // Academic Information
+                    department: isExam ? department : '',
+                    exam_type: isExam ? examType : '',
+                    course: !isExam ? course : '',
+                    edu_level: !isExam ? eduLevel : '',
+                    
+                    // Parent Information - ✅ EXACT field names
+                    parent_name: parentName,
+                    parent_relationship: parentRelationship,
+                    parent_phone_call: parentPhoneCall,
+                    parent_phone_whatsapp: parentPhoneWhatsapp,
+                    parent_email: parentEmail || '',
+                    parent_occupation: parentOccupation,
+                    parent_address: parentAddress,
+                    
+                    // File Uploads (base64)
+                    photo_url: photoBase64,
+                    form_url: formBase64
+                };
+
+                // ✅ DEBUG: Log what's being sent
+                console.log('📤 Sending registration data:', data);
+
+                // =============================================
+                // ✅ SEND AS JSON
+                // =============================================
+                const response = await fetch(`${BASE_API}/students/register`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                // ✅ DEBUG: Log the response
+                console.log('📥 Server response:', result);
+
+                if (response.ok) {
+                    showToast('✅ Student registered successfully!', 'success');
+                    form.reset();
+                    setStudentType('exam');
+                    document.getElementById('phone').value = '';
+                    document.getElementById('parentPhoneCall').value = '';
+                    document.getElementById('parentPhoneWhatsapp').value = '';
+                } else {
+                    const errorMsg = result.error || result.message || 'Registration failed';
+                    showToast('⚠️ ' + errorMsg, 'warning');
+                    // Show detailed validation errors if available
+                    if (result.details) {
+                        console.error('Validation details:', result.details);
+                        const firstError = result.details[0]?.msg || '';
+                        if (firstError) showToast('⚠️ ' + firstError, 'warning');
+                    }
+                }
+            } catch (err) {
+                console.error('❌ Registration error:', err);
+                showToast('❌ Error: ' + err.message, 'error');
+            }
+
+            // =============================================
+            // ✅ RE-ENABLE BUTTON
+            // =============================================
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `📝 Register Student <span class="material-symbols-outlined">arrow_forward</span>`;
+        });
+    </script>
+</body>
+</html>
