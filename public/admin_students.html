@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -126,9 +126,6 @@
             box-shadow: 0 4px 24px -4px rgba(15, 43, 61, 0.1);
         }
         
-        /* ============================================
-           SIDEBAR STYLES
-           ============================================ */
         .admin-sidebar {
             position: fixed;
             top: 0;
@@ -287,9 +284,6 @@
             color: #ffffff;
         }
         
-        /* ============================================
-           MAIN CONTENT
-           ============================================ */
         .admin-main {
             flex: 1;
             margin-left: 260px;
@@ -298,9 +292,6 @@
             min-height: 100vh;
         }
         
-        /* ============================================
-           TOP NAV (Fixed)
-           ============================================ */
         .top-nav {
             position: fixed;
             top: 0;
@@ -389,9 +380,6 @@
             font-size: 24px;
         }
         
-        /* ============================================
-           DASHBOARD CONTENT
-           ============================================ */
         .dashboard-content {
             padding: 80px 32px 48px;
             flex: 1;
@@ -399,9 +387,6 @@
             width: 100%;
         }
         
-        /* ============================================
-           BADGES
-           ============================================ */
         .badge-exam {
             background: #0f2b3d;
             color: #ffffff;
@@ -434,9 +419,6 @@
         .status-dot.active { background: #2d9b4e; }
         .status-dot.inactive { background: #94a3b8; }
         
-        /* ============================================
-           MOBILE HAMBURGER
-           ============================================ */
         .hamburger-btn {
             display: none;
             background: none;
@@ -450,9 +432,6 @@
             font-size: 28px;
         }
         
-        /* ============================================
-           MOBILE BOTTOM NAV
-           ============================================ */
         .mobile-bottom-nav {
             display: none;
             position: fixed;
@@ -491,9 +470,6 @@
             margin-top: 2px;
         }
         
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
         @media (max-width: 1024px) {
             .top-nav {
                 padding: 0 20px;
@@ -613,9 +589,6 @@
             }
         }
         
-        /* ============================================
-           SCROLLBAR
-           ============================================ */
         .admin-sidebar::-webkit-scrollbar {
             width: 4px;
         }
@@ -633,9 +606,6 @@
             background: rgba(255,255,255,0.25);
         }
         
-        /* ============================================
-           TABLE RESPONSIVE
-           ============================================ */
         .table-wrap {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -709,50 +679,46 @@
     </style>
 </head>
 <body>
-    <!-- ==========================================
-    SIDEBAR
-    ========================================== -->
+    <!-- ========================================== -->
+    <!-- SIDEBAR -->
+    <!-- ========================================== -->
     <aside class="admin-sidebar" id="sidebar">
         <div class="brand">
             <h1>Geo Solution</h1>
             <p>Management Portal</p>
         </div>
         
-        <button class="cta-btn" onclick="window.location.href='registration.html'">
+        <button class="cta-btn" id="registerStudentBtn">
             <span class="material-symbols-outlined">person_add</span>
             Register Student
         </button>
         
         <nav class="sidebar-nav">
-            <a href="/admin_dashboard.html">
+            <a href="/admin_dashboard.html" id="navDashboard">
                 <span class="material-symbols-outlined">dashboard</span>
                 Dashboard
             </a>
-            <a href="/admin_students.html" class="active">
+            <a href="/admin_students.html" class="active" id="navStudents">
                 <span class="material-symbols-outlined">school</span>
                 Students
             </a>
-            <a href="/admin_finance.html">
+            <a href="/admin_finance.html" id="navFinance">
                 <span class="material-symbols-outlined">payments</span>
                 Finance
             </a>
-            <a href="/admin_staff.html">
+            <a href="/admin_staff.html" id="navStaff">
                 <span class="material-symbols-outlined">group</span>
                 Staff
             </a>
-            <a href="/admin_attendance.html">
+            <a href="/admin_attendance.html" id="navAttendance">
                 <span class="material-symbols-outlined">event_available</span>
                 Attendance
             </a>
-            <!-- <a href="/admin_results.html">
-                <span class="material-symbols-outlined">quiz</span>
-                Exam Results
-            </a> -->
-            <a href="/admin_notes.html">
+            <a href="/admin_notes.html" id="navNotes">
                 <span class="material-symbols-outlined">sticky_note_2</span>
                 Notes
             </a>
-            <a href="/settings.html">
+            <a href="/settings.html" id="navSettings">
                 <span class="material-symbols-outlined">settings</span>
                 Settings
             </a>
@@ -766,33 +732,33 @@
                 <span class="name" id="adminName">Administrator</span>
                 <span class="email" id="adminEmail">admin@email.com</span>
             </div>
-            <button class="logout-btn" onclick="handleLogout()" title="Logout">
+            <button class="logout-btn" id="logoutBtn" title="Logout">
                 <span class="material-symbols-outlined">logout</span>
             </button>
         </div>
     </aside>
 
-    <!-- ==========================================
-    MAIN CONTENT
-    ========================================== -->
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================================== -->
     <main class="admin-main">
         <!-- Top Nav -->
         <header class="top-nav">
-            <button class="hamburger-btn" onclick="toggleSidebar()">
+            <button class="hamburger-btn" id="sidebarToggle">
                 <span class="material-symbols-outlined">menu</span>
             </button>
             
             <div class="search-wrap">
                 <span class="material-symbols-outlined">search</span>
-                <input type="text" placeholder="Search students by name, phone, or email..." id="searchInput" onkeyup="loadStudents()">
+                <input type="text" placeholder="Search students by name, phone, or email..." id="searchInput">
             </div>
             
             <div class="nav-actions">
-                <button class="icon-btn" onclick="window.location.href='notes.html'">
+                <button class="icon-btn" id="notificationsBtn">
                     <span class="material-symbols-outlined">notifications</span>
                     <span class="badge" id="notificationBadge">0</span>
                 </button>
-                <button class="icon-btn" onclick="window.location.href='admin_students.html'">
+                <button class="icon-btn" id="helpBtn">
                     <span class="material-symbols-outlined">help</span>
                 </button>
             </div>
@@ -806,7 +772,7 @@
                     <h2 style="font-size:32px; font-weight:700; color:#0f2b3d; margin:0;">👨‍🎓 Student Management</h2>
                     <p style="font-size:16px; color:#64748b; margin:4px 0 0;">Manage all students across the platform</p>
                 </div>
-                <a href="/registration.html" style="padding:10px 24px; background:#0f2b3d; color:#ffffff; border:none; border-radius:12px; font-weight:600; font-size:14px; cursor:pointer; transition:all 0.3s; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+                <a href="/registration.html" id="registerStudentLink" style="padding:10px 24px; background:#0f2b3d; color:#ffffff; border:none; border-radius:12px; font-weight:600; font-size:14px; cursor:pointer; transition:all 0.3s; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
                     <span class="material-symbols-outlined" style="font-size:20px;">person_add</span>
                     Register Student
                 </a>
@@ -846,16 +812,16 @@
             <div class="glass-card filters-bar" style="padding:14px 18px; border-radius:14px; margin-bottom:24px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
                 <div class="search-wrap" style="flex:1; min-width:180px; position:relative;">
                     <span class="material-symbols-outlined" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#73777d; font-size:20px;">search</span>
-                    <input type="text" id="searchInput" placeholder="Search by name, phone, email..." style="width:100%; padding:9px 12px 9px 40px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:14px; outline:none; font-family:'Inter',sans-serif; transition:border 0.3s;" onkeyup="loadStudents()">
+                    <input type="text" id="searchInput" placeholder="Search by name, phone, email..." style="width:100%; padding:9px 12px 9px 40px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:14px; outline:none; font-family:'Inter',sans-serif; transition:border 0.3s;">
                 </div>
                 
-                <select id="filterType" onchange="loadStudents()" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:140px;">
+                <select id="filterType" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:140px;">
                     <option value="all">All Students</option>
                     <option value="exam">📝 Exam Students</option>
                     <option value="computer_training">💻 Computer Training</option>
                 </select>
                 
-                <button onclick="loadStudents()" style="padding:8px 16px; background:rgba(26,95,122,0.1); color:#1a5f7a; border:none; border-radius:10px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:6px;">
+                <button id="refreshBtn" style="padding:8px 16px; background:rgba(26,95,122,0.1); color:#1a5f7a; border:none; border-radius:10px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:6px;">
                     <span class="material-symbols-outlined" style="font-size:18px;">refresh</span>
                     Refresh
                 </button>
@@ -892,58 +858,71 @@
         </div>
     </main>
 
-    <!-- ==========================================
-    MOBILE BOTTOM NAV
-    ========================================== -->
-    <!-- <nav class="mobile-bottom-nav">
-        <a href="/admin_dashboard.html">
-            <span class="material-symbols-outlined">dashboard</span>
-            <span>Dashboard</span>
-        </a>
-        <a href="/admin_students.html" class="active">
-            <span class="material-symbols-outlined" style="font-variation-settings:'FILL'1;">school</span>
-            <span>Students</span>
-        </a>
-        <a href="/admin_finance.html">
-            <span class="material-symbols-outlined">payments</span>
-            <span>Finance</span>
-        </a>
-        <a href="/admin_staff.html">
-            <span class="material-symbols-outlined">group</span>
-            <span>Staff</span>
-        </a>
-        <a href="/admin_attendance.html">
-            <span class="material-symbols-outlined">event_available</span>
-            <span>Attendance</span>
-        </a>
-    </nav> -->
-
-    <!-- ==========================================
-    SCRIPTS - USING DATABASE API
-    ========================================== -->
+    <!-- ========================================== -->
+    <!-- SCRIPTS -->
+    <!-- ========================================== -->
     <script src="js/config.js"></script>
-<script>
-        const BASE_API = window.BASE_API || 'https://your-backend-url.com/api';
-
-         (async function protectPage() {
-        try {
-            const response = await fetch(`${window.BASE_API}/auth/check-session`, {
-                credentials: 'include'
-            });
-            const data = await response.json();
-            if (!data.valid) {
-                window.location.href = 'access.html';
-                return;
-            }
-            document.getElementById('adminName').textContent = data.name || data.email.split('@')[0];
-            document.getElementById('adminEmail').textContent = data.email;
-        } catch (err) {
-            window.location.href = 'access.html';
-        }
-    })();
+    <script>
+        // =============================================
+        // ✅ CSP-COMPLIANT - NO INLINE EVENT HANDLERS
+        // =============================================
         
+        const BASE_API = window.BASE_API || 'https://geosolutionv2.onrender.com/api';
         let allStudents = [];
 
+        // =============================================
+        // ✅ AUTH
+        // =============================================
+        (async function protectPage() {
+            try {
+                const response = await fetch(`${window.BASE_API}/auth/check-session`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (!data.valid) {
+                    window.location.href = 'access.html';
+                    return;
+                }
+                document.getElementById('adminName').textContent = data.name || data.email.split('@')[0];
+                document.getElementById('adminEmail').textContent = data.email;
+            } catch (err) {
+                window.location.href = 'access.html';
+            }
+        })();
+
+        // =============================================
+        // ✅ NAVIGATION HELPERS
+        // =============================================
+        function navigateTo(url) {
+            window.location.href = url;
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch(`${BASE_API}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                .then(() => {
+                    window.location.href = 'access.html';
+                })
+                .catch(() => {
+                    window.location.href = 'access.html';
+                });
+            }
+        }
+
+        function viewStudent(id) {
+            window.location.href = `profile.html?type=student&id=${id}`;
+        }
+
+        // =============================================
+        // ✅ LOAD STUDENTS
+        // =============================================
         window.loadStudents = async function() {
             const search = document.getElementById('searchInput').value.toLowerCase().trim();
             const filterType = document.getElementById('filterType').value;
@@ -1020,10 +999,10 @@
                             </td>
                             <td>
                                 <div class="table-actions">
-                                    <button class="action-btn" onclick="viewStudent('${s.student_id}')" title="View Student">
+                                    <button class="action-btn view-btn" data-id="${s.student_id}" title="View Student">
                                         <span class="material-symbols-outlined" style="font-size:18px;">visibility</span>
                                     </button>
-                                    <button class="action-btn delete" onclick="deleteStudent('${s.student_id}')" title="Delete Student">
+                                    <button class="action-btn delete-btn" data-id="${s.student_id}" title="Delete Student">
                                         <span class="material-symbols-outlined" style="font-size:18px;">delete</span>
                                     </button>
                                 </div>
@@ -1033,6 +1012,19 @@
                 });
 
                 tbody.innerHTML = html;
+
+                // ✅ Attach event listeners to dynamic buttons
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        viewStudent(this.dataset.id);
+                    });
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        deleteStudent(this.dataset.id);
+                    });
+                });
 
             } catch (err) {
                 console.error('Error loading students:', err);
@@ -1046,11 +1038,10 @@
             }
         };
 
-        window.viewStudent = function(id) {
-            window.location.href = `profile.html?type=student&id=${id}`;
-        };
-
-        window.deleteStudent = async function(id) {
+        // =============================================
+        // ✅ DELETE STUDENT
+        // =============================================
+        async function deleteStudent(id) {
             if (!confirm('⚠️ Are you sure you want to delete this student? This action cannot be undone.')) return;
             
             try {
@@ -1067,29 +1058,101 @@
                 console.error('Error deleting student:', err);
                 alert('❌ Error deleting student. Please try again.');
             }
-        };
+        }
 
-        window.toggleSidebar = function() {
-            document.getElementById('sidebar').classList.toggle('open');
-        };
+        // =============================================
+        // ✅ EVENT LISTENERS (CSP COMPLIANT)
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Sidebar toggle ---
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
 
-        window.handleLogout = function() {
-            if (confirm('Are you sure you want to logout?')) {
-                fetch(`${BASE_API}/auth/logout`, {
-                    method: 'POST',
-                    credentials: 'include'
-                })
-                .then(() => {
-                    window.location.href = 'access.html';
-                })
-                .catch(() => {
-                    window.location.href = 'access.html';
+            // --- Logout ---
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', handleLogout);
+            }
+
+            // --- Register Student (CTA) ---
+            const registerBtn = document.getElementById('registerStudentBtn');
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function() {
+                    navigateTo('registration.html');
                 });
             }
-        };
 
-        document.addEventListener('DOMContentLoaded', loadStudents);
-        setInterval(loadStudents, 60000);
+            // --- Register Student Link ---
+            const registerLink = document.getElementById('registerStudentLink');
+            if (registerLink) {
+                registerLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navigateTo('registration.html');
+                });
+            }
+
+            // --- Navigation links (sidebar) ---
+            const navLinks = {
+                'navDashboard': '/admin_dashboard.html',
+                'navStudents': '/admin_students.html',
+                'navFinance': '/admin_finance.html',
+                'navStaff': '/admin_staff.html',
+                'navAttendance': '/admin_attendance.html',
+                'navNotes': '/admin_notes.html',
+                'navSettings': '/settings.html'
+            };
+
+            Object.keys(navLinks).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo(navLinks[id]);
+                    });
+                }
+            });
+
+            // --- Search input ---
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', loadStudents);
+            }
+
+            // --- Filter type ---
+            const filterType = document.getElementById('filterType');
+            if (filterType) {
+                filterType.addEventListener('change', loadStudents);
+            }
+
+            // --- Refresh button ---
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', loadStudents);
+            }
+
+            // --- Notifications ---
+            const notifBtn = document.getElementById('notificationsBtn');
+            if (notifBtn) {
+                notifBtn.addEventListener('click', function() {
+                    navigateTo('notes.html');
+                });
+            }
+
+            // --- Help ---
+            const helpBtn = document.getElementById('helpBtn');
+            if (helpBtn) {
+                helpBtn.addEventListener('click', function() {
+                    navigateTo('admin_students.html');
+                });
+            }
+
+            // --- Load initial data ---
+            loadStudents();
+            setInterval(loadStudents, 60000);
+        });
     </script>
 </body>
 </html>

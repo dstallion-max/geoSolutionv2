@@ -1,4 +1,3 @@
- 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -668,47 +667,46 @@
     </style>
 </head>
 <body>
+    <!-- ========================================== -->
+    <!-- SIDEBAR -->
+    <!-- ========================================== -->
     <aside class="admin-sidebar" id="sidebar">
         <div class="brand">
             <h1>Geo Solution</h1>
             <p>Admin Portal</p>
         </div>
         
-        <button class="cta-btn" onclick="window.location.href='registration.html'">
+        <button class="cta-btn" id="registerStudentBtn">
             <span class="material-symbols-outlined">person_add</span>
             Register Student
         </button>
         
         <nav class="sidebar-nav">
-            <a href="/admin_dashboard.html">
+            <a href="/admin_dashboard.html" id="navDashboard">
                 <span class="material-symbols-outlined">dashboard</span>
                 Dashboard
             </a>
-            <a href="/admin_students.html">
+            <a href="/admin_students.html" id="navStudents">
                 <span class="material-symbols-outlined">school</span>
                 Students
             </a>
-            <a href="/admin_finance.html">
+            <a href="/admin_finance.html" id="navFinance">
                 <span class="material-symbols-outlined">payments</span>
                 Finance
             </a>
-            <a href="/admin_staff.html">
+            <a href="/admin_staff.html" id="navStaff">
                 <span class="material-symbols-outlined">group</span>
                 Staff
             </a>
-            <a href="/admin_attendance.html" class="active">
+            <a href="/admin_attendance.html" class="active" id="navAttendance">
                 <span class="material-symbols-outlined">event_available</span>
                 Attendance
             </a>
-            <!-- <a href="/admin_results.html">
-                <span class="material-symbols-outlined">quiz</span>
-                Exam Results
-            </a> -->
-            <a href="/admin_notes.html">
+            <a href="/admin_notes.html" id="navNotes">
                 <span class="material-symbols-outlined">sticky_note_2</span>
                 Notes
             </a>
-            <a href="/settings.html">
+            <a href="/settings.html" id="navSettings">
                 <span class="material-symbols-outlined">settings</span>
                 Settings
             </a>
@@ -722,29 +720,32 @@
                 <span class="name" id="adminName">Administrator</span>
                 <span class="email" id="adminEmail">admin@email.com</span>
             </div>
-            <button class="logout-btn" onclick="handleLogout()" title="Logout">
+            <button class="logout-btn" id="logoutBtn" title="Logout">
                 <span class="material-symbols-outlined">logout</span>
             </button>
         </div>
     </aside>
 
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================================== -->
     <main class="admin-main">
         <header class="top-nav">
-            <button class="hamburger-btn" onclick="toggleSidebar()">
+            <button class="hamburger-btn" id="sidebarToggle">
                 <span class="material-symbols-outlined">menu</span>
             </button>
             
             <div class="search-wrap">
                 <span class="material-symbols-outlined">search</span>
-                <input type="text" placeholder="Search by name..." id="searchInput" onkeyup="loadAttendance()">
+                <input type="text" placeholder="Search by name..." id="searchInput">
             </div>
             
             <div class="nav-actions">
-                <button class="icon-btn" onclick="window.location.href='notes.html'">
+                <button class="icon-btn" id="notificationsBtn">
                     <span class="material-symbols-outlined">notifications</span>
                     <span class="badge" id="notificationBadge">0</span>
                 </button>
-                <button class="icon-btn" onclick="window.location.href='admin_attendance.html'">
+                <button class="icon-btn" id="helpBtn">
                     <span class="material-symbols-outlined">help</span>
                 </button>
             </div>
@@ -756,7 +757,7 @@
                     <h2 style="font-size:32px; font-weight:700; color:#0f2b3d; margin:0;">📅 Attendance History</h2>
                     <p style="font-size:16px; color:#64748b; margin:4px 0 0;">View and manage student attendance records</p>
                 </div>
-                <a href="#" style="padding:10px 20px; background:#0f2b3d; color:#ffffff; border:none; border-radius:12px; font-weight:600; font-size:14px; cursor:pointer; transition:all 0.3s; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+                <a href="#" id="todayRecordsBtn" style="padding:10px 20px; background:#0f2b3d; color:#ffffff; border:none; border-radius:12px; font-weight:600; font-size:14px; cursor:pointer; transition:all 0.3s; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
                     <span class="material-symbols-outlined" style="font-size:20px;">description</span>
                     Today's Records
                 </a>
@@ -803,19 +804,19 @@
             <div class="glass-card filters-bar" style="padding:14px 18px; border-radius:14px; margin-bottom:24px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
                 <div class="search-wrap" style="flex:1; min-width:180px; position:relative;">
                     <span class="material-symbols-outlined" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#73777d; font-size:20px;">search</span>
-                    <input type="text" id="searchInput" placeholder="Search by name..." style="width:100%; padding:9px 12px 9px 40px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:14px; outline:none; font-family:'Inter',sans-serif; transition:border 0.3s;" onkeyup="loadAttendance()">
+                    <input type="text" id="searchInput" placeholder="Search by name..." style="width:100%; padding:9px 12px 9px 40px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:14px; outline:none; font-family:'Inter',sans-serif; transition:border 0.3s;">
                 </div>
                 
-                <input type="date" id="datePicker" onchange="loadAttendance()" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:160px;">
+                <input type="date" id="datePicker" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:160px;">
                 
-                <select id="filterStatus" onchange="loadAttendance()" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:140px;">
+                <select id="filterStatus" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:140px;">
                     <option value="all">All Status</option>
                     <option value="PRESENT">Present</option>
                     <option value="LATE">Late</option>
                     <option value="ABSENT">Absent</option>
                 </select>
                 
-                <button onclick="loadAttendance()" style="padding:8px 16px; background:rgba(26,95,122,0.1); color:#1a5f7a; border:none; border-radius:10px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:6px;">
+                <button id="refreshBtn" style="padding:8px 16px; background:rgba(26,95,122,0.1); color:#1a5f7a; border:none; border-radius:10px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:6px;">
                     <span class="material-symbols-outlined" style="font-size:18px;">refresh</span>
                     Refresh
                 </button>
@@ -852,27 +853,66 @@
         </div>
     </main>
 
+    <!-- ========================================== -->
+    <!-- SCRIPTS -->
+    <!-- ========================================== -->
     <script src="js/config.js"></script>
-<script>
-        const BASE_API = window.BASE_API || 'https://your-backend-url.com/api';
-
-        (async function protectPage() {
-        try {
-            const response = await fetch(`${window.BASE_API}/auth/check-session`, {
-                credentials: 'include'
-            });
-            const data = await response.json();
-            if (!data.valid) {
-                window.location.href = 'access.html';
-                return;
-            }
-            document.getElementById('adminName').textContent = data.name || data.email.split('@')[0];
-            document.getElementById('adminEmail').textContent = data.email;
-        } catch (err) {
-            window.location.href = 'access.html';
-        }
-    })();
+    <script>
+        // =============================================
+        // ✅ CSP-COMPLIANT - NO INLINE EVENT HANDLERS
+        // =============================================
         
+        const BASE_API = window.BASE_API || 'https://geosolutionv2.onrender.com/api';
+
+        // =============================================
+        // ✅ AUTH
+        // =============================================
+        (async function protectPage() {
+            try {
+                const response = await fetch(`${window.BASE_API}/auth/check-session`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (!data.valid) {
+                    window.location.href = 'access.html';
+                    return;
+                }
+                document.getElementById('adminName').textContent = data.name || data.email.split('@')[0];
+                document.getElementById('adminEmail').textContent = data.email;
+            } catch (err) {
+                window.location.href = 'access.html';
+            }
+        })();
+
+        // =============================================
+        // ✅ NAVIGATION HELPERS
+        // =============================================
+        function navigateTo(url) {
+            window.location.href = url;
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch(`${BASE_API}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                .then(() => {
+                    window.location.href = 'access.html';
+                })
+                .catch(() => {
+                    window.location.href = 'access.html';
+                });
+            }
+        }
+
+        // =============================================
+        // ✅ LOAD ATTENDANCE
+        // =============================================
         window.loadAttendance = async function() {
             const date = document.getElementById('datePicker').value;
             const statusFilter = document.getElementById('filterStatus').value;
@@ -970,32 +1010,112 @@
             }
         };
 
-        window.toggleSidebar = function() {
-            document.getElementById('sidebar').classList.toggle('open');
-        };
+        // =============================================
+        // ✅ EVENT LISTENERS (CSP COMPLIANT)
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Sidebar toggle ---
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
 
-        window.handleLogout = function() {
-            if (confirm('Are you sure you want to logout?')) {
-                fetch(`${BASE_API}/auth/logout`, {
-                    method: 'POST',
-                    credentials: 'include'
-                })
-                .then(() => {
-                    window.location.href = 'access.html';
-                })
-                .catch(() => {
-                    window.location.href = 'access.html';
+            // --- Logout ---
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', handleLogout);
+            }
+
+            // --- Register Student ---
+            const registerBtn = document.getElementById('registerStudentBtn');
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function() {
+                    navigateTo('registration.html');
                 });
             }
-        };
 
-        document.addEventListener('DOMContentLoaded', function() {
+            // --- Navigation links ---
+            const navLinks = {
+                'navDashboard': '/admin_dashboard.html',
+                'navStudents': '/admin_students.html',
+                'navFinance': '/admin_finance.html',
+                'navStaff': '/admin_staff.html',
+                'navAttendance': '/admin_attendance.html',
+                'navNotes': '/admin_notes.html',
+                'navSettings': '/settings.html'
+            };
+
+            Object.keys(navLinks).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo(navLinks[id]);
+                    });
+                }
+            });
+
+            // --- Today's Records button ---
+            const todayRecordsBtn = document.getElementById('todayRecordsBtn');
+            if (todayRecordsBtn) {
+                todayRecordsBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Set date to today
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('datePicker').value = today;
+                    loadAttendance();
+                });
+            }
+
+            // --- Search input ---
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', loadAttendance);
+            }
+
+            // --- Date picker ---
+            const datePicker = document.getElementById('datePicker');
+            if (datePicker) {
+                datePicker.addEventListener('change', loadAttendance);
+            }
+
+            // --- Status filter ---
+            const filterStatus = document.getElementById('filterStatus');
+            if (filterStatus) {
+                filterStatus.addEventListener('change', loadAttendance);
+            }
+
+            // --- Refresh button ---
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', loadAttendance);
+            }
+
+            // --- Notifications ---
+            const notifBtn = document.getElementById('notificationsBtn');
+            if (notifBtn) {
+                notifBtn.addEventListener('click', function() {
+                    navigateTo('notes.html');
+                });
+            }
+
+            // --- Help ---
+            const helpBtn = document.getElementById('helpBtn');
+            if (helpBtn) {
+                helpBtn.addEventListener('click', function() {
+                    navigateTo('admin_attendance.html');
+                });
+            }
+
+            // --- Set default date to today ---
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('datePicker').value = today;
+            
+            // --- Load initial data ---
             loadAttendance();
+            setInterval(loadAttendance, 60000);
         });
-        
-        setInterval(loadAttendance, 60000);
     </script>
 </body>
 </html>

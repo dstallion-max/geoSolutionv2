@@ -29,11 +29,11 @@
     
     // Only log in development
     if (isLocal) {
-        console.log('🌐 Geo Solution - API URL:', window.BASE_API);
-        console.log('📱 Environment: Development');
+        // console.log('🌐 Geo Solution - API URL:', window.BASE_API);
+        // console.log('📱 Environment: Development');
     } else {
-        console.log('🌐 Geo Solution - API URL:', window.BASE_API);
-        console.log('📱 Environment: Production');
+        // console.log('🌐 Geo Solution - API URL:', window.BASE_API);
+        // console.log('📱 Environment: Production');
     }
     
     // ✅ Make sure BASE_API is never undefined
