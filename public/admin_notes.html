@@ -486,119 +486,6 @@
             margin-top: 2px;
         }
         
-        @media (max-width: 1024px) {
-            .top-nav {
-                padding: 0 20px;
-            }
-            .dashboard-content {
-                padding: 80px 20px 48px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .admin-sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-            }
-            
-            .admin-sidebar.open {
-                transform: translateX(0);
-            }
-            
-            .admin-main {
-                margin-left: 0;
-            }
-            
-            .top-nav {
-                left: 0;
-                width: 100%;
-                padding: 0 16px;
-                background: #0f2b3d;
-                border-bottom: none;
-            }
-            
-            .top-nav .search-wrap input {
-                background: rgba(255, 255, 255, 0.12);
-                color: #ffffff;
-            }
-            
-            .top-nav .search-wrap input::placeholder {
-                color: rgba(255, 255, 255, 0.5);
-            }
-            
-            .top-nav .search-wrap .material-symbols-outlined {
-                color: rgba(255, 255, 255, 0.5);
-            }
-            
-            .top-nav .nav-actions .icon-btn {
-                color: rgba(255, 255, 255, 0.7);
-            }
-            
-            .top-nav .nav-actions .icon-btn:hover {
-                color: #ffffff;
-            }
-            
-            .hamburger-btn {
-                display: block;
-            }
-            
-            .dashboard-content {
-                padding: 80px 16px 80px;
-            }
-            
-            .page-header h2 {
-                font-size: 22px !important;
-            }
-            
-            .notes-grid {
-                grid-template-columns: 1fr !important;
-            }
-            
-            .filters-bar {
-                flex-direction: column !important;
-                align-items: stretch !important;
-            }
-            
-            .filters-bar select {
-                width: 100% !important;
-            }
-            
-            .mobile-bottom-nav {
-                display: flex !important;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .note-card {
-                padding: 14px 16px !important;
-            }
-            
-            .note-card .note-title {
-                font-size: 15px !important;
-            }
-            
-            .note-card .note-desc {
-                font-size: 13px !important;
-            }
-        }
-        
-        .admin-sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-        
-        .admin-sidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        
-        .admin-sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.15);
-            border-radius: 10px;
-        }
-        
-        .admin-sidebar::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.25);
-        }
-        
         .status-dropdown {
             padding: 3px 8px;
             border: 1px solid rgba(195,199,204,0.3);
@@ -672,6 +559,248 @@
         @keyframes fadeOut {
             from { opacity: 1; transform: translateX(0); }
             to { opacity: 0; transform: translateX(50px); }
+        }
+        
+        /* ============================================ */
+        /* ✅ RESPONSIVE BREAKPOINTS */
+        /* ============================================ */
+        @media (max-width: 1024px) {
+            .top-nav {
+                padding: 0 20px;
+            }
+            .dashboard-content {
+                padding: 80px 20px 48px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .top-nav {
+                left: 0;
+                width: 100%;
+                padding: 0 16px;
+                background: #0f2b3d;
+                border-bottom: none;
+            }
+            
+            .top-nav .search-wrap input {
+                background: rgba(255, 255, 255, 0.12);
+                color: #ffffff;
+            }
+            
+            .top-nav .search-wrap input::placeholder {
+                color: rgba(255, 255, 255, 0.5);
+            }
+            
+            .top-nav .search-wrap .material-symbols-outlined {
+                color: rgba(255, 255, 255, 0.5);
+            }
+            
+            .top-nav .nav-actions .icon-btn {
+                color: rgba(255, 255, 255, 0.7);
+            }
+            
+            .top-nav .nav-actions .icon-btn:hover {
+                color: #ffffff;
+            }
+            
+            .hamburger-btn {
+                display: block;
+            }
+            
+            .dashboard-content {
+                padding: 80px 16px 80px;
+            }
+            
+            .page-header h2 {
+                font-size: 22px !important;
+            }
+            
+            .page-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 8px !important;
+            }
+            
+            .page-header .header-actions {
+                width: 100% !important;
+            }
+            
+            /* ✅ Stats become 2 columns on mobile */
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            
+            .stat-number {
+                font-size: 22px !important;
+            }
+            
+            .stat-card {
+                padding: 12px 14px !important;
+            }
+            
+            /* ✅ Notes become 1 column on mobile */
+            .notes-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* ✅ Filters stack vertically */
+            .filters-bar {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            
+            .filters-bar .search-wrap {
+                width: 100% !important;
+            }
+            
+            .filters-bar select {
+                width: 100% !important;
+            }
+            
+            .filters-bar .search-hint {
+                display: none !important;
+            }
+            
+            .mobile-bottom-nav {
+                display: flex !important;
+            }
+            
+            /* ✅ Note cards compact on mobile */
+            .note-card {
+                padding: 14px 16px !important;
+            }
+            
+            .note-card .note-title {
+                font-size: 15px !important;
+            }
+            
+            .note-card .note-desc {
+                font-size: 13px !important;
+            }
+            
+            .note-card .note-actions {
+                flex-wrap: wrap !important;
+                gap: 6px !important;
+            }
+            
+            .note-card .status-dropdown {
+                font-size: 10px !important;
+                padding: 2px 6px !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                gap: 8px !important;
+            }
+            
+            .stat-number {
+                font-size: 20px !important;
+            }
+            
+            .stat-label {
+                font-size: 9px !important;
+            }
+            
+            .note-card {
+                padding: 12px 14px !important;
+            }
+            
+            .note-card .note-title {
+                font-size: 14px !important;
+            }
+            
+            .note-card .note-desc {
+                font-size: 12px !important;
+            }
+            
+            .note-card .note-badges span {
+                font-size: 8px !important;
+                padding: 1px 8px !important;
+            }
+            
+            .page-header h2 {
+                font-size: 20px !important;
+            }
+            
+            .page-header p {
+                font-size: 13px !important;
+            }
+            
+            .page-header .header-actions button {
+                font-size: 11px !important;
+                padding: 6px 12px !important;
+            }
+            
+            .note-card .status-dropdown {
+                font-size: 9px !important;
+                padding: 2px 6px !important;
+            }
+        }
+        
+        .admin-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        /* ✅ Extra small screen tweaks */
+        .note-card .note-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        
+        .note-card .note-badges span {
+            font-size: 9px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .note-card .note-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        
+        .note-card .note-footer .note-date {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+        
+        .note-card .note-footer .note-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
         }
     </style>
 </head>
@@ -761,12 +890,15 @@
         </header>
 
         <div class="dashboard-content">
+            <!-- ========================================== -->
+            <!-- PAGE HEADER - Responsive -->
+            <!-- ========================================== -->
             <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
                 <div>
                     <h2 style="font-size:32px; font-weight:700; color:#0f2b3d; margin:0;">📝 Notes Management</h2>
                     <p style="font-size:16px; color:#64748b; margin:4px 0 0;">View and manage all notes from staff members</p>
                 </div>
-                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <div class="header-actions" style="display:flex; gap:8px; flex-wrap:wrap;">
                     <button id="refreshBtn" style="padding:8px 16px; background:rgba(26,95,122,0.1); color:#1a5f7a; border:none; border-radius:10px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:6px;">
                         <span class="material-symbols-outlined" style="font-size:18px;">refresh</span>
                         Refresh
@@ -774,6 +906,9 @@
                 </div>
             </div>
 
+            <!-- ========================================== -->
+            <!-- STATS - Responsive Grid -->
+            <!-- ========================================== -->
             <div class="stats-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; width:100%;">
                 <div class="glass-card stat-card" style="padding:16px 18px; border-radius:14px; border-left:4px solid #0f2b3d;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
@@ -812,6 +947,9 @@
                 </div>
             </div>
 
+            <!-- ========================================== -->
+            <!-- FILTERS - Responsive -->
+            <!-- ========================================== -->
             <div class="glass-card filters-bar" style="padding:14px 18px; border-radius:14px; margin-bottom:24px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
                 <div class="search-wrap" style="flex:1; min-width:180px; position:relative;">
                     <span class="material-symbols-outlined" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#73777d; font-size:20px;">search</span>
@@ -838,6 +976,9 @@
                 </button>
             </div>
 
+            <!-- ========================================== -->
+            <!-- NOTES LIST - Responsive Grid -->
+            <!-- ========================================== -->
             <div class="notes-grid" id="notesList" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:16px;">
                 <div style="grid-column:1/-1; text-align:center; padding:40px; color:#94a3b8;">
                     Loading notes...
@@ -860,7 +1001,7 @@
         // ✅ CSP-COMPLIANT - NO INLINE EVENT HANDLERS
         // =============================================
         
-        const BASE_API = window.BASE_API;
+        const BASE_API = window.BASE_API || 'https://geosolutionv2.onrender.com/api';
 
         // =============================================
         // ✅ AUTH
@@ -1024,7 +1165,7 @@
                             <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px;">
                                 <div style="flex:1; min-width:0;">
                                     <h3 style="font-size:16px; font-weight:600; color:#0f2b3d; margin:0; word-wrap:break-word;">${note.title}</h3>
-                                    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+                                    <div class="note-badges" style="display:flex; gap:4px; flex-wrap:wrap; margin-top:4px;">
                                         <span class="${priorityInfo.class}" style="padding:2px 10px; border-radius:20px; font-size:9px; font-weight:600;">${priorityInfo.label}</span>
                                         <span class="${statusInfo.class}" style="padding:2px 10px; border-radius:20px; font-size:9px; font-weight:600;">${statusInfo.label}</span>
                                         <span style="font-size:9px; color:#94a3b8; background:#f1f5f9; padding:2px 10px; border-radius:20px;">👤 ${createdBy}</span>
@@ -1032,9 +1173,9 @@
                                 </div>
                             </div>
                             <p style="font-size:14px; color:#475569; margin:0 0 10px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${note.description || 'No description'}</p>
-                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:4px;">
-                                <span style="font-size:10px; color:#94a3b8;">${dateStr}</span>
-                                <div style="display:flex; gap:6px; align-items:center;">
+                            <div class="note-footer" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:4px;">
+                                <span class="note-date" style="font-size:10px; color:#94a3b8;">${dateStr}</span>
+                                <div class="note-actions" style="display:flex; gap:6px; align-items:center;">
                                     <select class="status-dropdown status-${note.status || 'pending'}" 
                                             data-id="${note.id}"
                                             style="padding:3px 8px; border:1px solid rgba(195,199,204,0.3); border-radius:6px; font-size:11px; font-weight:600; font-family:'Inter',sans-serif; outline:none; background:#ffffff; cursor:pointer;">
