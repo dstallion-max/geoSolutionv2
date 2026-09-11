@@ -120,6 +120,7 @@ export const validateTransaction = [
     body('customer_name').optional().isString().withMessage('Customer name must be a string'),
     body('amount').isNumeric().withMessage('Amount must be a number')
         .isFloat({ min: 0.01 }).withMessage('Amount must be greater than 0'),
+    body('date').optional().isISO8601({ strict: true }).withMessage('Date must be valid YYYY-MM-DD'),
     body('method').optional().isIn(['cash', 'transfer', 'cheque', 'online']).withMessage('Invalid payment method'),
     (req, res, next) => {
         const errors = validationResult(req);

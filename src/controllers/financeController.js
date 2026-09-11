@@ -8,6 +8,13 @@ export const addTransaction = async (req, res) => {
         if (!type || !category || !amount) {
             return res.status(400).json({ error: 'Type, category, and amount are required' });
         }
+
+        if (date) {
+            const parsedDate = new Date(`${date}T00:00:00Z`);
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== date) {
+                return res.status(400).json({ error: 'Date must be valid YYYY-MM-DD' });
+            }
+        }
         
         const transaction = {
             type,
@@ -166,6 +173,26 @@ export const getMonthlyStats = async (req, res) => {
     try {
         const stats = await financeRepo.getMonthlyStats();
         res.json({ success: true, stats });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+export const getByDate = async (req, res) => {
+    try {
+        const { date } = req.query;
+        if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+            return res.status(400).json({ error: 'A valid date in YYYY-MM-DD format is required' });
+        }
+
+        const parsedDate = new Date(`${date}T00:00:00Z`);
+        if (Number.isNaN(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== date) {
+            return res.status(400).json({ error: 'A valid date in YYYY-MM-DD format is required' });
+        }
+
+        const transactions = await financeRepo.getByDate(date);
+        const totals = await financeRepo.getTotals(date);
+        res.json({ success: true, date, transactions, totals });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

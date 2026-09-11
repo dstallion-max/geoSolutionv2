@@ -873,7 +873,10 @@
             </div>
 
             <div class="glass-card filters-bar" style="padding:14px 18px; border-radius:14px; margin-bottom:24px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                <label for="financeDatePicker" style="font-size:13px; font-weight:600; color:#0f2b3d; white-space:nowrap;">Select Finance Date</label>
+                <input type="date" id="financeDatePicker" aria-label="Select Finance Date" style="padding:8px 10px; border:1px solid rgba(195,199,204,0.5); border-radius:8px; font:inherit; color:#0f2b3d; background:#ffffff; min-height:36px;">
                 <select id="periodFilter" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:140px;">
+                    <option value="date" selected>Selected date</option>
                     <option value="today">Today</option>
                     <option value="week">This Week</option>
                     <option value="month" selected>This Month</option>
@@ -1033,6 +1036,7 @@
         };
 
         let currentType = 'income';
+        let selectedFinanceDate = new Date();
         let barChartInstance = null;
         let pieChartInstance = null;
         let lineChartInstance = null;
@@ -1046,7 +1050,7 @@
             document.getElementById('modalTitle').textContent = type === 'income' ? '💰 Add Income' : '💸 Add Expense';
             document.getElementById('modalSub').textContent = type === 'income' ? 'Record a new income transaction' : 'Record a new expense transaction';
             document.getElementById('financeForm').reset();
-            document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('transactionDate').value = getDateString(selectedFinanceDate);
             
             const select = document.getElementById('category');
             select.innerHTML = '<option value="">Select category...</option>';
@@ -1062,6 +1066,17 @@
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
             document.getElementById('financeForm').reset();
+        }
+
+        function getDateString(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function dateFromString(dateString) {
+            return new Date(`${dateString}T00:00:00`);
         }
 
         // =============================================
@@ -1149,10 +1164,14 @@
                 'year': '/finance/year'
             };
             
-            const endpoint = BASE_API + endpointMap[period] || BASE_API + '/finance/month';
+            const selectedDate = getDateString(selectedFinanceDate);
+            const endpoint = period === 'date'
+                ? `${BASE_API}/finance/date?date=${encodeURIComponent(selectedDate)}`
+                : `${BASE_API}${endpointMap[period] || '/finance/month'}`;
 
             try {
-                const response = await fetch(endpoint);
+                document.getElementById('transactionsBody').innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#94a3b8;">Loading finance records...</td></tr>';
+                const response = await fetch(endpoint, { credentials: 'include' });
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 
                 const data = await response.json();
@@ -1174,8 +1193,8 @@
             
             const income = transactions.filter(t => t.transaction_type === 'income');
             const expenses = transactions.filter(t => t.transaction_type === 'expense');
-            const totalIncome = income.reduce((sum, t) => sum + t.amount, 0);
-            const totalExpense = expenses.reduce((sum, t) => sum + t.amount, 0);
+            const totalIncome = data.totals?.totalIncome ?? income.reduce((sum, t) => sum + Number(t.amount || 0), 0);
+            const totalExpense = data.totals?.totalExpenses ?? expenses.reduce((sum, t) => sum + Number(t.amount || 0), 0);
             
             document.getElementById('totalIncome').textContent = '₦' + formatNumber(totalIncome);
             document.getElementById('totalExpense').textContent = '₦' + formatNumber(totalExpense);
@@ -1407,7 +1426,7 @@
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="5" style="text-align:center; padding:30px; color:#94a3b8;">
-                            No transactions found.
+                            No finance records found for this date.
                         </td>
                     </tr>
                 `;
@@ -1492,6 +1511,17 @@
             const periodFilter = document.getElementById('periodFilter');
             if (periodFilter) {
                 periodFilter.addEventListener('change', loadAllData);
+            }
+
+            const financeDatePicker = document.getElementById('financeDatePicker');
+            if (financeDatePicker) {
+                financeDatePicker.value = getDateString(selectedFinanceDate);
+                financeDatePicker.addEventListener('change', function() {
+                    if (!this.value) return;
+                    selectedFinanceDate = dateFromString(this.value);
+                    periodFilter.value = 'date';
+                    loadAllData();
+                });
             }
 
             // --- Search input ---

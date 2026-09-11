@@ -34,6 +34,17 @@ export const financeRepo = {
         return data || [];
     },
 
+    async getByDate(date) {
+        const { data, error } = await supabase
+            .from('finance')
+            .select('*')
+            .eq('transaction_date', date)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+    },
+
     async getYesterday() {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);

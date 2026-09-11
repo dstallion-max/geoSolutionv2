@@ -894,6 +894,8 @@
 
             <!-- 📅 DATE NAVIGATION -->
             <div class="glass-card date-nav" style="padding:12px 18px; border-radius:14px; margin-bottom:24px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <label for="financeDatePicker" style="font-size:13px; font-weight:600; color:#0f2b3d; white-space:nowrap;">Select Finance Date</label>
+                <input type="date" id="financeDatePicker" aria-label="Select Finance Date" style="padding:8px 10px; border:1px solid rgba(195,199,204,0.5); border-radius:8px; font:inherit; color:#0f2b3d; background:#ffffff; min-height:36px;">
                 <button class="date-nav-btn" id="prevDayBtn" style="padding:6px 16px; border:1px solid rgba(195,199,204,0.3); border-radius:8px; background:transparent; cursor:pointer; font-size:13px; font-weight:500; color:#0f2b3d; transition:all 0.3s; display:flex; align-items:center; gap:4px;">
                     <span class="material-symbols-outlined" style="font-size:18px;">chevron_left</span>
                     <span class="nav-label">Yesterday</span>
@@ -1135,7 +1137,14 @@
         // ✅ DATE HELPERS
         // =============================================
         function getDateString(date) {
-            return date.toISOString().split('T')[0];
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function dateFromString(dateString) {
+            return new Date(`${dateString}T00:00:00`);
         }
 
         function formatDisplayDate(date) {
@@ -1152,6 +1161,7 @@
             document.getElementById('dateDisplay').textContent = 'Date: ' + dateStr;
             document.getElementById('displayDate').textContent = dateStr;
             document.getElementById('dateLabel2').textContent = dateStr;
+            document.getElementById('financeDatePicker').value = getDateString(currentDate);
         }
 
         function changeDate(days) {
@@ -1208,38 +1218,19 @@
             const period = document.getElementById('periodFilter').value;
             const typeFilter = document.getElementById('filterType').value;
             const container = document.getElementById('transactionList');
+            container.innerHTML = '<div style="text-align:center; padding:30px; color:#94a3b8;">Loading finance records...</div>';
             
             // ✅ Map period to API endpoint
-            const endpointMap = {
-                'today': '/finance/today',
-                'yesterday': '/finance/today', // Will filter by date in code
-                'week': '/finance/week'
-            };
-            
             try {
-                // ✅ Use currentDate for the API call
                 const dateStr = getDateString(currentDate);
-                
-                // For specific date, we need to use the date endpoint
-                let endpoint = BASE_API + endpointMap[period] || BASE_API + '/finance/today';
-                let response = await fetch(endpoint);
+                const endpoint = period === 'week'
+                    ? `${BASE_API}/finance/week`
+                    : `${BASE_API}/finance/date?date=${encodeURIComponent(dateStr)}`;
+                const response = await fetch(endpoint, { credentials: 'include' });
                 let result = await response.json();
                 
                 if (response.ok) {
                     let transactions = result.transactions || [];
-                    
-                    // ✅ If "yesterday", filter by yesterday's date
-                    if (period === 'yesterday') {
-                        const yesterday = new Date(currentDate);
-                        yesterday.setDate(yesterday.getDate() - 1);
-                        const yesterdayStr = getDateString(yesterday);
-                        transactions = transactions.filter(t => t.transaction_date === yesterdayStr);
-                    }
-                    
-                    // ✅ For "today", filter by current date
-                    if (period === 'today') {
-                        transactions = transactions.filter(t => t.transaction_date === dateStr);
-                    }
                     
                     // Filter by type
                     if (typeFilter !== 'all') {
@@ -1256,12 +1247,12 @@
                     }
                     
                     // Update stats
-                    const totalIncome = transactions
+                    const totalIncome = period === 'week' ? transactions
                         .filter(t => t.transaction_type === 'income')
-                        .reduce((sum, t) => sum + (t.amount || 0), 0);
-                    const totalExpense = transactions
+                        .reduce((sum, t) => sum + (Number(t.amount) || 0), 0) : result.totals?.totalIncome || 0;
+                    const totalExpense = period === 'week' ? transactions
                         .filter(t => t.transaction_type === 'expense')
-                        .reduce((sum, t) => sum + (t.amount || 0), 0);
+                        .reduce((sum, t) => sum + (Number(t.amount) || 0), 0) : result.totals?.totalExpenses || 0;
                     
                     document.getElementById('totalIncome').textContent = '₦' + formatNumber(totalIncome);
                     document.getElementById('totalExpense').textContent = '₦' + formatNumber(totalExpense);
@@ -1272,7 +1263,7 @@
                     container.innerHTML = `
                         <div style="text-align:center; padding:30px; color:#94a3b8;">
                             <span class="material-symbols-outlined" style="font-size:48px; display:block; margin-bottom:12px;">receipt_long</span>
-                            <p>No transactions found.</p>
+                            <p>No finance records found for this date.</p>
                             <p style="font-size:13px;">Click "Add Income" or "Add Expense" to record.</p>
                         </div>
                     `;
@@ -1296,7 +1287,7 @@
                 container.innerHTML = `
                     <div style="text-align:center; padding:30px; color:#94a3b8;">
                         <span class="material-symbols-outlined" style="font-size:48px; display:block; margin-bottom:12px;">receipt_long</span>
-                        <p>No transactions found.</p>
+                        <p>No finance records found for this date.</p>
                         <p style="font-size:13px;">Click "Add Income" or "Add Expense" to record.</p>
                     </div>
                 `;
@@ -1349,7 +1340,7 @@
             const description = document.getElementById('description').value;
             const date = document.getElementById('transactionDate').value;
 
-            if (!category || !customer_name || !amount || amount <= 0) {
+            if (!category || !customer_name || !amount || amount <= 0 || !date) {
                 alert('Please fill in all required fields');
                 return;
             }
@@ -1491,6 +1482,17 @@
             const todayBtn = document.getElementById('todayBtn');
             if (todayBtn) {
                 todayBtn.addEventListener('click', goToday);
+            }
+
+            const financeDatePicker = document.getElementById('financeDatePicker');
+            if (financeDatePicker) {
+                financeDatePicker.addEventListener('change', function() {
+                    if (!this.value) return;
+                    currentDate = dateFromString(this.value);
+                    document.getElementById('periodFilter').value = 'today';
+                    updateDateDisplay();
+                    renderTransactions();
+                });
             }
 
             // --- Add Income ---
