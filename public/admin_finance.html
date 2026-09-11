@@ -932,11 +932,12 @@
                                 <th style="padding:10px 16px; text-align:left; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Description</th>
                                 <th style="padding:10px 16px; text-align:left; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Method</th>
                                 <th style="padding:10px 16px; text-align:right; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Amount</th>
+                                <th style="padding:10px 16px; text-align:right; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="transactionsBody" style="border-bottom:1px solid rgba(195,199,204,0.1);">
                             <tr>
-                                <td colspan="5" style="text-align:center; padding:30px; color:#94a3b8;">No transactions found.</td>
+                                <td colspan="6" style="text-align:center; padding:30px; color:#94a3b8;">No transactions found.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -953,6 +954,13 @@
             <h2 id="modalTitle">💰 Add Income</h2>
             <p class="sub" id="modalSub">Record a new income transaction</p>
             <form id="financeForm">
+                <div class="form-group">
+                    <label>Transaction Type *</label>
+                    <select id="transactionType" required>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
                 <div class="form-group" id="categoryGroup">
                     <label>Category *</label>
                     <select id="category" required>
@@ -992,6 +1000,18 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <h2>Delete Finance Entry?</h2>
+            <p class="sub">You are about to permanently delete:</p>
+            <div id="deleteSummary" style="padding:12px; margin:12px 0 20px; border-radius:8px; background:#f8fafc; color:#475569; font-size:14px; line-height:1.7;"></div>
+            <div class="btn-row">
+                <button type="button" class="btn-cancel" id="cancelDeleteBtn">Cancel</button>
+                <button type="button" class="btn-save" id="confirmDeleteBtn" style="background:#e63946;">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ========================================== -->
     <!-- SCRIPTS -->
     <!-- ========================================== -->
@@ -1018,6 +1038,11 @@
                     return;
                 }
                 
+                if (data.role !== 'admin') {
+                    window.location.href = 'access.html';
+                    return;
+                }
+
                 document.getElementById('adminName').textContent = data.name || data.email.split('@')[0];
                 document.getElementById('adminEmail').textContent = data.email;
                 
@@ -1037,6 +1062,9 @@
 
         let currentType = 'income';
         let selectedFinanceDate = new Date();
+        let editingId = null;
+        let pendingDeleteId = null;
+        let currentTransactions = [];
         let barChartInstance = null;
         let pieChartInstance = null;
         let lineChartInstance = null;
@@ -1044,28 +1072,60 @@
         // =============================================
         // ✅ MODAL CONTROLS
         // =============================================
+        function populateCategories(type, selectedCategory = '') {
+            const select = document.getElementById('category');
+            select.innerHTML = '<option value="">Select category...</option>';
+            CATEGORIES[type].forEach(category => {
+                select.innerHTML += `<option value="${category}">${category}</option>`;
+            });
+            select.value = selectedCategory;
+        }
+
         function openModal(type) {
             currentType = type;
+            editingId = null;
             document.getElementById('modal').classList.add('active');
             document.getElementById('modalTitle').textContent = type === 'income' ? '💰 Add Income' : '💸 Add Expense';
             document.getElementById('modalSub').textContent = type === 'income' ? 'Record a new income transaction' : 'Record a new expense transaction';
             document.getElementById('financeForm').reset();
+            document.getElementById('transactionType').value = type;
             document.getElementById('transactionDate').value = getDateString(selectedFinanceDate);
             
-            const select = document.getElementById('category');
-            select.innerHTML = '<option value="">Select category...</option>';
-            CATEGORIES[type].forEach(cat => {
-                select.innerHTML += `<option value="${cat}">${cat}</option>`;
-            });
+            populateCategories(type);
             
             const saveBtn = document.querySelector('.btn-save');
             saveBtn.style.background = type === 'income' ? '#2d9b4e' : '#e63946';
             saveBtn.textContent = '💾 Save';
         }
 
+        function openEditModal(transaction) {
+            editingId = transaction.id;
+            currentType = transaction.transaction_type;
+            document.getElementById('modal').classList.add('active');
+            document.getElementById('modalTitle').textContent = '✏️ Edit Finance Entry';
+            document.getElementById('modalSub').textContent = 'Update this finance entry';
+            document.getElementById('financeForm').reset();
+            document.getElementById('transactionType').value = currentType;
+
+            populateCategories(currentType, transaction.category || '');
+            document.getElementById('customerName').value = transaction.customer_name || '';
+            document.getElementById('amount').value = transaction.amount || '';
+            document.getElementById('method').value = transaction.payment_method || 'cash';
+            document.getElementById('description').value = transaction.description || '';
+            document.getElementById('transactionDate').value = transaction.transaction_date || getDateString(selectedFinanceDate);
+            document.getElementById('saveBtn').style.background = currentType === 'income' ? '#2d9b4e' : '#e63946';
+            document.getElementById('saveBtn').textContent = '💾 Update';
+        }
+
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
             document.getElementById('financeForm').reset();
+            editingId = null;
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            pendingDeleteId = null;
         }
 
         function getDateString(date) {
@@ -1111,7 +1171,8 @@
         document.getElementById('financeForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const type = currentType;
+            const type = document.getElementById('transactionType').value;
+            currentType = type;
             const category = document.getElementById('category').value;
             const customer_name = document.getElementById('customerName').value.trim();
             const amount = parseFloat(document.getElementById('amount').value);
@@ -1119,7 +1180,7 @@
             const description = document.getElementById('description').value;
             const date = document.getElementById('transactionDate').value;
 
-            if (!category || !amount || amount <= 0) {
+            if (!category || !amount || amount <= 0 || !date) {
                 alert('Please fill in all required fields');
                 return;
             }
@@ -1134,16 +1195,20 @@
                 date: date
             };
 
+            const saveButton = document.getElementById('saveBtn');
+            saveButton.disabled = true;
+            saveButton.textContent = editingId ? 'Updating...' : 'Saving...';
             try {
-                const response = await fetch(`${BASE_API}/finance/add`, {
-                    method: 'POST',
+                const response = await fetch(editingId ? `${BASE_API}/finance/${encodeURIComponent(editingId)}` : `${BASE_API}/finance/add`, {
+                    method: editingId ? 'PUT' : 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify(data)
                 });
                 const result = await response.json();
                 
                 if (response.ok) {
-                    alert('✅ ' + (type === 'income' ? 'Income' : 'Expense') + ' added successfully!');
+                    alert(editingId ? 'Finance entry updated successfully.' : '✅ ' + (type === 'income' ? 'Income' : 'Expense') + ' added successfully!');
                     closeModal();
                     loadAllData();
                 } else {
@@ -1151,6 +1216,9 @@
                 }
             } catch (err) {
                 alert('❌ Error: ' + err.message);
+            } finally {
+                saveButton.disabled = false;
+                saveButton.textContent = editingId ? '💾 Update' : '💾 Save';
             }
         });
 
@@ -1170,7 +1238,7 @@
                 : `${BASE_API}${endpointMap[period] || '/finance/month'}`;
 
             try {
-                document.getElementById('transactionsBody').innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#94a3b8;">Loading finance records...</td></tr>';
+                document.getElementById('transactionsBody').innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:#94a3b8;">Loading finance records...</td></tr>';
                 const response = await fetch(endpoint, { credentials: 'include' });
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 
@@ -1180,7 +1248,7 @@
                 console.error('Error loading data:', err);
                 document.getElementById('transactionsBody').innerHTML = `
                     <tr>
-                        <td colspan="5" style="text-align:center; padding:30px; color:#e63946;">
+                        <td colspan="6" style="text-align:center; padding:30px; color:#e63946;">
                             ❌ Error loading transactions. Please try again.
                         </td>
                     </tr>
@@ -1190,6 +1258,7 @@
 
         function updateUI(data) {
             const transactions = data.transactions || [];
+            currentTransactions = transactions;
             
             const income = transactions.filter(t => t.transaction_type === 'income');
             const expenses = transactions.filter(t => t.transaction_type === 'expense');
@@ -1425,7 +1494,7 @@
             if (!transactions || transactions.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" style="text-align:center; padding:30px; color:#94a3b8;">
+                        <td colspan="6" style="text-align:center; padding:30px; color:#94a3b8;">
                             No finance records found for this date.
                         </td>
                     </tr>
@@ -1442,11 +1511,15 @@
                 
                 html += `
                     <tr style="border-bottom:1px solid rgba(195,199,204,0.08); transition:background 0.2s;" onmouseenter="this.style.background='rgba(15,43,61,0.02)'" onmouseleave="this.style.background='transparent'">
-                        <td style="padding:10px 16px; color:#64748b; font-size:13px;">${t.transaction_date}</td>
-                        <td style="padding:10px 16px; font-weight:500; color:#0f2b3d;">${t.category}</td>
-                        <td style="padding:10px 16px; color:#64748b; font-size:13px;">${t.customer_name || t.description || '—'}</td>
+                        <td style="padding:10px 16px; color:#64748b; font-size:13px;">${escapeHtml(t.transaction_date)}</td>
+                        <td style="padding:10px 16px; font-weight:500; color:#0f2b3d;">${escapeHtml(t.category)}</td>
+                        <td style="padding:10px 16px; color:#64748b; font-size:13px;">${escapeHtml(t.customer_name || t.description || '—')}</td>
                         <td style="padding:10px 16px; color:#94a3b8; font-size:12px;">${t.payment_method || 'cash'}</td>
                         <td style="padding:10px 16px; text-align:right; font-weight:700; ${amountClass}">${sign}₦${formatNumber(t.amount)}</td>
+                        <td style="padding:10px 16px; text-align:right; white-space:nowrap;">
+                            <button type="button" class="edit-finance-btn" data-id="${escapeHtml(t.id)}" style="padding:5px 8px; margin-right:4px; border:0; border-radius:6px; background:#e0f2fe; color:#0369a1; cursor:pointer;">Edit</button>
+                            <button type="button" class="delete-finance-btn" data-id="${escapeHtml(t.id)}" style="padding:5px 8px; border:0; border-radius:6px; background:#fee2e2; color:#b91c1c; cursor:pointer;">Delete</button>
+                        </td>
                     </tr>
                 `;
             });
@@ -1458,6 +1531,43 @@
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
             });
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>'"]/g, character => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[character]));
+        }
+
+        async function deleteFinanceEntry(transaction) {
+            pendingDeleteId = transaction.id;
+            document.getElementById('deleteSummary').innerHTML = `Description: ${escapeHtml(transaction.description || transaction.category || '—')}<br>Amount: ₦${formatNumber(transaction.amount)}<br>Date: ${escapeHtml(transaction.transaction_date)}`;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        async function confirmDeleteFinanceEntry() {
+            if (!pendingDeleteId) return;
+
+            const button = document.getElementById('confirmDeleteBtn');
+            button.disabled = true;
+            button.textContent = 'Deleting...';
+            try {
+                const response = await fetch(`${BASE_API}/finance/${encodeURIComponent(pendingDeleteId)}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || 'Unable to delete finance entry. Please try again.');
+
+                closeDeleteModal();
+                alert('Finance entry deleted successfully.');
+                await loadAllData();
+            } catch (err) {
+                alert(err.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Delete';
+            }
         }
 
         // =============================================
@@ -1498,6 +1608,15 @@
             if (addExpenseBtn) {
                 addExpenseBtn.addEventListener('click', function() {
                     openModal('expense');
+                });
+            }
+
+            const transactionType = document.getElementById('transactionType');
+            if (transactionType) {
+                transactionType.addEventListener('change', function() {
+                    currentType = this.value;
+                    populateCategories(currentType);
+                    document.getElementById('saveBtn').style.background = currentType === 'income' ? '#2d9b4e' : '#e63946';
                 });
             }
 
@@ -1543,6 +1662,29 @@
                     if (e.target === this) closeModal();
                 });
             }
+
+            const deleteModal = document.getElementById('deleteModal');
+            if (deleteModal) {
+                deleteModal.addEventListener('click', function(e) {
+                    if (e.target === this) closeDeleteModal();
+                });
+            }
+
+            document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+            document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDeleteFinanceEntry);
+
+            document.getElementById('transactionsBody').addEventListener('click', function(e) {
+                const actionButton = e.target.closest('[data-id]');
+                if (!actionButton) return;
+                const transaction = currentTransactions.find(item => String(item.id) === actionButton.dataset.id);
+                if (!transaction) return;
+
+                if (actionButton.classList.contains('edit-finance-btn')) {
+                    openEditModal(transaction);
+                } else if (actionButton.classList.contains('delete-finance-btn')) {
+                    deleteFinanceEntry(transaction);
+                }
+            });
 
             // --- Navigation links ---
             const navLinks = {

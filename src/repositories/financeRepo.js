@@ -87,6 +87,7 @@ export const financeRepo = {
         const { data, error } = await supabase
             .from('finance')
             .update({
+                transaction_type: updates.type,
                 category: updates.category,
                 customer_name: updates.customer_name || '',
                 amount: updates.amount,
@@ -97,6 +98,17 @@ export const financeRepo = {
             .eq('id', id)
             .select()
             .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    async getById(id) {
+        const { data, error } = await supabase
+            .from('finance')
+            .select('*')
+            .eq('id', id)
+            .maybeSingle();
 
         if (error) throw error;
         return data;

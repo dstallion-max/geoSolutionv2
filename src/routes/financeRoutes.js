@@ -9,11 +9,12 @@ import {
     getThisMonth,
     getThisYear,
     updateTransaction,
+    deleteTransaction,
     getByDateRange,
     getMonthlyStats
 } from '../controllers/financeController.js';
-import { verifySession, isStaff } from '../middleware/auth.js';
-import { validateTransaction, validateDateRange, sanitizeInput } from '../middleware/validation.js';
+import { verifySession, isAdmin, isStaff } from '../middleware/auth.js';
+import { validateTransaction, validateDateRange, validateId, sanitizeInput } from '../middleware/validation.js';
 
 const router = express.Router();
 
@@ -27,6 +28,7 @@ router.get('/month', verifySession, isStaff, getThisMonth);
 router.get('/year', verifySession, isStaff, getThisYear);
 router.get('/range', verifySession, isStaff, validateDateRange, getByDateRange);
 router.get('/monthly-stats', verifySession, isStaff, getMonthlyStats);
-router.put('/:id', verifySession, isStaff, sanitizeInput, updateTransaction);
+router.put('/:id', verifySession, isAdmin, sanitizeInput, validateId, validateTransaction, updateTransaction);
+router.delete('/:id', verifySession, isAdmin, sanitizeInput, validateId, deleteTransaction);
 
 export default router;

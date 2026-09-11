@@ -145,14 +145,34 @@ export const getThisYear = async (req, res) => {
 export const updateTransaction = async (req, res) => {
     try {
         const { id } = req.params;
-        const { category, customer_name, amount, method, description, date } = req.body;
+        const { type, category, customer_name, amount, method, description, date } = req.body;
         
-        const updates = { category, customer_name, amount, method, description, date };
+        const updates = { type, category, customer_name, amount, method, description, date };
         const result = await financeRepo.update(id, updates);
         
         res.json({ success: true, message: 'Transaction updated successfully', data: result });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        if (err.code === 'PGRST116') {
+            return res.status(404).json({ error: 'Finance entry not found.' });
+        }
+        console.error('Update transaction error:', err);
+        res.status(500).json({ error: 'Unable to update finance entry. Please try again.' });
+    }
+};
+
+export const deleteTransaction = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const existing = await financeRepo.getById(id);
+        if (!existing) {
+            return res.status(404).json({ error: 'Finance entry not found.' });
+        }
+
+        await financeRepo.delete(id);
+        res.json({ success: true, message: 'Finance entry deleted successfully.' });
+    } catch (err) {
+        console.error('Delete transaction error:', err);
+        res.status(500).json({ error: 'Unable to delete finance entry. Please try again.' });
     }
 };
 
