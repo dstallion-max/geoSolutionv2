@@ -726,7 +726,7 @@
             background: #cbd5e1;
         }
 
-        /* ✅ NEW: read-only Profit/Loss preview inside modal */
+        /* ✅ read-only Profit/Loss preview inside modal */
         .profit-preview {
             margin-top: 6px;
             padding: 10px 14px;
@@ -997,12 +997,12 @@
                     <input type="number" id="amount" placeholder="e.g. 5000" required step="0.01" min="0">
                 </div>
 
-                <!-- ✅ NEW: Actual Cost (income only) -->
+                <!-- ✅ Actual Cost (income only) -->
                 <div class="form-group" id="actualCostGroup" style="display:none;">
                     <label>Actual Cost (₦) — what it really cost you</label>
                     <input type="number" id="actualCost" placeholder="e.g. 14500" step="0.01" min="0">
                 </div>
-                <!-- ✅ NEW: read-only Profit/Loss preview -->
+                <!-- ✅ read-only Profit/Loss preview -->
                 <div class="profit-preview" id="profitPreview" style="display:none;">N/A — enter amount & actual cost</div>
 
                 <div class="form-group">
@@ -1043,9 +1043,6 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- SCRIPTS -->
-    <!-- ========================================== -->
-       <!-- ========================================== -->
     <!-- SCRIPTS -->
     <!-- ========================================== -->
     <script src="js/config.js"></script>
@@ -1143,7 +1140,6 @@
                 actualCostGroup.style.display = 'none';
                 profitPreview.style.display = 'none';
                 document.getElementById('actualCost').value = '';
-                // reset preview class
                 profitPreview.classList.remove('profit', 'loss');
             }
         }
@@ -1654,12 +1650,18 @@
                 } else {
                     profitCell = `<span style="color:#94a3b8;">—</span>`;
                 }
+
+                // ✅ Description cell — description on top, customer name as sub-line
+                const descriptionCell = `
+                    <div style="color:#1a1c1d; font-weight:500;">${escapeHtml(t.description || '—')}</div>
+                    ${t.customer_name ? `<div style="font-size:11px; color:#94a3b8; margin-top:2px;">👤 ${escapeHtml(t.customer_name)}</div>` : ''}
+                `;
                 
                 html += `
                     <tr style="border-bottom:1px solid rgba(195,199,204,0.08); transition:background 0.2s;" onmouseenter="this.style.background='rgba(15,43,61,0.02)'" onmouseleave="this.style.background='transparent'">
                         <td style="padding:10px 16px; color:#64748b; font-size:13px;">${escapeHtml(t.transaction_date)}</td>
                         <td style="padding:10px 16px; font-weight:500; color:#0f2b3d;">${escapeHtml(t.category)}</td>
-                        <td style="padding:10px 16px; color:#64748b; font-size:13px;">${escapeHtml(t.customer_name || t.description || '—')}</td>
+                        <td style="padding:10px 16px; color:#64748b; font-size:13px;">${descriptionCell}</td>
                         <td style="padding:10px 16px; color:#94a3b8; font-size:12px;">${t.payment_method || 'cash'}</td>
                         <td style="padding:10px 16px; text-align:right; font-weight:700; ${amountClass}">${sign}₦${formatNumber(t.amount)}</td>
                         <td style="padding:10px 16px; text-align:right; font-size:13px; color:#475569;">${actualCostCell}</td>
