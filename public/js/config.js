@@ -19,7 +19,7 @@
     // 🔧 API URLs
     // =============================================
     const LOCAL_API = 'http://localhost:3000/api';
-    const PRODUCTION_API = 'https://geosolutionv2.onrender.com/api';
+    const PRODUCTION_API = 'https://geosolutionv2.onrender.com/api, https://geosolutions-office.onrender.com/api';
 
     // Set the global API base URL
     window.BASE_API = isLocal ? LOCAL_API : PRODUCTION_API;
