@@ -11,10 +11,17 @@ import {
     updateTransaction,
     deleteTransaction,
     getByDateRange,
-    getMonthlyStats
+    getMonthlyStats,
+    getProfitSummary
 } from '../controllers/financeController.js';
 import { verifySession, isAdmin, isStaff } from '../middleware/auth.js';
-import { validateTransaction, validateDateRange, validateId, sanitizeInput } from '../middleware/validation.js';
+import {
+    validateTransaction,
+    validateDateRange,
+    validateProfitSummary,
+    validateId,
+    sanitizeInput
+} from '../middleware/validation.js';
 
 const router = express.Router();
 
@@ -27,6 +34,8 @@ router.get('/week', verifySession, isStaff, getThisWeek);
 router.get('/month', verifySession, isStaff, getThisMonth);
 router.get('/year', verifySession, isStaff, getThisYear);
 router.get('/range', verifySession, isStaff, validateDateRange, getByDateRange);
+// ✅ NEW: income-only profit summary for a date range
+router.get('/profit-summary', verifySession, isStaff, validateProfitSummary, getProfitSummary);
 router.get('/monthly-stats', verifySession, isStaff, getMonthlyStats);
 router.put('/:id', verifySession, isAdmin, sanitizeInput, validateId, validateTransaction, updateTransaction);
 router.delete('/:id', verifySession, isAdmin, sanitizeInput, validateId, deleteTransaction);

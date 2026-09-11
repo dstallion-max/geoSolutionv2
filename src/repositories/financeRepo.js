@@ -3,6 +3,12 @@ import { supabase } from '../config/db.js';
 
 export const financeRepo = {
     async add(transaction) {
+        // ✅ actual_cost applies ONLY to income. Expenses always store null.
+        const actual_cost =
+            transaction.type === 'income' && transaction.actual_cost !== undefined && transaction.actual_cost !== null
+                ? Number(transaction.actual_cost)
+                : null;
+
         const { data, error } = await supabase
             .from('finance')
             .insert([{
@@ -10,6 +16,7 @@ export const financeRepo = {
                 category: transaction.category,
                 customer_name: transaction.customer_name || '',
                 amount: transaction.amount,
+                actual_cost: actual_cost,
                 payment_method: transaction.method || null,
                 description: transaction.description || '',
                 transaction_date: transaction.date || new Date().toISOString().split('T')[0],
@@ -84,6 +91,12 @@ export const financeRepo = {
     },
 
     async update(id, updates) {
+        // ✅ actual_cost applies ONLY to income. Expenses always store null.
+        const actual_cost =
+            updates.type === 'income' && updates.actual_cost !== undefined && updates.actual_cost !== null
+                ? Number(updates.actual_cost)
+                : null;
+
         const { data, error } = await supabase
             .from('finance')
             .update({
@@ -91,6 +104,7 @@ export const financeRepo = {
                 category: updates.category,
                 customer_name: updates.customer_name || '',
                 amount: updates.amount,
+                actual_cost: actual_cost,
                 payment_method: updates.method || null,
                 description: updates.description || '',
                 transaction_date: updates.date || new Date().toISOString().split('T')[0]
@@ -132,7 +146,7 @@ export const financeRepo = {
 
         const { data, error } = await supabase
             .from('finance')
-            .select('transaction_type, amount')
+            .select('transaction_type, amount, actual_cost')
             .gte('transaction_date', startDate)
             .lte('transaction_date', endDate);
 
@@ -182,5 +196,55 @@ export const financeRepo = {
 
         if (error) throw error;
         return data || [];
+    },
+
+    // ✅ NEW: Profit summary for income-only transactions in a date range.
+    // Expenses are NOT included here. Records with null actual_cost are counted
+    // but not added to profit/loss sums.
+    async getProfitSummary(startDate, endDate) {
+        const { data, error } = await supabase
+            .from('finance')
+            .select('amount, actual_cost')
+            .eq('transaction_type', 'income')
+            .gte('transaction_date', startDate)
+            .lte('transaction_date', endDate);
+
+        if (error) throw error;
+
+        let totalIncome = 0;
+        let totalActualCost = 0;
+        let totalProfit = 0;
+        let totalLoss = 0;
+        let recordsMissingCost = 0;
+        let recordsWithCost = 0;
+
+        (data || []).forEach(t => {
+            const amount = Number(t.amount) || 0;
+            totalIncome += amount;
+
+            if (t.actual_cost === null || t.actual_cost === undefined) {
+                recordsMissingCost++;
+                return;
+            }
+
+            recordsWithCost++;
+            const cost = Number(t.actual_cost) || 0;
+            totalActualCost += cost;
+
+            const diff = amount - cost;
+            if (diff > 0) totalProfit += diff;
+            else if (diff < 0) totalLoss += Math.abs(diff);
+        });
+
+        return {
+            totalIncome,
+            totalActualCost,
+            totalProfit,
+            totalLoss,
+            netProfitLoss: totalProfit - totalLoss,
+            recordsMissingCost,
+            recordsWithCost,
+            count: (data || []).length
+        };
     }
 };

@@ -942,10 +942,6 @@
                     <span class="material-symbols-outlined">event_available</span>
                     Attendance
                 </a>
-                <!-- <a href="/admin_results.html" id="navResults">
-                    <span class="material-symbols-outlined">quiz</span>
-                    Exam Results
-                </a> -->
                 <a href="/admin_notes.html" id="navNotes">
                     <span class="material-symbols-outlined">sticky_note_2</span>
                     Notes
@@ -1047,16 +1043,16 @@
                             <span class="trend up" id="profitTrend">+0%</span>
                         </div>
                         <div class="stat-number" id="netProfit">₦0</div>
-                        <div class="stat-label">Net Profit</div>
+                        <div class="stat-label">Net (Income − Expenses)</div>
                     </div>
                     
                     <div class="stat-card border-warning">
                         <div class="stat-top">
-                            <span class="material-symbols-outlined icon" style="color:#f4a261;">grade</span>
-                            <span class="trend neutral">Month</span>
+                            <span class="material-symbols-outlined icon" style="color:#f4a261;">savings</span>
+                            <span class="trend neutral">MTD</span>
                         </div>
-                        <div class="stat-number" id="examResults">0</div>
-                        <div class="stat-label">Exam Results</div>
+                        <div class="stat-number" id="totalProfit">₦0</div>
+                        <div class="stat-label">Total Profit</div>
                     </div>
                 </div>
                 
@@ -1268,6 +1264,18 @@
             });
         }
 
+        function getFirstOfMonthString() {
+            const now = new Date();
+            return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+        }
+
+        function getDateString(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         // =============================================
         // ✅ LOAD DASHBOARD DATA
         // =============================================
@@ -1287,35 +1295,41 @@
                     document.getElementById('todayPresent').textContent = attData.length || 0;
                 }
                 
-                // --- ✅ FIXED: Fetch finance data from multiple endpoints ---
-                // Get today's transactions
+                // --- Fetch today's transactions ---
                 const todayRes = await fetch(`${BASE_API}/finance/today`);
                 let todayData = { transactions: [] };
                 if (todayRes.ok) {
                     todayData = await todayRes.json();
                 }
                 
-                // Get monthly transactions for MTD stats
+                // --- Fetch monthly transactions for MTD stats ---
                 const monthRes = await fetch(`${BASE_API}/finance/month`);
                 let monthData = { transactions: [] };
                 if (monthRes.ok) {
                     monthData = await monthRes.json();
                 }
                 
-                // Calculate MTD totals from month data
                 const monthTransactions = monthData.transactions || [];
                 const income = monthTransactions.filter(t => t.transaction_type === 'income');
                 const expenses = monthTransactions.filter(t => t.transaction_type === 'expense');
-                const totalIncome = income.reduce((sum, t) => sum + (t.amount || 0), 0);
-                const totalExpense = expenses.reduce((sum, t) => sum + (t.amount || 0), 0);
+                const totalIncome = income.reduce((sum, t) => sum + Number(t.amount || 0), 0);
+                const totalExpense = expenses.reduce((sum, t) => sum + Number(t.amount || 0), 0);
                 const netProfit = totalIncome - totalExpense;
+
+                // ✅ Total Profit = sum of positive (amount − actual_cost) for income
+                //    records where actual_cost has been entered.
+                let totalProfit = 0;
+                income.forEach(t => {
+                    if (t.actual_cost === null || t.actual_cost === undefined) return;
+                    const diff = Number(t.amount || 0) - Number(t.actual_cost || 0);
+                    if (diff > 0) totalProfit += diff;
+                });
                 
-                // Update dashboard stats with MTD values
                 document.getElementById('totalIncome').textContent = '₦' + formatNumber(totalIncome);
                 document.getElementById('totalExpenses').textContent = '₦' + formatNumber(totalExpense);
                 document.getElementById('netProfit').textContent = '₦' + formatNumber(netProfit);
+                document.getElementById('totalProfit').textContent = '₦' + formatNumber(totalProfit);
                 
-                // Update notification badge with today's transactions count
                 const todayTransactions = todayData.transactions || [];
                 document.getElementById('notificationBadge').textContent = todayTransactions.length;
                 
@@ -1377,7 +1391,6 @@
                 });
                 tbody.innerHTML = html;
 
-                // ✅ Attach event listeners to dynamic buttons
                 document.querySelectorAll('.view-student-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         viewStudent(this.dataset.id);
@@ -1495,7 +1508,6 @@
                 'navFinance': '/admin_finance.html',
                 'navStaff': '/admin_staff.html',
                 'navAttendance': '/admin_attendance.html',
-                'navResults': '/admin_results.html',
                 'navNotes': '/admin_notes.html',
                 'navSettings': '/settings.html'
             };

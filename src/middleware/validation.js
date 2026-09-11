@@ -120,8 +120,29 @@ export const validateTransaction = [
     body('customer_name').optional().isString().withMessage('Customer name must be a string'),
     body('amount').isNumeric().withMessage('Amount must be a number')
         .isFloat({ min: 0.01 }).withMessage('Amount must be greater than 0'),
+    // ✅ actual_cost: optional, nullable, only meaningful for income
+    body('actual_cost').optional({ nullable: true })
+        .isFloat({ min: 0 }).withMessage('Actual cost must be a non-negative number'),
     body('date').optional().isISO8601({ strict: true }).withMessage('Date must be valid YYYY-MM-DD'),
     body('method').optional().isIn(['cash', 'transfer', 'cheque', 'online']).withMessage('Invalid payment method'),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ 
+                error: 'Validation failed', 
+                details: errors.array() 
+            });
+        }
+        next();
+    }
+];
+
+// ✅ NEW: Profit summary validator (start + end required, both YYYY-MM-DD)
+export const validateProfitSummary = [
+    query('start').notEmpty().withMessage('Start date is required')
+        .isISO8601({ strict: true }).withMessage('Start must be valid YYYY-MM-DD'),
+    query('end').notEmpty().withMessage('End date is required')
+        .isISO8601({ strict: true }).withMessage('End must be valid YYYY-MM-DD'),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

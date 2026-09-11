@@ -3,7 +3,7 @@ import { financeRepo } from '../repositories/financeRepo.js';
 
 export const addTransaction = async (req, res) => {
     try {
-        const { type, category, customer_name, amount, method, description, date } = req.body;
+        const { type, category, customer_name, amount, method, description, date, actual_cost } = req.body;
         
         if (!type || !category || !amount) {
             return res.status(400).json({ error: 'Type, category, and amount are required' });
@@ -15,12 +15,23 @@ export const addTransaction = async (req, res) => {
                 return res.status(400).json({ error: 'Date must be valid YYYY-MM-DD' });
             }
         }
+
+        // ✅ actual_cost only applies to income. Validate if provided.
+        let parsedActualCost = null;
+        if (type === 'income' && actual_cost !== undefined && actual_cost !== null && actual_cost !== '') {
+            parsedActualCost = Number(actual_cost);
+            if (Number.isNaN(parsedActualCost) || parsedActualCost < 0) {
+                return res.status(400).json({ error: 'Actual cost must be a non-negative number' });
+            }
+        }
+        // If type is expense, parsedActualCost stays null and is ignored.
         
         const transaction = {
             type,
             category,
             customer_name: customer_name || '',
             amount: parseFloat(amount),
+            actual_cost: parsedActualCost,
             method: method || 'cash',
             description: description || '',
             date: date || new Date().toISOString().split('T')[0],
@@ -145,9 +156,27 @@ export const getThisYear = async (req, res) => {
 export const updateTransaction = async (req, res) => {
     try {
         const { id } = req.params;
-        const { type, category, customer_name, amount, method, description, date } = req.body;
+        const { type, category, customer_name, amount, method, description, date, actual_cost } = req.body;
+
+        // ✅ actual_cost only applies to income. Validate if provided.
+        let parsedActualCost = null;
+        if (type === 'income' && actual_cost !== undefined && actual_cost !== null && actual_cost !== '') {
+            parsedActualCost = Number(actual_cost);
+            if (Number.isNaN(parsedActualCost) || parsedActualCost < 0) {
+                return res.status(400).json({ error: 'Actual cost must be a non-negative number' });
+            }
+        }
         
-        const updates = { type, category, customer_name, amount, method, description, date };
+        const updates = {
+            type,
+            category,
+            customer_name,
+            amount,
+            actual_cost: parsedActualCost,
+            method,
+            description,
+            date
+        };
         const result = await financeRepo.update(id, updates);
         
         res.json({ success: true, message: 'Transaction updated successfully', data: result });
@@ -213,6 +242,20 @@ export const getByDate = async (req, res) => {
         const transactions = await financeRepo.getByDate(date);
         const totals = await financeRepo.getTotals(date);
         res.json({ success: true, date, transactions, totals });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// ✅ NEW: Profit summary endpoint (income-only).
+export const getProfitSummary = async (req, res) => {
+    try {
+        const { start, end } = req.query;
+        if (!start || !end) {
+            return res.status(400).json({ error: 'Start and end dates required' });
+        }
+        const summary = await financeRepo.getProfitSummary(start, end);
+        res.json({ success: true, summary });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

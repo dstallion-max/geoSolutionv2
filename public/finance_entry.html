@@ -405,6 +405,7 @@
         .stat-income { border-left: 4px solid #2d9b4e; }
         .stat-expense { border-left: 4px solid #e63946; }
         .stat-profit { border-left: 4px solid #00b4d8; }
+        .stat-total-profit { border-left: 4px solid #0f2b3d; }
         
         .transaction-item {
             transition: all 0.2s ease;
@@ -786,6 +787,29 @@
         .date-nav-btn.active:hover {
             background: #0f2b3d;
         }
+
+        /* ✅ NEW: read-only Profit/Loss preview inside modal */
+        .profit-preview {
+            margin-top: 6px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        .profit-preview.profit {
+            background: rgba(45,155,78,0.10);
+            color: #2d9b4e;
+            border-color: rgba(45,155,78,0.2);
+        }
+        .profit-preview.loss {
+            background: rgba(230,57,70,0.10);
+            color: #e63946;
+            border-color: rgba(230,57,70,0.2);
+        }
     </style>
 </head>
 <body>
@@ -892,31 +916,25 @@
                 </div>
             </div>
 
-            <!-- 📅 DATE NAVIGATION -->
+            <!-- 📅 DATE RANGE -->
             <div class="glass-card date-nav" style="padding:12px 18px; border-radius:14px; margin-bottom:24px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                <label for="financeDatePicker" style="font-size:13px; font-weight:600; color:#0f2b3d; white-space:nowrap;">Select Finance Date</label>
-                <input type="date" id="financeDatePicker" aria-label="Select Finance Date" style="padding:8px 10px; border:1px solid rgba(195,199,204,0.5); border-radius:8px; font:inherit; color:#0f2b3d; background:#ffffff; min-height:36px;">
-                <button class="date-nav-btn" id="prevDayBtn" style="padding:6px 16px; border:1px solid rgba(195,199,204,0.3); border-radius:8px; background:transparent; cursor:pointer; font-size:13px; font-weight:500; color:#0f2b3d; transition:all 0.3s; display:flex; align-items:center; gap:4px;">
-                    <span class="material-symbols-outlined" style="font-size:18px;">chevron_left</span>
-                    <span class="nav-label">Yesterday</span>
+                <label for="startDate" style="font-size:13px; font-weight:600; color:#0f2b3d; white-space:nowrap;">From</label>
+                <input type="date" id="startDate" aria-label="Starting Date" style="padding:8px 10px; border:1px solid rgba(195,199,204,0.5); border-radius:8px; font:inherit; color:#0f2b3d; background:#ffffff; min-height:36px;">
+
+                <label for="endDate" style="font-size:13px; font-weight:600; color:#0f2b3d; white-space:nowrap;">To</label>
+                <input type="date" id="endDate" aria-label="Ending Date" style="padding:8px 10px; border:1px solid rgba(195,199,204,0.5); border-radius:8px; font:inherit; color:#0f2b3d; background:#ffffff; min-height:36px;">
+
+                <button class="date-nav-btn" id="thisMonthBtn" style="padding:6px 16px; border:1px solid rgba(195,199,204,0.3); border-radius:8px; background:transparent; cursor:pointer; font-size:13px; font-weight:500; color:#0f2b3d; transition:all 0.3s;">
+                    This Month
                 </button>
-                
-                <div class="date-display" style="flex:1; text-align:center; font-size:16px; font-weight:600; color:#0f2b3d;">
-                    <span id="displayDate">Loading...</span>
-                </div>
-                
-                <button class="date-nav-btn" id="nextDayBtn" style="padding:6px 16px; border:1px solid rgba(195,199,204,0.3); border-radius:8px; background:transparent; cursor:pointer; font-size:13px; font-weight:500; color:#0f2b3d; transition:all 0.3s; display:flex; align-items:center; gap:4px;">
-                    <span class="nav-label">Tomorrow</span>
-                    <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </button>
-                
-                <button class="date-nav-btn active" id="todayBtn" style="padding:6px 16px; border:none; border-radius:8px; background:#0f2b3d; color:#ffffff; cursor:pointer; font-size:13px; font-weight:600; transition:all 0.3s;">
+
+                <button class="date-nav-btn" id="todayBtn" style="padding:6px 16px; border:1px solid rgba(195,199,204,0.3); border-radius:8px; background:transparent; cursor:pointer; font-size:13px; font-weight:500; color:#0f2b3d; transition:all 0.3s;">
                     Today
                 </button>
             </div>
 
             <!-- Stats Grid -->
-            <div class="stats-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; width:100%;">
+            <div class="stats-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; width:100%;">
                 <div class="glass-card stat-card stat-income" style="padding:16px 18px; border-radius:14px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                         <span class="material-symbols-outlined" style="color:#2d9b4e; font-size:24px;">account_balance_wallet</span>
@@ -943,6 +961,15 @@
                     <div class="stat-number" id="netProfit">₦0</div>
                     <div class="stat-label">Net Profit</div>
                 </div>
+
+                <div class="glass-card stat-card stat-total-profit" style="padding:16px 18px; border-radius:14px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span class="material-symbols-outlined" style="color:#0f2b3d; font-size:24px;">savings</span>
+                        <span style="font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; color:#0f2b3d; background:rgba(15,43,61,0.08);">Income</span>
+                    </div>
+                    <div class="stat-number" id="totalProfit">₦0</div>
+                    <div class="stat-label">Total Profit</div>
+                </div>
             </div>
 
             <!-- 🔍 PAGE-SPECIFIC SEARCH + DROPDOWNS -->
@@ -952,14 +979,7 @@
                     <input type="text" id="pageSearch" placeholder="Search by description or customer..." style="width:100%; padding:9px 12px 9px 40px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:14px; outline:none; font-family:'Inter',sans-serif; transition:border 0.3s;">
                 </div>
                 <span class="search-hint">Search within this page's transactions</span>
-                
-                <!-- ✅ Period Filter Dropdown -->
-                <select id="periodFilter" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:140px;">
-                    <option value="today">Today</option>
-                    <option value="yesterday">Yesterday</option>
-                    <option value="week">This Week</option>
-                </select>
-                
+
                 <!-- ✅ Type Filter Dropdown -->
                 <select id="filterType" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:140px;">
                     <option value="all">All Types</option>
@@ -1022,6 +1042,15 @@
                     <label>Amount (₦) *</label>
                     <input type="number" id="amount" placeholder="e.g. 5000" required step="0.01" min="0">
                 </div>
+
+                <!-- ✅ NEW: Actual Cost (income only) -->
+                <div class="form-group" id="actualCostGroup" style="display:none;">
+                    <label>Actual Cost (₦) — what it really cost you</label>
+                    <input type="number" id="actualCost" placeholder="e.g. 14500" step="0.01" min="0">
+                </div>
+                <!-- ✅ NEW: read-only Profit/Loss preview -->
+                <div class="profit-preview" id="profitPreview" style="display:none;">N/A — enter amount & actual cost</div>
+
                 <div class="form-group">
                     <label>Payment Method</label>
                     <select id="method">
@@ -1057,9 +1086,6 @@
         // =============================================
         
         const BASE_API = window.BASE_API;
-        let currentDate = new Date();
-        let allTransactions = [];
-        let editingId = null;
 
         // =============================================
         // ✅ CATEGORIES
@@ -1070,6 +1096,7 @@
         };
 
         let currentType = 'income';
+        let currentTransactions = [];
 
         // =============================================
         // ✅ AUTH
@@ -1147,54 +1174,85 @@
             return new Date(`${dateString}T00:00:00`);
         }
 
-        function formatDisplayDate(date) {
-            return date.toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
+        function getFirstOfMonthString() {
+            const now = new Date();
+            return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
         }
 
         function updateDateDisplay() {
-            const dateStr = formatDisplayDate(currentDate);
-            document.getElementById('dateDisplay').textContent = 'Date: ' + dateStr;
-            document.getElementById('displayDate').textContent = dateStr;
-            document.getElementById('dateLabel2').textContent = dateStr;
-            document.getElementById('financeDatePicker').value = getDateString(currentDate);
-        }
-
-        function changeDate(days) {
-            const newDate = new Date(currentDate);
-            newDate.setDate(newDate.getDate() + days);
-            currentDate = newDate;
-            updateDateDisplay();
-            renderTransactions();
-        }
-
-        function goToday() {
-            currentDate = new Date();
-            updateDateDisplay();
-            renderTransactions();
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            const label = `${start || '—'} → ${end || '—'}`;
+            document.getElementById('dateDisplay').textContent = 'Range: ' + label;
+            document.getElementById('dateLabel2').textContent = label;
         }
 
         // =============================================
         // ✅ MODAL CONTROLS
         // =============================================
+        function toggleActualCostField(type) {
+            const actualCostGroup = document.getElementById('actualCostGroup');
+            const profitPreview = document.getElementById('profitPreview');
+            if (type === 'income') {
+                actualCostGroup.style.display = '';
+                profitPreview.style.display = '';
+                updateProfitPreview();
+            } else {
+                actualCostGroup.style.display = 'none';
+                profitPreview.style.display = 'none';
+                document.getElementById('actualCost').value = '';
+                profitPreview.classList.remove('profit', 'loss');
+            }
+        }
+
+        function updateProfitPreview() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const costRaw = document.getElementById('actualCost').value;
+            const preview = document.getElementById('profitPreview');
+
+            preview.classList.remove('profit', 'loss');
+
+            if (!amount || amount <= 0) {
+                preview.textContent = 'N/A — enter amount & actual cost';
+                return;
+            }
+            if (costRaw === '' || costRaw === null || costRaw === undefined) {
+                preview.textContent = 'N/A — enter actual cost';
+                return;
+            }
+            const cost = parseFloat(costRaw);
+            if (Number.isNaN(cost) || cost < 0) {
+                preview.textContent = 'Actual cost must be a non-negative number';
+                return;
+            }
+
+            const diff = amount - cost;
+            if (diff > 0) {
+                preview.textContent = `Profit +₦${formatNumber(diff)}`;
+                preview.classList.add('profit');
+            } else if (diff < 0) {
+                preview.textContent = `Loss −₦${formatNumber(Math.abs(diff))}`;
+                preview.classList.add('loss');
+            } else {
+                preview.textContent = '₦0 — No Profit/Loss';
+            }
+        }
+
         function openModal(type) {
             currentType = type;
-            editingId = null;
             document.getElementById('modal').classList.add('active');
             document.getElementById('modalTitle').textContent = type === 'income' ? '💰 Add Income' : '💸 Add Expense';
             document.getElementById('modalSub').textContent = type === 'income' ? 'Record a new income transaction' : 'Record a new expense transaction';
             document.getElementById('financeForm').reset();
-            document.getElementById('transactionDate').value = getDateString(currentDate);
+            document.getElementById('transactionDate').value = document.getElementById('endDate').value || getDateString(new Date());
             
             const select = document.getElementById('category');
             select.innerHTML = '<option value="">Select category...</option>';
             CATEGORIES[type].forEach(cat => {
                 select.innerHTML += `<option value="${cat}">${cat}</option>`;
             });
+
+            toggleActualCostField(type);
             
             const saveBtn = document.querySelector('.btn-save');
             saveBtn.style.background = type === 'income' ? '#2d9b4e' : '#e63946';
@@ -1204,30 +1262,39 @@
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
             document.getElementById('financeForm').reset();
+            document.getElementById('profitPreview').classList.remove('profit', 'loss');
         }
 
         // =============================================
         // ✅ RENDER TRANSACTIONS
         // =============================================
         window.renderTransactions = async function() {
-            // ✅ Get search values from BOTH search bars
             const globalSearchVal = document.getElementById('globalSearch').value.trim().toLowerCase();
             const pageSearchVal = document.getElementById('pageSearch').value.trim().toLowerCase();
             const searchVal = globalSearchVal || pageSearchVal;
-            
-            const period = document.getElementById('periodFilter').value;
             const typeFilter = document.getElementById('filterType').value;
             const container = document.getElementById('transactionList');
+
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+
+            updateDateDisplay();
+
+            if (!start || !end) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px; color:#94a3b8;">
+                        Please select both From and To dates.
+                    </div>
+                `;
+                return;
+            }
+
             container.innerHTML = '<div style="text-align:center; padding:30px; color:#94a3b8;">Loading finance records...</div>';
             
-            // ✅ Map period to API endpoint
             try {
-                const dateStr = getDateString(currentDate);
-                const endpoint = period === 'week'
-                    ? `${BASE_API}/finance/week`
-                    : `${BASE_API}/finance/date?date=${encodeURIComponent(dateStr)}`;
+                const endpoint = `${BASE_API}/finance/range?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`;
                 const response = await fetch(endpoint, { credentials: 'include' });
-                let result = await response.json();
+                const result = await response.json();
                 
                 if (response.ok) {
                     let transactions = result.transactions || [];
@@ -1247,23 +1314,30 @@
                     }
                     
                     // Update stats
-                    const totalIncome = period === 'week' ? transactions
-                        .filter(t => t.transaction_type === 'income')
-                        .reduce((sum, t) => sum + (Number(t.amount) || 0), 0) : result.totals?.totalIncome || 0;
-                    const totalExpense = period === 'week' ? transactions
-                        .filter(t => t.transaction_type === 'expense')
-                        .reduce((sum, t) => sum + (Number(t.amount) || 0), 0) : result.totals?.totalExpenses || 0;
+                    const income = transactions.filter(t => t.transaction_type === 'income');
+                    const expenses = transactions.filter(t => t.transaction_type === 'expense');
+                    const totalIncome = income.reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+                    const totalExpense = expenses.reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+
+                    // ✅ Total Profit = sum of positive (amount - actual_cost) for income with cost entered
+                    let totalProfit = 0;
+                    income.forEach(t => {
+                        if (t.actual_cost === null || t.actual_cost === undefined) return;
+                        const diff = Number(t.amount || 0) - Number(t.actual_cost || 0);
+                        if (diff > 0) totalProfit += diff;
+                    });
                     
                     document.getElementById('totalIncome').textContent = '₦' + formatNumber(totalIncome);
                     document.getElementById('totalExpense').textContent = '₦' + formatNumber(totalExpense);
                     document.getElementById('netProfit').textContent = '₦' + formatNumber(totalIncome - totalExpense);
+                    document.getElementById('totalProfit').textContent = '₦' + formatNumber(totalProfit);
                     
                     renderTransactionList(transactions);
                 } else {
                     container.innerHTML = `
                         <div style="text-align:center; padding:30px; color:#94a3b8;">
                             <span class="material-symbols-outlined" style="font-size:48px; display:block; margin-bottom:12px;">receipt_long</span>
-                            <p>No finance records found for this date.</p>
+                            <p>No finance records found for this period.</p>
                             <p style="font-size:13px;">Click "Add Income" or "Add Expense" to record.</p>
                         </div>
                     `;
@@ -1287,7 +1361,7 @@
                 container.innerHTML = `
                     <div style="text-align:center; padding:30px; color:#94a3b8;">
                         <span class="material-symbols-outlined" style="font-size:48px; display:block; margin-bottom:12px;">receipt_long</span>
-                        <p>No finance records found for this date.</p>
+                        <p>No finance records found for this period.</p>
                         <p style="font-size:13px;">Click "Add Income" or "Add Expense" to record.</p>
                     </div>
                 `;
@@ -1295,7 +1369,7 @@
             }
 
             let html = '';
-            transactions.forEach((t, index) => {
+            transactions.forEach((t) => {
                 const isIncome = t.transaction_type === 'income';
                 const sign = isIncome ? '+' : '-';
                 const icon = isIncome ? '📈' : '📉';
@@ -1303,10 +1377,39 @@
                 const customerName = t.customer_name || '—';
                 const amountColor = isIncome ? '#2d9b4e' : '#e63946';
                 const dateDisplay = t.transaction_date || '—';
+
+                // ✅ Actual Cost
+                let actualCostDisplay;
+                if (isIncome) {
+                    actualCostDisplay = (t.actual_cost === null || t.actual_cost === undefined)
+                        ? `<span style="color:#94a3b8;">N/A</span>`
+                        : `₦${formatNumber(t.actual_cost)}`;
+                } else {
+                    actualCostDisplay = `<span style="color:#94a3b8;">—</span>`;
+                }
+
+                // ✅ Profit/Loss
+                let profitDisplay;
+                if (isIncome) {
+                    if (t.actual_cost === null || t.actual_cost === undefined) {
+                        profitDisplay = `<span style="color:#94a3b8;">N/A</span>`;
+                    } else {
+                        const diff = Number(t.amount || 0) - Number(t.actual_cost || 0);
+                        if (diff > 0) {
+                            profitDisplay = `<span style="color:#2d9b4e; font-weight:700;">Profit +₦${formatNumber(diff)}</span>`;
+                        } else if (diff < 0) {
+                            profitDisplay = `<span style="color:#e63946; font-weight:700;">Loss −₦${formatNumber(Math.abs(diff))}</span>`;
+                        } else {
+                            profitDisplay = `<span style="color:#64748b; font-weight:600;">₦0</span>`;
+                        }
+                    }
+                } else {
+                    profitDisplay = `<span style="color:#94a3b8;">—</span>`;
+                }
                 
                 html += `
-                    <div class="transaction-item" style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px; border-bottom:1px solid rgba(195,199,204,0.08);">
-                        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; flex:1;">
+                    <div class="transaction-item" style="display:flex; justify-content:space-between; align-items:flex-start; padding:12px 18px; border-bottom:1px solid rgba(195,199,204,0.08); gap:12px; flex-wrap:wrap;">
+                        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; flex:1; min-width:220px;">
                             <div style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; ${iconClass === 'trans-icon-income' ? 'background:rgba(45,155,78,0.12); color:#2d9b4e;' : 'background:rgba(230,57,70,0.12); color:#e63946;'}">
                                 <span style="font-size:18px;">${icon}</span>
                             </div>
@@ -1316,8 +1419,10 @@
                             </div>
                             <span style="font-size:10px; color:#94a3b8; background:#f1f5f9; padding:2px 10px; border-radius:10px;">${t.payment_method || 'cash'}</span>
                         </div>
-                        <div style="display:flex; align-items:center; gap:12px;">
+                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px; min-width:180px;">
                             <div style="font-weight:700; font-size:15px; color:${amountColor};">${sign}₦${formatNumber(t.amount)}</div>
+                            <div style="font-size:11px; color:#64748b;">Cost: ${actualCostDisplay}</div>
+                            <div style="font-size:11px;">${profitDisplay}</div>
                         </div>
                     </div>
                 `;
@@ -1355,10 +1460,24 @@
                 date: date
             };
 
+            // ✅ Actual Cost — only send for income when provided
+            if (type === 'income') {
+                const costRaw = document.getElementById('actualCost').value;
+                if (costRaw !== '' && costRaw !== null && costRaw !== undefined) {
+                    const cost = parseFloat(costRaw);
+                    if (Number.isNaN(cost) || cost < 0) {
+                        alert('Actual cost must be a non-negative number');
+                        return;
+                    }
+                    data.actual_cost = cost;
+                }
+            }
+
             try {
                 const response = await fetch(`${BASE_API}/finance/add`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify(data)
                 });
                 const result = await response.json();
@@ -1379,37 +1498,38 @@
         // ✅ DOWNLOAD CSV
         // =============================================
         window.downloadCSV = function() {
-            const container = document.getElementById('transactionList');
-            const items = container.querySelectorAll('.transaction-item');
-            
-            if (items.length === 0) {
+            if (!currentTransactions || currentTransactions.length === 0) {
                 alert('No transactions to download.');
                 return;
             }
 
-            const dateStr = getDateString(currentDate);
-            let csvContent = "Date,Category,Customer Name,Amount,Method,Description,Type\n";
+            const start = document.getElementById('startDate').value || 'all';
+            const end = document.getElementById('endDate').value || 'all';
+            let csvContent = "Date,Type,Category,Customer Name,Amount,Actual Cost,Profit/Loss,Method,Description\n";
 
-            items.forEach(item => {
-                const cells = item.querySelectorAll('div');
-                const category = cells[1]?.querySelector('div:first-child')?.textContent?.trim() || '';
-                const customerAndDesc = cells[1]?.querySelector('div:nth-child(2)')?.textContent?.trim() || '';
-                const customerName = customerAndDesc.split('•')[0]?.trim() || '';
-                const description = customerAndDesc.split('•')[1]?.trim() || '';
-                const date = customerAndDesc.split('•')[2]?.trim() || '';
-                const method = cells[1]?.querySelector('span')?.textContent?.trim() || '';
-                const amountText = cells[2]?.querySelector('div')?.textContent?.trim() || '';
-                const type = amountText.includes('+') ? 'Income' : 'Expense';
-                const amount = amountText.replace(/[+−₦]/g, '').trim();
-                
-                csvContent += `"${date}","${category}","${customerName}","${amount}","${method}","${description}","${type}"\n`;
+            currentTransactions.forEach(t => {
+                const isIncome = t.transaction_type === 'income';
+                const amount = Number(t.amount || 0);
+                let actualCost = '';
+                let profitLoss = '';
+
+                if (isIncome && t.actual_cost !== null && t.actual_cost !== undefined) {
+                    actualCost = Number(t.actual_cost);
+                    const diff = amount - actualCost;
+                    profitLoss = diff > 0 ? `Profit ${diff}` : diff < 0 ? `Loss ${Math.abs(diff)}` : '0';
+                } else if (isIncome) {
+                    actualCost = 'N/A';
+                    profitLoss = 'N/A';
+                }
+
+                csvContent += `"${t.transaction_date}","${t.transaction_type}","${t.category}","${t.customer_name || ''}","${amount}","${actualCost}","${profitLoss}","${t.payment_method || ''}","${(t.description || '').replace(/"/g, '""')}"\n`;
             });
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', `Geo_Solution_Finance_${dateStr}.csv`);
+            link.setAttribute('download', `Geo_Solution_Finance_${start}_to_${end}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
@@ -1421,7 +1541,9 @@
         // =============================================
         document.addEventListener('DOMContentLoaded', function() {
             
-            // --- Initial date ---
+            // --- Default date range: 1st of month → today ---
+            document.getElementById('startDate').value = getFirstOfMonthString();
+            document.getElementById('endDate').value = getDateString(new Date());
             updateDateDisplay();
             
             // --- Sidebar toggle ---
@@ -1464,33 +1586,33 @@
                 }
             });
 
-            // --- Date Navigation ---
-            const prevDayBtn = document.getElementById('prevDayBtn');
-            if (prevDayBtn) {
-                prevDayBtn.addEventListener('click', function() {
-                    changeDate(-1);
+            // --- Date range change ---
+            const startDate = document.getElementById('startDate');
+            if (startDate) {
+                startDate.addEventListener('change', renderTransactions);
+            }
+            const endDate = document.getElementById('endDate');
+            if (endDate) {
+                endDate.addEventListener('change', renderTransactions);
+            }
+
+            // --- This Month shortcut ---
+            const thisMonthBtn = document.getElementById('thisMonthBtn');
+            if (thisMonthBtn) {
+                thisMonthBtn.addEventListener('click', function() {
+                    document.getElementById('startDate').value = getFirstOfMonthString();
+                    document.getElementById('endDate').value = getDateString(new Date());
+                    renderTransactions();
                 });
             }
 
-            const nextDayBtn = document.getElementById('nextDayBtn');
-            if (nextDayBtn) {
-                nextDayBtn.addEventListener('click', function() {
-                    changeDate(1);
-                });
-            }
-
+            // --- Today shortcut ---
             const todayBtn = document.getElementById('todayBtn');
             if (todayBtn) {
-                todayBtn.addEventListener('click', goToday);
-            }
-
-            const financeDatePicker = document.getElementById('financeDatePicker');
-            if (financeDatePicker) {
-                financeDatePicker.addEventListener('change', function() {
-                    if (!this.value) return;
-                    currentDate = dateFromString(this.value);
-                    document.getElementById('periodFilter').value = 'today';
-                    updateDateDisplay();
+                todayBtn.addEventListener('click', function() {
+                    const today = getDateString(new Date());
+                    document.getElementById('startDate').value = today;
+                    document.getElementById('endDate').value = today;
                     renderTransactions();
                 });
             }
@@ -1509,6 +1631,16 @@
                 addExpenseBtn.addEventListener('click', function() {
                     openModal('expense');
                 });
+            }
+
+            // --- Live profit preview on amount / actual cost change ---
+            const amountInput = document.getElementById('amount');
+            if (amountInput) {
+                amountInput.addEventListener('input', updateProfitPreview);
+            }
+            const actualCostInput = document.getElementById('actualCost');
+            if (actualCostInput) {
+                actualCostInput.addEventListener('input', updateProfitPreview);
             }
 
             // --- Close Modal ---
@@ -1537,19 +1669,13 @@
                 pageSearch.addEventListener('keyup', renderTransactions);
             }
 
-            // --- Period Filter ---
-            const periodFilter = document.getElementById('periodFilter');
-            if (periodFilter) {
-                periodFilter.addEventListener('change', renderTransactions);
-            }
-
             // --- Type Filter ---
             const filterType = document.getElementById('filterType');
             if (filterType) {
                 filterType.addEventListener('change', renderTransactions);
             }
 
-            // --- Refresh buttons ---
+            // --- Refresh button ---
             const refreshBtn = document.getElementById('refreshBtn');
             if (refreshBtn) {
                 refreshBtn.addEventListener('click', renderTransactions);
@@ -1579,9 +1705,6 @@
 
             // --- Load initial data ---
             renderTransactions();
-            
-            // Auto-refresh every 30 seconds
-            setInterval(renderTransactions, 30000);
         });
     </script>
 </body>

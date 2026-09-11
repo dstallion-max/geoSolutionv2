@@ -725,6 +725,29 @@
         .modal .btn-cancel:hover {
             background: #cbd5e1;
         }
+
+        /* ✅ NEW: read-only Profit/Loss preview inside modal */
+        .profit-preview {
+            margin-top: 6px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        .profit-preview.profit {
+            background: rgba(45,155,78,0.10);
+            color: #2d9b4e;
+            border-color: rgba(45,155,78,0.2);
+        }
+        .profit-preview.loss {
+            background: rgba(230,57,70,0.10);
+            color: #e63946;
+            border-color: rgba(230,57,70,0.2);
+        }
     </style>
 </head>
 <body>
@@ -763,10 +786,6 @@
                 <span class="material-symbols-outlined">event_available</span>
                 Attendance
             </a>
-            <!-- <a href="/admin_results.html" id="navResults">
-                <span class="material-symbols-outlined">quiz</span>
-                Exam Results
-            </a> -->
             <a href="/admin_notes.html" id="navNotes">
                 <span class="material-symbols-outlined">sticky_note_2</span>
                 Notes
@@ -864,24 +883,24 @@
 
                 <div class="glass-card stat-card stat-count" style="padding:16px 18px; border-radius:14px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                        <span class="material-symbols-outlined" style="color:#0f2b3d; font-size:24px;">receipt_long</span>
-                        <span style="font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; color:#64748b; background:rgba(100,116,139,0.08);">Count</span>
+                        <span class="material-symbols-outlined" style="color:#0f2b3d; font-size:24px;">savings</span>
+                        <span style="font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; color:#0f2b3d; background:rgba(15,43,61,0.08);" id="totalProfitTrend">Income</span>
                     </div>
-                    <div class="stat-number" id="transactionCount">0</div>
-                    <div class="stat-label">Transactions</div>
+                    <div class="stat-number" id="totalProfit">₦0</div>
+                    <div class="stat-label">Total Profit</div>
                 </div>
             </div>
 
             <div class="glass-card filters-bar" style="padding:14px 18px; border-radius:14px; margin-bottom:24px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-                <label for="financeDatePicker" style="font-size:13px; font-weight:600; color:#0f2b3d; white-space:nowrap;">Select Finance Date</label>
-                <input type="date" id="financeDatePicker" aria-label="Select Finance Date" style="padding:8px 10px; border:1px solid rgba(195,199,204,0.5); border-radius:8px; font:inherit; color:#0f2b3d; background:#ffffff; min-height:36px;">
-                <select id="periodFilter" style="padding:8px 14px; border:1px solid rgba(195,199,204,0.3); border-radius:10px; font-size:13px; font-family:'Inter',sans-serif; outline:none; background:#ffffff; min-width:140px;">
-                    <option value="date" selected>Selected date</option>
-                    <option value="today">Today</option>
-                    <option value="week">This Week</option>
-                    <option value="month" selected>This Month</option>
-                    <option value="year">This Year</option>
-                </select>
+                <label for="startDate" style="font-size:13px; font-weight:600; color:#0f2b3d; white-space:nowrap;">From</label>
+                <input type="date" id="startDate" aria-label="Starting Date" style="padding:8px 10px; border:1px solid rgba(195,199,204,0.5); border-radius:8px; font:inherit; color:#0f2b3d; background:#ffffff; min-height:36px;">
+
+                <label for="endDate" style="font-size:13px; font-weight:600; color:#0f2b3d; white-space:nowrap;">To</label>
+                <input type="date" id="endDate" aria-label="Ending Date" style="padding:8px 10px; border:1px solid rgba(195,199,204,0.5); border-radius:8px; font:inherit; color:#0f2b3d; background:#ffffff; min-height:36px;">
+
+                <button id="thisMonthBtn" style="padding:8px 14px; background:rgba(15,43,61,0.06); color:#0f2b3d; border:none; border-radius:8px; font-weight:600; font-size:12px; cursor:pointer; transition:all 0.3s;">
+                    This Month
+                </button>
                 
                 <button id="refreshBtn" style="padding:8px 16px; background:rgba(26,95,122,0.1); color:#1a5f7a; border:none; border-radius:10px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:6px;">
                     <span class="material-symbols-outlined" style="font-size:18px;">refresh</span>
@@ -924,7 +943,7 @@
                     <span style="font-size:13px; color:#64748b;" id="recentCount">0 transactions</span>
                 </div>
                 <div style="overflow-x:auto;">
-                    <table style="width:100%; border-collapse:collapse; font-size:13px; min-width:600px;">
+                    <table style="width:100%; border-collapse:collapse; font-size:13px; min-width:800px;">
                         <thead style="background:#f1f5f9; color:#475569;">
                             <tr>
                                 <th style="padding:10px 16px; text-align:left; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Date</th>
@@ -932,12 +951,14 @@
                                 <th style="padding:10px 16px; text-align:left; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Description</th>
                                 <th style="padding:10px 16px; text-align:left; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Method</th>
                                 <th style="padding:10px 16px; text-align:right; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Amount</th>
+                                <th style="padding:10px 16px; text-align:right; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Actual Cost</th>
+                                <th style="padding:10px 16px; text-align:right; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Profit/Loss</th>
                                 <th style="padding:10px 16px; text-align:right; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="transactionsBody" style="border-bottom:1px solid rgba(195,199,204,0.1);">
                             <tr>
-                                <td colspan="6" style="text-align:center; padding:30px; color:#94a3b8;">No transactions found.</td>
+                                <td colspan="8" style="text-align:center; padding:30px; color:#94a3b8;">No transactions found.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -975,6 +996,15 @@
                     <label>Amount (₦) *</label>
                     <input type="number" id="amount" placeholder="e.g. 5000" required step="0.01" min="0">
                 </div>
+
+                <!-- ✅ NEW: Actual Cost (income only) -->
+                <div class="form-group" id="actualCostGroup" style="display:none;">
+                    <label>Actual Cost (₦) — what it really cost you</label>
+                    <input type="number" id="actualCost" placeholder="e.g. 14500" step="0.01" min="0">
+                </div>
+                <!-- ✅ NEW: read-only Profit/Loss preview -->
+                <div class="profit-preview" id="profitPreview" style="display:none;">N/A — enter amount & actual cost</div>
+
                 <div class="form-group">
                     <label>Payment Method</label>
                     <select id="method">
@@ -1013,6 +1043,9 @@
     </div>
 
     <!-- ========================================== -->
+    <!-- SCRIPTS -->
+    <!-- ========================================== -->
+       <!-- ========================================== -->
     <!-- SCRIPTS -->
     <!-- ========================================== -->
     <script src="js/config.js"></script>
@@ -1061,13 +1094,31 @@
         };
 
         let currentType = 'income';
-        let selectedFinanceDate = new Date();
         let editingId = null;
         let pendingDeleteId = null;
         let currentTransactions = [];
         let barChartInstance = null;
         let pieChartInstance = null;
         let lineChartInstance = null;
+
+        // =============================================
+        // ✅ DATE HELPERS
+        // =============================================
+        function getDateString(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function dateFromString(dateString) {
+            return new Date(`${dateString}T00:00:00`);
+        }
+
+        function getFirstOfMonthString() {
+            const now = new Date();
+            return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+        }
 
         // =============================================
         // ✅ MODAL CONTROLS
@@ -1081,6 +1132,55 @@
             select.value = selectedCategory;
         }
 
+        function toggleActualCostField(type) {
+            const actualCostGroup = document.getElementById('actualCostGroup');
+            const profitPreview = document.getElementById('profitPreview');
+            if (type === 'income') {
+                actualCostGroup.style.display = '';
+                profitPreview.style.display = '';
+                updateProfitPreview();
+            } else {
+                actualCostGroup.style.display = 'none';
+                profitPreview.style.display = 'none';
+                document.getElementById('actualCost').value = '';
+                // reset preview class
+                profitPreview.classList.remove('profit', 'loss');
+            }
+        }
+
+        function updateProfitPreview() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const costRaw = document.getElementById('actualCost').value;
+            const preview = document.getElementById('profitPreview');
+
+            preview.classList.remove('profit', 'loss');
+
+            if (!amount || amount <= 0) {
+                preview.textContent = 'N/A — enter amount & actual cost';
+                return;
+            }
+            if (costRaw === '' || costRaw === null || costRaw === undefined) {
+                preview.textContent = 'N/A — enter actual cost';
+                return;
+            }
+            const cost = parseFloat(costRaw);
+            if (Number.isNaN(cost) || cost < 0) {
+                preview.textContent = 'Actual cost must be a non-negative number';
+                return;
+            }
+
+            const diff = amount - cost;
+            if (diff > 0) {
+                preview.textContent = `Profit +₦${formatNumber(diff)}`;
+                preview.classList.add('profit');
+            } else if (diff < 0) {
+                preview.textContent = `Loss −₦${formatNumber(Math.abs(diff))}`;
+                preview.classList.add('loss');
+            } else {
+                preview.textContent = '₦0 — No Profit/Loss';
+            }
+        }
+
         function openModal(type) {
             currentType = type;
             editingId = null;
@@ -1089,9 +1189,10 @@
             document.getElementById('modalSub').textContent = type === 'income' ? 'Record a new income transaction' : 'Record a new expense transaction';
             document.getElementById('financeForm').reset();
             document.getElementById('transactionType').value = type;
-            document.getElementById('transactionDate').value = getDateString(selectedFinanceDate);
+            document.getElementById('transactionDate').value = document.getElementById('endDate').value || getDateString(new Date());
             
             populateCategories(type);
+            toggleActualCostField(type);
             
             const saveBtn = document.querySelector('.btn-save');
             saveBtn.style.background = type === 'income' ? '#2d9b4e' : '#e63946';
@@ -1112,7 +1213,16 @@
             document.getElementById('amount').value = transaction.amount || '';
             document.getElementById('method').value = transaction.payment_method || 'cash';
             document.getElementById('description').value = transaction.description || '';
-            document.getElementById('transactionDate').value = transaction.transaction_date || getDateString(selectedFinanceDate);
+            document.getElementById('transactionDate').value = transaction.transaction_date || getDateString(new Date());
+
+            // ✅ Actual Cost — only for income
+            if (currentType === 'income' && transaction.actual_cost !== null && transaction.actual_cost !== undefined) {
+                document.getElementById('actualCost').value = transaction.actual_cost;
+            } else {
+                document.getElementById('actualCost').value = '';
+            }
+            toggleActualCostField(currentType);
+
             document.getElementById('saveBtn').style.background = currentType === 'income' ? '#2d9b4e' : '#e63946';
             document.getElementById('saveBtn').textContent = '💾 Update';
         }
@@ -1120,23 +1230,13 @@
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
             document.getElementById('financeForm').reset();
+            document.getElementById('profitPreview').classList.remove('profit', 'loss');
             editingId = null;
         }
 
         function closeDeleteModal() {
             document.getElementById('deleteModal').classList.remove('active');
             pendingDeleteId = null;
-        }
-
-        function getDateString(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        function dateFromString(dateString) {
-            return new Date(`${dateString}T00:00:00`);
         }
 
         // =============================================
@@ -1195,6 +1295,19 @@
                 date: date
             };
 
+            // ✅ Actual Cost — only send for income when provided
+            if (type === 'income') {
+                const costRaw = document.getElementById('actualCost').value;
+                if (costRaw !== '' && costRaw !== null && costRaw !== undefined) {
+                    const cost = parseFloat(costRaw);
+                    if (Number.isNaN(cost) || cost < 0) {
+                        alert('Actual cost must be a non-negative number');
+                        return;
+                    }
+                    data.actual_cost = cost;
+                }
+            }
+
             const saveButton = document.getElementById('saveBtn');
             saveButton.disabled = true;
             saveButton.textContent = editingId ? 'Updating...' : 'Saving...';
@@ -1223,22 +1336,18 @@
         });
 
         window.loadAllData = async function() {
-            const period = document.getElementById('periodFilter').value;
-            
-            const endpointMap = {
-                'today': '/finance/today',
-                'week': '/finance/week',
-                'month': '/finance/month',
-                'year': '/finance/year'
-            };
-            
-            const selectedDate = getDateString(selectedFinanceDate);
-            const endpoint = period === 'date'
-                ? `${BASE_API}/finance/date?date=${encodeURIComponent(selectedDate)}`
-                : `${BASE_API}${endpointMap[period] || '/finance/month'}`;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (!startDate || !endDate) {
+                document.getElementById('transactionsBody').innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:#94a3b8;">Please select From and To dates.</td></tr>';
+                return;
+            }
+
+            const endpoint = `${BASE_API}/finance/range?start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`;
 
             try {
-                document.getElementById('transactionsBody').innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:#94a3b8;">Loading finance records...</td></tr>';
+                document.getElementById('transactionsBody').innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:#94a3b8;">Loading finance records...</td></tr>';
                 const response = await fetch(endpoint, { credentials: 'include' });
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 
@@ -1248,7 +1357,7 @@
                 console.error('Error loading data:', err);
                 document.getElementById('transactionsBody').innerHTML = `
                     <tr>
-                        <td colspan="6" style="text-align:center; padding:30px; color:#e63946;">
+                        <td colspan="8" style="text-align:center; padding:30px; color:#e63946;">
                             ❌ Error loading transactions. Please try again.
                         </td>
                     </tr>
@@ -1262,13 +1371,21 @@
             
             const income = transactions.filter(t => t.transaction_type === 'income');
             const expenses = transactions.filter(t => t.transaction_type === 'expense');
-            const totalIncome = data.totals?.totalIncome ?? income.reduce((sum, t) => sum + Number(t.amount || 0), 0);
-            const totalExpense = data.totals?.totalExpenses ?? expenses.reduce((sum, t) => sum + Number(t.amount || 0), 0);
+            const totalIncome = income.reduce((sum, t) => sum + Number(t.amount || 0), 0);
+            const totalExpense = expenses.reduce((sum, t) => sum + Number(t.amount || 0), 0);
+
+            // ✅ Total Profit = sum of positive (amount - actual_cost) for income with cost entered
+            let totalProfit = 0;
+            income.forEach(t => {
+                if (t.actual_cost === null || t.actual_cost === undefined) return;
+                const diff = Number(t.amount || 0) - Number(t.actual_cost || 0);
+                if (diff > 0) totalProfit += diff;
+            });
             
             document.getElementById('totalIncome').textContent = '₦' + formatNumber(totalIncome);
             document.getElementById('totalExpense').textContent = '₦' + formatNumber(totalExpense);
             document.getElementById('netProfit').textContent = '₦' + formatNumber(totalIncome - totalExpense);
-            document.getElementById('transactionCount').textContent = transactions.length;
+            document.getElementById('totalProfit').textContent = '₦' + formatNumber(totalProfit);
             document.getElementById('recentCount').textContent = transactions.length + ' transactions';
             document.getElementById('notificationBadge').textContent = transactions.length;
 
@@ -1285,7 +1402,7 @@
             transactions.forEach(t => {
                 const key = t.category + ' (' + t.transaction_type + ')';
                 if (!categories[key]) categories[key] = 0;
-                categories[key] += t.amount;
+                categories[key] += Number(t.amount) || 0;
             });
 
             const labels = Object.keys(categories);
@@ -1342,7 +1459,7 @@
             const categories = {};
             expenses.forEach(t => {
                 if (!categories[t.category]) categories[t.category] = 0;
-                categories[t.category] += t.amount;
+                categories[t.category] += Number(t.amount) || 0;
             });
 
             const labels = Object.keys(categories);
@@ -1380,7 +1497,7 @@
                             callbacks: {
                                 label: function(context) {
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((context.raw / total) * 100).toFixed(1);
+                                    const percentage = total > 0 ? ((context.raw / total) * 100).toFixed(1) : '0.0';
                                     return context.label + ': ₦' + formatNumber(context.raw) + ' (' + percentage + '%)';
                                 }
                             }
@@ -1401,9 +1518,9 @@
                     monthlyData[month] = { income: 0, expense: 0 };
                 }
                 if (t.transaction_type === 'income') {
-                    monthlyData[month].income += t.amount;
+                    monthlyData[month].income += Number(t.amount) || 0;
                 } else {
-                    monthlyData[month].expense += t.amount;
+                    monthlyData[month].expense += Number(t.amount) || 0;
                 }
             });
 
@@ -1494,20 +1611,49 @@
             if (!transactions || transactions.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6" style="text-align:center; padding:30px; color:#94a3b8;">
-                            No finance records found for this date.
+                        <td colspan="8" style="text-align:center; padding:30px; color:#94a3b8;">
+                            No finance records found for this period.
                         </td>
                     </tr>
                 `;
                 return;
             }
 
-            const recent = transactions.slice(0, 10);
+            const recent = transactions.slice(0, 50);
             let html = '';
             recent.forEach(t => {
                 const isIncome = t.transaction_type === 'income';
                 const amountClass = isIncome ? 'color:#2d9b4e;' : 'color:#e63946;';
                 const sign = isIncome ? '+' : '-';
+
+                // ✅ Actual Cost cell
+                let actualCostCell;
+                if (isIncome) {
+                    actualCostCell = (t.actual_cost === null || t.actual_cost === undefined)
+                        ? `<span style="color:#94a3b8;">N/A</span>`
+                        : `₦${formatNumber(t.actual_cost)}`;
+                } else {
+                    actualCostCell = `<span style="color:#94a3b8;">—</span>`;
+                }
+
+                // ✅ Profit/Loss cell
+                let profitCell;
+                if (isIncome) {
+                    if (t.actual_cost === null || t.actual_cost === undefined) {
+                        profitCell = `<span style="color:#94a3b8;">N/A</span>`;
+                    } else {
+                        const diff = Number(t.amount || 0) - Number(t.actual_cost || 0);
+                        if (diff > 0) {
+                            profitCell = `<span style="color:#2d9b4e; font-weight:700;">Profit +₦${formatNumber(diff)}</span>`;
+                        } else if (diff < 0) {
+                            profitCell = `<span style="color:#e63946; font-weight:700;">Loss −₦${formatNumber(Math.abs(diff))}</span>`;
+                        } else {
+                            profitCell = `<span style="color:#64748b; font-weight:600;">₦0</span>`;
+                        }
+                    }
+                } else {
+                    profitCell = `<span style="color:#94a3b8;">—</span>`;
+                }
                 
                 html += `
                     <tr style="border-bottom:1px solid rgba(195,199,204,0.08); transition:background 0.2s;" onmouseenter="this.style.background='rgba(15,43,61,0.02)'" onmouseleave="this.style.background='transparent'">
@@ -1516,6 +1662,8 @@
                         <td style="padding:10px 16px; color:#64748b; font-size:13px;">${escapeHtml(t.customer_name || t.description || '—')}</td>
                         <td style="padding:10px 16px; color:#94a3b8; font-size:12px;">${t.payment_method || 'cash'}</td>
                         <td style="padding:10px 16px; text-align:right; font-weight:700; ${amountClass}">${sign}₦${formatNumber(t.amount)}</td>
+                        <td style="padding:10px 16px; text-align:right; font-size:13px; color:#475569;">${actualCostCell}</td>
+                        <td style="padding:10px 16px; text-align:right; font-size:13px;">${profitCell}</td>
                         <td style="padding:10px 16px; text-align:right; white-space:nowrap;">
                             <button type="button" class="edit-finance-btn" data-id="${escapeHtml(t.id)}" style="padding:5px 8px; margin-right:4px; border:0; border-radius:6px; background:#e0f2fe; color:#0369a1; cursor:pointer;">Edit</button>
                             <button type="button" class="delete-finance-btn" data-id="${escapeHtml(t.id)}" style="padding:5px 8px; border:0; border-radius:6px; background:#fee2e2; color:#b91c1c; cursor:pointer;">Delete</button>
@@ -1575,6 +1723,10 @@
         // =============================================
         document.addEventListener('DOMContentLoaded', function() {
             
+            // --- Default date range: 1st of month → today ---
+            document.getElementById('startDate').value = getFirstOfMonthString();
+            document.getElementById('endDate').value = getDateString(new Date());
+            
             // --- Sidebar toggle ---
             const sidebarToggle = document.getElementById('sidebarToggle');
             if (sidebarToggle) {
@@ -1611,13 +1763,25 @@
                 });
             }
 
+            // --- Transaction Type change in modal ---
             const transactionType = document.getElementById('transactionType');
             if (transactionType) {
                 transactionType.addEventListener('change', function() {
                     currentType = this.value;
                     populateCategories(currentType);
+                    toggleActualCostField(currentType);
                     document.getElementById('saveBtn').style.background = currentType === 'income' ? '#2d9b4e' : '#e63946';
                 });
+            }
+
+            // --- Live profit preview on amount / actual cost change ---
+            const amountInput = document.getElementById('amount');
+            if (amountInput) {
+                amountInput.addEventListener('input', updateProfitPreview);
+            }
+            const actualCostInput = document.getElementById('actualCost');
+            if (actualCostInput) {
+                actualCostInput.addEventListener('input', updateProfitPreview);
             }
 
             // --- Refresh ---
@@ -1626,27 +1790,42 @@
                 refreshBtn.addEventListener('click', loadAllData);
             }
 
-            // --- Period filter ---
-            const periodFilter = document.getElementById('periodFilter');
-            if (periodFilter) {
-                periodFilter.addEventListener('change', loadAllData);
+            // --- Date range change ---
+            const startDate = document.getElementById('startDate');
+            if (startDate) {
+                startDate.addEventListener('change', loadAllData);
+            }
+            const endDate = document.getElementById('endDate');
+            if (endDate) {
+                endDate.addEventListener('change', loadAllData);
             }
 
-            const financeDatePicker = document.getElementById('financeDatePicker');
-            if (financeDatePicker) {
-                financeDatePicker.value = getDateString(selectedFinanceDate);
-                financeDatePicker.addEventListener('change', function() {
-                    if (!this.value) return;
-                    selectedFinanceDate = dateFromString(this.value);
-                    periodFilter.value = 'date';
+            // --- This Month shortcut ---
+            const thisMonthBtn = document.getElementById('thisMonthBtn');
+            if (thisMonthBtn) {
+                thisMonthBtn.addEventListener('click', function() {
+                    document.getElementById('startDate').value = getFirstOfMonthString();
+                    document.getElementById('endDate').value = getDateString(new Date());
                     loadAllData();
                 });
             }
 
-            // --- Search input ---
+            // --- Search input (client-side filter) ---
             const searchInput = document.getElementById('searchInput');
             if (searchInput) {
-                searchInput.addEventListener('keyup', loadAllData);
+                searchInput.addEventListener('keyup', function() {
+                    const q = this.value.trim().toLowerCase();
+                    if (!q) {
+                        updateTransactionsTable(currentTransactions);
+                        return;
+                    }
+                    const filtered = currentTransactions.filter(t =>
+                        (t.category && t.category.toLowerCase().includes(q)) ||
+                        (t.customer_name && t.customer_name.toLowerCase().includes(q)) ||
+                        (t.description && t.description.toLowerCase().includes(q))
+                    );
+                    updateTransactionsTable(filtered);
+                });
             }
 
             // --- Close Modal ---
@@ -1693,7 +1872,6 @@
                 'navFinance': '/admin_finance.html',
                 'navStaff': '/admin_staff.html',
                 'navAttendance': '/admin_attendance.html',
-                'navResults': '/admin_results.html',
                 'navNotes': '/admin_notes.html',
                 'navSettings': '/settings.html'
             };
@@ -1726,7 +1904,6 @@
 
             // --- Load initial data ---
             loadAllData();
-            setInterval(loadAllData, 60000);
         });
     </script>
 </body>
